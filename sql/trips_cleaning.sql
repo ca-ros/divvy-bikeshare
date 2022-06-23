@@ -1,4 +1,4 @@
--- Cleaning trips_p1 & trips_p2 table
+-- Cleaning trips table
 
 -- back-up tables
 CREATE TABLE bike_trips.trips_p1_test AS
@@ -29,7 +29,7 @@ FROM 'D:/Github/divvy-bikeshare/csv files/stations/Divvy_Bicycle_Stations.csv'
 DELIMITER ',' CSV HEADER;
 
 
--- trips_p1
+----------------------- trips_p1 -------------------------
 -- Check missing/ dirty data
 SELECT t.id, t.name
 FROM (
@@ -53,6 +53,51 @@ WHERE NOT EXISTS (SELECT id, name
 				 FROM bike_trips.stations as s
 				 WHERE s.name = t.name)
 
+-- Import csv file
+-- Create table
+CREATE TABLE bike_trips.name_changes_p1 (
+  old_name varchar, 
+  new_name varchar);
+-- Import
+COPY bike_trips.name_changes_p1 (old_name, new_name)
+FROM 'D:/Github/divvy-bikeshare/csv files/stations/name_changes_p1.csv' 
+DELIMITER ',' CSV HEADER;
+
+-- ID change
+-- stations table
+UPDATE bike_trips.stations
+SET id = CASE 
+  WHEN name = 'Lakefront Trail & Bryn Mawr Ave' THEN 459
+  WHEN name = 'Michigan Ave & 71st St' THEN 651
+  END
+WHERE name IN (
+    'Lakefront Trail & Bryn Mawr Ave', 
+    'Michigan Ave & 71st St');
+-- trips_p1 table
+UPDATE bike_trips.trips_p1
+SET id = CASE 
+  WHEN name = 'Lakefront Trail & Bryn Mawr Ave' THEN 459
+  WHEN name = 'Michigan Ave & 71st St' THEN 651
+  END
+WHERE name IN (
+    'Lakefront Trail & Bryn Mawr Ave', 
+    'Michigan Ave & 71st St');
+	
+-- Name change
+-- trips table
+-- start_station_name
+UPDATE bike_trips.trips_p1 as s
+SET start_station_name = c.new_name
+FROM bike_trips.name_changes_p1 as c
+WHERE s.start_station_name = c.old_name;
+
+-- end_station_name
+UPDATE bike_trips.trips_p1 as s
+SET end_station_name = c.new_name
+FROM bike_trips.name_changes_p1 as c
+WHERE s.end_station_name = c.old_name;
+	
+--------------------  trips_p2  -----------------------
 
 -- trips_p2
 -- Check missing/ dirty data
@@ -77,7 +122,37 @@ FROM (
 WHERE NOT EXISTS (SELECT s.id, s.name
 				 FROM bike_trips.stations as s
 				 WHERE s.name = t.name);
-				 
+
+
+
+
+-- Import csv file
+-- station ID
+-- Create table
+CREATE TABLE bike_trips.id_changes_p2 (
+  old_name varchar,
+  new_id varchar
+);
+-- Import
+COPY bike_trips.id_changes_p2 (old_name, new_id)
+FROM 'D:/Github/divvy-bikeshare/csv files/stations/id_changes_p2.csv' 
+DELIMITER ',' CSV HEADER;
+
+SELECT * FROM bike_trips.id_changes_p2
+
+-- station name
+-- Create table
+CREATE TABLE bike_trips.name_changes_p2 (
+  old_name varchar,
+  new_name varchar
+);
+-- Import
+COPY bike_trips.name_changes_p2 (old_name, new_name)
+FROM 'D:/Github/divvy-bikeshare/csv files/stations/name_changes_p2.csv' 
+DELIMITER ',' CSV HEADER NULL 'null';
+
+
+
 -- ID change
 -- start_station_id
 UPDATE bike_trips.trips_p2_test
@@ -105,7 +180,9 @@ WHERE end_station_id IN ('13221', '20215', 'WL-008');
 UPDATE bike_trips.trips_p2_test as s
 SET end_station_id = c.new_id
 FROM bike_trips.id_changes_p2 as c
-WHERE s.end_station_name = c.old_name;
+WHERE s.end_station_name = c.old_name; 
+
+
 
 
 -- Name change

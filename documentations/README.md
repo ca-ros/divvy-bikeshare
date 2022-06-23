@@ -759,13 +759,12 @@ SET id = CASE
   WHEN name = 'Lakefront Trail & Bryn Mawr Ave' THEN 459
   WHEN name = 'Michigan Ave & 71st St' THEN 651
   END
-WHERE 
-  name IN (
-    'Lakefront Trail & Bryn Mawr Ave', 
-    'Michigan Ave & 71st St')
+WHERE name IN (
+  'Lakefront Trail & Bryn Mawr Ave', 
+  'Michigan Ave & 71st St');
 ```
 
-- trips_p1 table
+- trips table
 
 ```sql
 UPDATE bike_trips.trips_p1
@@ -773,14 +772,13 @@ SET id = CASE
   WHEN name = 'Lakefront Trail & Bryn Mawr Ave' THEN 459
   WHEN name = 'Michigan Ave & 71st St' THEN 651
   END
-WHERE 
-  name IN (
-    'Lakefront Trail & Bryn Mawr Ave', 
-    'Michigan Ave & 71st St')
+WHERE name IN (
+  'Lakefront Trail & Bryn Mawr Ave', 
+  'Michigan Ave & 71st St');
 ```
 
 *Name change*
-- trips_p1 table
+- trips table
 
 ```sql
 -- start_station_name
