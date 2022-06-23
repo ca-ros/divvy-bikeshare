@@ -53,12 +53,10 @@ Ogden Ave & Chicago Ave,54
 Halsted St & Roosevelt Rd,55
 Desplaines St & Kinzie St,56
 Clinton St & Roosevelt Rd,57
-NULL,57
 Elston Ave & Cortland St,58
 Marshfield Ave & Cortland St,58
 Wabash Ave & Roosevelt Rd,59
 Dayton St & North Ave,60
-NULL,61
 Wood St & Milwaukee Ave,61
 McCormick Place,62
 Clinton St & Lake St,66
@@ -167,7 +165,6 @@ Mies van der Rohe Way & Chicago Ave,173
 Canal St & Madison St,174
 Wells St & Polk St,175
 Clark St & Elm St,176
-N Clark St & W Elm St,176
 N Clark St & W Elm St,176
 Theater on the Lake,177
 State St & 19th St,178
@@ -603,12 +600,10 @@ Chicago State University,737
 Calumet Park,738
 Altgeld Gardens,739
 Loomis St & 89th St,740
-Loomis St & 89th St,740
 Yates Blvd & 93rd St,741
 Doty Ave & 111th St,742
 Olive Harvey College,748
 State St & Chicago Ave,753
-Lakefront Trail & Bryn Mawr Ave,760
 S Aberdeen St & W 106th St,20126
 S Wentworth Ave & W 111th St,20128
 Woodlawn & 103rd - Olive Harvey Vaccination Site,20133
@@ -616,23 +611,20 @@ Maryland Ave & 104th St,20134
 Kedzie Ave & 104th St,20201
 W 103rd St & S Avers Ave,20202
 S Michigan Ave & E 118th St,20209
-S Michigan Ave & E 118th St,20209
 Avenue L & 114th St,20220
 Indiana Ave & 133rd St,20240
 N Green St & W Lake St,20246
 W Washington Blvd & N Peoria St,20247
+Hampden Ct & Diversey Ave,20248
+N Hampden Ct & W Diversey Ave,20248
 N Carpenter St & W Lake St,20251
-W Oakdale Ave & N Broadway,20252
 W Oakdale Ave & N Broadway,20252
 N Paulina St & Lincoln Ave,20253
 W Armitage Ave & N Sheffield Ave,20254
-W Armitage Ave & N Sheffield Ave,20254
 N Southport Ave & W Newport Ave,20257
 Ping Tom Park (East),20260
-Hampden Ct & Diversey Ave,202480
 Ashland Ave & 69th St,null
 Central Park Ave & Douglas Blvd,null
-Chicago Ave & Dempster St,null
 Chicago Ave & Dempster St,null
 Damen Ave & Wabansia Ave,null
 Harding Ave & 26th St,null

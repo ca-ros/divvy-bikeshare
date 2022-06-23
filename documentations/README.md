@@ -10,11 +10,11 @@ Data sources:
 
 <h2 align = "center">Table of Contents</h2>
 
-I. [Setting up SQL Environment]()
+I. [Setting up SQL Environment](https://github.com/56i8/divvy-bikeshare/tree/master/documentations#setting-up-sql-environment)
 
-II. [Combining Data]()
+II. [Combining Data](https://github.com/56i8/divvy-bikeshare/tree/master/documentations#combining-data)
 
-- [2013]()
+- [2013](https://github.com/56i8/divvy-bikeshare/tree/master/documentations#2013)
 - [2014]()
 - [2015]()
 - [2016]()
@@ -821,7 +821,7 @@ FROM (
   FROM bike_trips.trips_p2)as t
 WHERE NOT EXISTS (SELECT s.id, s.name
 				 FROM bike_trips.stations as s
-				 WHERE s.name = t.name)
+				 WHERE s.name = t.name);
 -- 701 records
 ```
 Export the result as [trips_p2_stations.csv](). 
@@ -908,7 +908,7 @@ DELIMITER ',' CSV HEADER NULL 'null';
 - start_station_id
 
 ```sql
-UPDATE bike_trips.trips_p2_test
+UPDATE bike_trips.trips_p2
 SET start_station_id = CASE
   WHEN start_station_id = '13221' THEN '61'
   WHEN start_station_id = '20215' THEN '732'
@@ -916,7 +916,7 @@ SET start_station_id = CASE
   END
 WHERE start_station_id IN ('13221', '20215', 'WL-008');
 
-UPDATE bike_trips.trips_p2_test as s
+UPDATE bike_trips.trips_p2 as s
 SET start_station_id = c.new_id
 FROM bike_trips.id_changes_p2 as c
 WHERE s.start_station_name = c.old_name;
@@ -924,7 +924,7 @@ WHERE s.start_station_name = c.old_name;
 
 - end_station_id
 ```sql
-UPDATE bike_trips.trips_p2_test
+UPDATE bike_trips.trips_p2
 SET end_station_id = CASE
   WHEN end_station_id = '13221' THEN '61'
   WHEN end_station_id = '20215' THEN '732'
@@ -932,17 +932,17 @@ SET end_station_id = CASE
   END
 WHERE end_station_id IN ('13221', '20215', 'WL-008');
 
-UPDATE bike_trips.trips_p2_test as s
+UPDATE bike_trips.trips_p2 as s
 SET end_station_id = c.new_id
 FROM bike_trips.id_changes_p2 as c
 WHERE s.end_station_name = c.old_name;
 ```
 
 *Name change*
-
+CASE
 - start_station
 ```sql
-UPDATE bike_trips.trips_p2_test
+UPDATE bike_trips.trips_p2
 SET start_station_name = CASE
   WHEN start_station_id = '61' THEN 'Wood St & Milwaukee Ave'
   WHEN start_station_id = '732' THEN 'Hegewisch Metra Station'
@@ -950,7 +950,7 @@ SET start_station_name = CASE
   END
 WHERE start_station_id IN ('61', '732', '57');
 
-UPDATE bike_trips.trips_p2_test as s
+UPDATE bike_trips.trips_p2 as s
 SET start_station_name = c.new_name
 FROM bike_trips.name_changes_p2 as c
 WHERE s.start_station_name = c.old_name;
@@ -958,7 +958,7 @@ WHERE s.start_station_name = c.old_name;
 
 - end_station
 ```sql
-UPDATE bike_trips.trips_p2_test
+UPDATE bike_trips.trips_p2
 SET end_station_name = CASE
   WHEN end_station_id = '61' THEN 'Wood St & Milwaukee Ave'
   WHEN end_station_id = '732' THEN 'Hegewisch Metra Station'
@@ -966,7 +966,7 @@ SET end_station_name = CASE
   END
 WHERE end_station_id IN ('61', '732', '57');
 
-UPDATE bike_trips.trips_p2_test as s
+UPDATE bike_trips.trips_p2 as s
 SET end_station_name = c.new_name
 FROM bike_trips.name_changes_p2 as c
 WHERE s.end_station_name = c.old_name;
