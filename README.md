@@ -16,17 +16,13 @@ Tasks:
 - [x] Find stations that is in trips_p2 but missing in Stations table
 - [ ] Add all the missing stations
 - [x] Clean the table trips_p1
-<<<<<<< HEAD
 - [x] Clean the table trips_p2
 =======
 - [ ] Clean the table trips_p2
->>>>>>> 6028595d345d22c9bd8e665cd783f13365d01362
 - [ ] Clean the stations table
 - [ ] Remove unused stations in Stations table
 - [ ] Fill the null values in Stations table using all the data in other tables
 - [ ] Combine trips_p1 & trips_p2
-<<<<<<< HEAD
 - [ ] Start analyzing the data
 =======
 - [ ] Start analyzing the data
->>>>>>> 6028595d345d22c9bd8e665cd783f13365d01362
