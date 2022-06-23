@@ -15,19 +15,19 @@ I. [Setting up SQL Environment](https://github.com/56i8/divvy-bikeshare/tree/mas
 II. [Combining Data](https://github.com/56i8/divvy-bikeshare/tree/master/documentations#combining-data)
 
 - [2013](https://github.com/56i8/divvy-bikeshare/tree/master/documentations#2013)
-- [2014]()
-- [2015]()
-- [2016]()
-- [2017]()
-- [2018]()
-- [2019]()
-- [2020]()
-- [2021]()
+- [2014](https://github.com/56i8/divvy-bikeshare/tree/master/documentations#2014)
+- [2015](https://github.com/56i8/divvy-bikeshare/tree/master/documentations#2015)
+- [2016](https://github.com/56i8/divvy-bikeshare/tree/master/documentations#2016)
+- [2017](https://github.com/56i8/divvy-bikeshare/tree/master/documentations#2017)
+- [2018](https://github.com/56i8/divvy-bikeshare/tree/master/documentations#2018)
+- [2019](https://github.com/56i8/divvy-bikeshare/tree/master/documentations#2019)
+- [2020](https://github.com/56i8/divvy-bikeshare/tree/master/documentations#2020)
+- [2021](https://github.com/56i8/divvy-bikeshare/tree/master/documentations#2021)
 
-III. [Stations Table]()
+III. [Stations Table](https://github.com/56i8/divvy-bikeshare/tree/master/documentations#stations-table)
 
-- [First table: trips_p1]()
-- [Second table: trips_p2]()
+- [First table: trips_p1](https://github.com/56i8/divvy-bikeshare/tree/master/documentations#first-table-trips_p1)
+- [Second table: trips_p2](https://github.com/56i8/divvy-bikeshare/tree/master/documentations#second-table-trips_p2)
 - [Missing Stations]()
 
 <h2 align = "center">Setting up SQL Environment</h2>
@@ -48,8 +48,8 @@ Lastly, to open the **Query Tool** press *ALT + SHIFT + Q*, or click the Query t
 
 <h2 align = "center">Combining data</h2>
 
-1. Download all the data for year 2013 to 2021 [here]().
-2. Download the stations data here, this data is from Chicago Data Portal. For this analysis, I will refer to the table as **Official Stations** table.
+1. Download all the data for year 2013 to 2021 [here](https://divvy-tripdata.s3.amazonaws.com/index.html).
+2. Download the stations data [here](https://data.cityofchicago.org/api/views/bbyy-e7gq/rows.csv?accessType=DOWNLOAD), this data is from [Chicago Data Portal](https://data.cityofchicago.org/). For this analysis, I will refer to the table as **Official Stations** table.
 3. After extracting the zip files, compile separately all the yearly bike-trips data and the stations data included in that folder. Name the folder as the year it represents.
 4. Start compiling the data.
 5. For file naming consistency, all combined trip-data must contain (year) followed by "-divvy-tripdata.csv"
@@ -694,7 +694,7 @@ Using [Google Maps](https://www.google.com/maps) to validate the station_name.
 Missing stations:
 
 - Filter the **correct_name** column, click the drop-down icon and search **missing**.
-- Copy all the **id** and **name** into a new blank workbook and save the file as [missing_stations_p1.csv]().
+- Copy all the **id** and **name** into a new blank workbook and save the file as [missing_stations_p1.csv](https://github.com/56i8/divvy-bikeshare/blob/master/csv%20files/stations/missing_stations_p1.csv).
 
 <details><summary>missing_stations_p1.csv</summary>
 <p>
@@ -822,7 +822,7 @@ WHERE NOT EXISTS (SELECT s.id, s.name
 				 WHERE s.name = t.name);
 -- 701 records
 ```
-Export the result as [trips_p2_stations.csv](). 
+Export the result as [trips_p2_stations.csv](https://github.com/56i8/divvy-bikeshare/blob/master/csv%20files/stations/trips_p2_stations.csv). 
 
 With some minor changes, repeat the steps of analysis done in MS Excel:
 
@@ -853,7 +853,7 @@ With some minor changes, repeat the steps of analysis done in MS Excel:
 - 13221 > 61
 - 20215 > 732
 - WL-008 > 57
-- table here [id_changes_p2.csv]()
+- table here [id_changes_p2.csv](https://github.com/56i8/divvy-bikeshare/blob/master/csv%20files/stations/id_changes_p2.csv)
 
 > Import the csv file into the database.
 5. Name change:
@@ -861,11 +861,11 @@ With some minor changes, repeat the steps of analysis done in MS Excel:
 - 61 = Wood St & Milwaukee Ave
 - 732 = Hegewisch Metra Station
 - 57 = Clinton St & Roosevelt Rd
-- table here: [name_changes_p2.csv]()
+- table here: [name_changes_p2.csv](https://github.com/56i8/divvy-bikeshare/blob/master/csv%20files/stations/name_changes_p2.csv)
 
 > Import the csv file into the database.
 6. List of missing stations from **Stations** table.
-- table here [missing_stations_p2.csv]()
+- table here [missing_stations_p2.csv](https://github.com/56i8/divvy-bikeshare/blob/master/csv%20files/stations/missing_stations_p2.csv)
 
 **SQL Queries:**
 
