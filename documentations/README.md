@@ -8,6 +8,33 @@ Data sources:
 - *PostgreSQL*
 - *RStudio*
 
+<details><summary>Skills applied</summary>
+<p>
+- Git - version control
+- Excel
+
+  - Conditional Formatting
+  - Data filter
+  - VLOOKUP
+  - Pivot table
+  - IF/ IFNA
+- SQL 
+
+  - CREATE TABLE
+  - CREATE DB
+  - EXTRACT: YEAR, EPOCH
+  - JOINS
+  - UNION/ UNION ALL
+- R
+
+  -
+  -
+  -
+  -
+  -
+- googling hard hehe
+</p></details>
+
 <h2 align = "center">Table of Contents</h2>
 
 I. [Setting up SQL Environment](https://github.com/56i8/divvy-bikeshare/tree/master/documentations#setting-up-sql-environment)
@@ -738,6 +765,20 @@ I used the lower station ID which is **459** and **651** for **Lakefront Trail &
 **SQL Queries:**
 
 *Import csv file*
+
+- Station ID
+```sql
+CREATE TABLE bike_trips.id_changes_p1 (
+  old_name varchar, 
+  new_id int);
+
+-- Import
+COPY bike_trips.id_changes_p1 (old_name, new_id)
+FROM 'D:/Github/divvy-bikeshare/csv files/stations/id_changes_p1.csv' 
+DELIMITER ',' CSV HEADER;
+```
+
+- Station name
 ```sql
 -- Create table
 CREATE TABLE bike_trips.name_changes_p1 (
@@ -753,6 +794,7 @@ DELIMITER ',' CSV HEADER;
 *ID change*
 
 - Stations table
+
 ```sql
 UPDATE bike_trips.stations
 SET id = CASE 
@@ -765,16 +807,19 @@ WHERE name IN (
 ```
 
 - trips table
-
 ```sql
-UPDATE bike_trips.trips_p1
-SET id = CASE 
-  WHEN name = 'Lakefront Trail & Bryn Mawr Ave' THEN 459
-  WHEN name = 'Michigan Ave & 71st St' THEN 651
-  END
-WHERE name IN (
-  'Lakefront Trail & Bryn Mawr Ave', 
-  'Michigan Ave & 71st St');
+-- start_station_id
+UPDATE bike_trips.trips_p1 as s
+SET start_station_id = c.new_id
+FROM bike_trips.id_changes_p1 as c
+WHERE s.start_station_name = c.old_name;
+```
+```sql
+-- end_station_id
+UPDATE bike_trips.trips_p1 as s
+SET end_station_id = c.new_id
+FROM bike_trips.id_changes_p1 as c
+WHERE s.end_station_name = c.old_name;
 ```
 
 *Name change*
@@ -786,7 +831,8 @@ UPDATE bike_trips.trips_p1 as s
 SET start_station_name = c.new_name
 FROM bike_trips.name_changes_p1 as c
 WHERE s.start_station_name = c.old_name;
-
+```
+```sql
 -- end_station_name
 UPDATE bike_trips.trips_p1 as s
 SET end_station_name = c.new_name
@@ -913,7 +959,8 @@ SET start_station_id = CASE
   WHEN start_station_id = 'WL-008' THEN '57'
   END
 WHERE start_station_id IN ('13221', '20215', 'WL-008');
-
+```
+```sql
 UPDATE bike_trips.trips_p2 as s
 SET start_station_id = c.new_id
 FROM bike_trips.id_changes_p2 as c
@@ -929,7 +976,8 @@ SET end_station_id = CASE
   WHEN end_station_id = 'WL-008' THEN '57'
   END
 WHERE end_station_id IN ('13221', '20215', 'WL-008');
-
+```
+```sql
 UPDATE bike_trips.trips_p2 as s
 SET end_station_id = c.new_id
 FROM bike_trips.id_changes_p2 as c
@@ -947,7 +995,8 @@ SET start_station_name = CASE
   WHEN start_station_id = '57' THEN 'Clinton St & Roosevelt Rd'
   END
 WHERE start_station_id IN ('61', '732', '57');
-
+```
+```sql
 UPDATE bike_trips.trips_p2 as s
 SET start_station_name = c.new_name
 FROM bike_trips.name_changes_p2 as c
@@ -963,7 +1012,8 @@ SET end_station_name = CASE
   WHEN end_station_id = '57' THEN 'Clinton St & Roosevelt Rd'
   END
 WHERE end_station_id IN ('61', '732', '57');
-
+```
+```sql
 UPDATE bike_trips.trips_p2 as s
 SET end_station_name = c.new_name
 FROM bike_trips.name_changes_p2 as c
