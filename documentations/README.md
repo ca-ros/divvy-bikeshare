@@ -10,6 +10,7 @@ Data sources:
 
 <details><summary>Skills applied</summary>
 <p>
+
 - Git - version control
 - Excel
 

@@ -36,19 +36,35 @@ SELECT EXTRACT(EPOCH FROM(end_time - start_time))::int as duration FROM bike_tri
 WHERE ride_id = 'EACB19130B0CDA4A'
 
 
+
+--FOR CHECKING
+-- trips_p1
 SELECT *
 FROM (
 	SELECT DISTINCT start_station_name as name, start_station_id as id
-	FROM bike_trips.trips_p1_test
+	FROM bike_trips.trips_p1
 	UNION
 	SELECT DISTINCT end_station_name as name, end_station_id as id
-	FROM bike_trips.trips_p1_test) as t
-WHERE t.id = 360
+	FROM bike_trips.trips_p1) as t
+WHERE t.id = '20';
+
+-- trips_p2
+SELECT *
+FROM (
+	SELECT DISTINCT start_station_name as name, start_station_id as id
+	FROM bike_trips.trips_p2
+	UNION
+	SELECT DISTINCT end_station_name as name, end_station_id as id
+	FROM bike_trips.trips_p2) as t
+WHERE t.id = '704';
+
+-- COUNT
+SELECT COUNT(*), start_station_name as name, start_station_id as id
+FROM bike_trips.trips_p2
+GROUP BY name, id
+HAVING start_station_id = '704';
 
 
-CREATE TABLE bike_trips.stations_original AS
-SELECT * FROM bike_trips.stations
-
-
-
+SELECT * FROM bike_trips.trips_p2
+WHERE start_station_id = '387';
 
