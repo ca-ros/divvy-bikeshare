@@ -23,9 +23,18 @@ Data sources:
 
   - CREATE TABLE
   - CREATE DB
+  - SELECT DISTINCT
+  - UPDATE TABLE
+  - HAVING
+  - LIKE
+  - WILDCARDS
+  - ALTER TABLE/ ALTER COLUMN
+  - IN
+  - CASE 
   - EXTRACT: YEAR, EPOCH
   - JOINS
-  - UNION/ UNION ALL
+  - UNION
+  - SUB QUERY
 - R
 
   -
@@ -52,11 +61,15 @@ II. [Combining Data](https://github.com/56i8/divvy-bikeshare/tree/master/documen
 - [2020](https://github.com/56i8/divvy-bikeshare/tree/master/documentations#2020)
 - [2021](https://github.com/56i8/divvy-bikeshare/tree/master/documentations#2021)
 
-III. [Stations Table](https://github.com/56i8/divvy-bikeshare/tree/master/documentations#stations-table)
+III. [Trips table](https://github.com/56i8/divvy-bikeshare/tree/master/documentations#trips-table)
 
 - [First table: trips_p1](https://github.com/56i8/divvy-bikeshare/tree/master/documentations#first-table-trips_p1)
 - [Second table: trips_p2](https://github.com/56i8/divvy-bikeshare/tree/master/documentations#second-table-trips_p2)
-- [Missing Stations]()
+- [Combining tables: trips]()
+
+IV. [Stations table]()
+
+
 
 <h2 align = "center">Setting up SQL Environment</h2>
 
@@ -76,11 +89,15 @@ Lastly, to open the **Query Tool** press *ALT + SHIFT + Q*, or click the Query t
 
 <h2 align = "center">Combining data</h2>
 
+The process of combining all the data into one table as a yearly data and using the **File Naming Convention (FNC)**.
+
+Steps:
+
 1. Download all the data for year 2013 to 2021 [here](https://divvy-tripdata.s3.amazonaws.com/index.html).
-2. Download the stations data [here](https://data.cityofchicago.org/api/views/bbyy-e7gq/rows.csv?accessType=DOWNLOAD), this data is from [Chicago Data Portal](https://data.cityofchicago.org/). For this analysis, I will refer to the table as **Official Stations** table.
+2. Download the stations data [here](https://data.cityofchicago.org/api/views/bbyy-e7gq/rows.csv?accessType=DOWNLOAD), this data is from [Chicago Data Portal](https://data.cityofchicago.org/). For this analysis, I will refer to the table as **Stations table**.
 3. After extracting the zip files, compile separately all the yearly bike-trips data and the stations data included in that folder. Name the folder as the year it represents.
 4. Start compiling the data.
-5. For file naming consistency, all combined trip-data must contain (year) followed by "-divvy-tripdata.csv"
+5. For file naming convention, all combined trip-data must named by "year" followed by "-divvy-tripdata.csv"
 
 *Using RStudio*
 ```r
@@ -128,23 +145,24 @@ COPY bike_trips.trips_2013 (
   user_type, 
   gender, 
   birthyear) 
-FROM 'D:/Github/divvy-bikeshare/csv files/trips/2013-divvy-tripdata.csv' 
+FROM 'D:/Github/large csv files/divvy-bikeshare/trips/2013-divvy-tripdata.csv' 
 DELIMITER ',' CSV HEADER;
 ```
 
 <h3 align = "center"><strong>2014</strong></h3>
 
 <sub>*RStudio*</sub>
+
 ```r
 # Merge 2014_tripdata
-df_2014 <- list.files(path="D:/Github/divvy-bikeshare/csv files/trips/2014", full.names = TRUE) %>% 
+df_2014 <- list.files(path="D:/Github/large csv files/divvy-bikeshare/trips/2014", full.names = TRUE) %>% 
   lapply(read_csv) %>% 
   bind_rows 
 ```
 
 ```r
 # Export the combined 2014_tripdata
-write.csv(df_2014,"D:/Github/divvy-bikeshare/csv files/trips/2014-divvy-tripdata.csv", row.names = FALSE)
+write.csv(df_2014,"D:/Github/large csv files/divvy-bikeshare/trips/2014-divvy-tripdata.csv", row.names = FALSE)
 ```
 > Follow the file naming guideline, file name should be "2014-divvy-tripdata.csv".
 
@@ -183,23 +201,24 @@ COPY bike_trips.trips_2014 (
   user_type, 
   gender, 
   birth_year) 
-FROM 'D:/Github/divvy-bikeshare/csv files/trips/2014-divvy-tripdata.csv' 
+FROM 'D:/Github/large csv files/divvy-bikeshare/trips/2014-divvy-tripdata.csv' 
 DELIMITER ',' CSV HEADER QUOTE '"' NULL 'NA';
 ```
 
 <h3 align = "center"><strong>2015</strong></h3>
 
 <sub>*RStudio*</sub>
+
 ```r
 # Merge 2015_tripdata
-df_2015 <- list.files(path="D:/Github/divvy-bikeshare/csv files/trips/2015", full.names = TRUE) %>% 
+df_2015 <- list.files(path="D:/Github/large csv files/divvy-bikeshare/trips/2015", full.names = TRUE) %>% 
   lapply(read_csv) %>% 
   bind_rows 
 ```
 
 ```r
 # Export the combined 2015_tripdata
-write.csv(df_2015,"D:/Github/divvy-bikeshare/csv files/trips/2015-divvy-tripdata.csv", row.names = FALSE)
+write.csv(df_2015,"D:/Github/large csv files/divvy-bikeshare/trips/2015-divvy-tripdata.csv", row.names = FALSE)
 ```
 > Follow the file naming guideline, file name should be "2015-divvy-tripdata.csv".
 
@@ -238,23 +257,24 @@ COPY bike_trips.trips_2015 (
   user_type, 
   gender, 
   birth_year) 
-FROM 'D:/Github/divvy-bikeshare/csv files/trips/2015-divvy-tripdata.csv' 
+FROM 'D:/Github/large csv files/divvy-bikeshare/trips/2015-divvy-tripdata.csv' 
 DELIMITER ',' CSV HEADER QUOTE '"' NULL 'NA';
 ```
 
 <h3 align = "center"><strong>2016</strong></h3>
 
 <sub>*RStudio*</sub>
+
 ```r
 # Merge 2016_tripdata
-df_2016 <- list.files(path="D:/Github/divvy-bikeshare/csv files/trips/2016", full.names = TRUE) %>% 
+df_2016 <- list.files(path="D:/Github/large csv files/divvy-bikeshare/trips/2016", full.names = TRUE) %>% 
   lapply(read_csv) %>% 
   bind_rows 
 ```
 
 ```r
 # Export the combined 2016_tripdata
-write.csv(df_2016,"D:/Github/divvy-bikeshare/csv files/trips/2016-divvy-tripdata.csv", row.names = FALSE)
+write.csv(df_2016,"D:/Github/large csv files/divvy-bikeshare/trips/2016-divvy-tripdata.csv", row.names = FALSE)
 ```
 > Follow the file naming guideline, file name should be "2016-divvy-tripdata.csv".
 
@@ -293,23 +313,24 @@ COPY bike_trips.trips_2016 (
   user_type, 
   gender, 
   birth_year) 
-FROM 'D:/Github/divvy-bikeshare/csv files/trips/2016-divvy-tripdata.csv' 
+FROM 'D:/Github/large csv files/divvy-bikeshare/trips/2016-divvy-tripdata.csv' 
 DELIMITER ',' CSV HEADER QUOTE '"' NULL 'NA';
 ```
 
 <h3 align = "center"><strong>2017</strong></h3>
 
 <sub>*RStudio*</sub>
+
 ```r
 # Merge 2017_tripdata
-df_2017 <- list.files(path="D:/Github/divvy-bikeshare/csv files/trips/2017", full.names = TRUE) %>% 
+df_2017 <- list.files(path="D:/Github/large csv files/divvy-bikeshare/trips/2017", full.names = TRUE) %>% 
   lapply(read_csv) %>% 
   bind_rows 
 ```
 
 ```r
 # Export the combined 2017_tripdata
-write.csv(df_2017,"D:/Github/divvy-bikeshare/csv files/trips/2017-divvy-tripdata.csv", row.names = FALSE)
+write.csv(df_2017,"D:/Github/large csv files/divvy-bikeshare/trips/2017-divvy-tripdata.csv", row.names = FALSE)
 ```
 > Follow the file naming guideline, file name should be "2017-divvy-tripdata.csv".
 
@@ -348,23 +369,24 @@ COPY bike_trips.trips_2017 (
   user_type, 
   gender, 
   birth_year) 
-FROM 'D:/Github/divvy-bikeshare/csv files/trips/2017-divvy-tripdata.csv' 
+FROM 'D:/Github/large csv files/divvy-bikeshare/trips/2017-divvy-tripdata.csv' 
 DELIMITER ',' CSV HEADER QUOTE '"' NULL 'NA';
 ```
 
 <h3 align = "center"><strong>2018</strong></h3>
 
 <sub>*RStudio*</sub>
+
 ```r
 # Merge 2018_tripdata
-df_2018 <- list.files(path="D:/Github/divvy-bikeshare/csv files/trips/2018", full.names = TRUE) %>% 
+df_2018 <- list.files(path="D:/Github/large csv files/divvy-bikeshare/trips/2018", full.names = TRUE) %>% 
   lapply(read_csv) %>% 
   bind_rows 
 ```
 
 ```r
 # Export the combined 2018_tripdata
-write.csv(df_2018,"D:/Github/divvy-bikeshare/csv files/trips/2018-divvy-tripdata.csv", row.names = FALSE)
+write.csv(df_2018,"D:/Github/large csv files/divvy-bikeshare/trips/2018-divvy-tripdata.csv", row.names = FALSE)
 ```
 > Follow the file naming guideline, file name should be "2018-divvy-tripdata.csv".
 
@@ -403,7 +425,7 @@ COPY bike_trips.trips_2018 (
   user_type, 
   gender, 
   birth_year) 
-FROM 'D:/Github/divvy-bikeshare/csv files/trips/2018-divvy-tripdata.csv' 
+FROM 'D:/Github/large csv files/divvy-bikeshare/trips/2018-divvy-tripdata.csv' 
 DELIMITER ',' CSV HEADER QUOTE '"' NULL 'NA';
 ```
 
@@ -412,16 +434,17 @@ DELIMITER ',' CSV HEADER QUOTE '"' NULL 'NA';
 This data set has inconsistent column naming. By using Notepad ++ to open large datasets, each quarterly files are opened and inspected. We can see that 2019_Q2 table has different column names than the other tables, which will affect the merging process of the csv files. 2019_Q2 column name was matched to the rest of the other quarterly tables.
 
 <sub>*RStudio*</sub>
+
 ```r
 # Merge 2019_tripdata
-df_2019 <- list.files(path="D:/Github/divvy-bikeshare/csv files/trips/2019", full.names = TRUE) %>% 
+df_2019 <- list.files(path="D:/Github/large csv files/divvy-bikeshare/trips/2019", full.names = TRUE) %>% 
   lapply(read_csv) %>% 
   bind_rows 
 ```
 
 ```r
 # Export the combined 2019_tripdata
-write.csv(df_2019,"D:/Github/divvy-bikeshare/csv files/trips/2019-divvy-tripdata.csv", row.names = FALSE)
+write.csv(df_2019,"D:/Github/large csv files/divvy-bikeshare/trips/2019-divvy-tripdata.csv", row.names = FALSE)
 ```
 > Follow the file naming guideline, file name should be "2019-divvy-tripdata.csv".
 
@@ -460,23 +483,24 @@ COPY bike_trips.trips_2019 (
   user_type, 
   gender, 
   birth_year) 
-FROM 'D:/Github/divvy-bikeshare/csv files/trips/2019-divvy-tripdata.csv' 
+FROM 'D:/Github/large csv files/divvy-bikeshare/trips/2019-divvy-tripdata.csv' 
 DELIMITER ',' CSV HEADER QUOTE '"' NULL 'NA';
 ```
 
 <h3 align = "center"><strong>2020</strong></h3>
 
 <sub>*RStudio*</sub>
+
 ```r
 # Merge 2020_tripdata
-df_2020 <- list.files(path="D:/Github/divvy-bikeshare/csv files/trips/2020", full.names = TRUE) %>% 
+df_2020 <- list.files(path="D:/Github/large csv files/divvy-bikeshare/trips/2020", full.names = TRUE) %>% 
   lapply(read_csv) %>% 
   bind_rows 
 ```
 
 ```r
 # Export the combined 2020_tripdata
-write.csv(df_2020,"D:/Github/divvy-bikeshare/csv files/trips/2020-divvy-tripdata.csv", row.names = FALSE)
+write.csv(df_2020,"D:/Github/large csv files/divvy-bikeshare/trips/2020-divvy-tripdata.csv", row.names = FALSE)
 ```
 > Follow the file naming guideline, file name should be "2020-divvy-tripdata.csv".
 
@@ -515,23 +539,24 @@ COPY bike_trips.trips_2020 (
   user_type, 
   gender, 
   birth_year) 
-FROM 'D:/Github/divvy-bikeshare/csv files/trips/2020-divvy-tripdata.csv' 
+FROM 'D:/Github/large csv files/divvy-bikeshare/trips/2020-divvy-tripdata.csv' 
 DELIMITER ',' CSV HEADER QUOTE '"' NULL 'NA';
 ```
 
 <h3 align = "center"><strong>2021</strong></h3>
 
 <sub>*RStudio*</sub>
+
 ```r
 # Merge 2021_tripdata
-df_2021 <- list.files(path="D:/Github/divvy-bikeshare/csv files/trips/2021", full.names = TRUE) %>% 
+df_2021 <- list.files(path="D:/Github/large csv files/divvy-bikeshare/trips/2021", full.names = TRUE) %>% 
   lapply(read_csv) %>% 
   bind_rows 
 ```
 
 ```r
 # Export the combined 2021_tripdata
-write.csv(df_2021,"D:/Github/divvy-bikeshare/csv files/trips/2021-divvy-tripdata.csv", row.names = FALSE)
+write.csv(df_2021,"D:/Github/large csv files/divvy-bikeshare/trips/2021-divvy-tripdata.csv", row.names = FALSE)
 ```
 > Follow the file naming guideline, file name should be "2021-divvy-tripdata.csv".
 
@@ -570,7 +595,7 @@ COPY bike_trips.trips_2021 (
   user_type, 
   gender, 
   birth_year) 
-FROM 'D:/Github/divvy-bikeshare/csv files/trips/2021-divvy-tripdata.csv' 
+FROM 'D:/Github/large csv files/divvy-bikeshare/trips/2021-divvy-tripdata.csv' 
 DELIMITER ',' CSV HEADER QUOTE '"' NULL 'NA';
 ```
 
@@ -608,7 +633,9 @@ CREATE TABLE AS bike_trips.trips_p2
   SELECT * FROM bike_trips.trips_2021;
 ```
 
-<h2 align = "center">Stations table</h2>
+<h2 align = "center">Cleaning stations</h2>
+
+The process of cleaning station names and station IDs in trips table and stations table, by verifying and matching the data available in Google Maps and Stations table.
 
 Import the csv file from [Chicago Data Portal](https://data.cityofchicago.org).
 
@@ -620,8 +647,7 @@ CREATE TABLE bike_trips.stations (
   docks int,
   latitude numeric,
   longitude numeric,
-  coordinate point
-);
+  coordinate point);
 ```
 
 ```sql
@@ -767,7 +793,7 @@ I used the lower station ID which is **459** and **651** for **Lakefront Trail &
 
 *Import csv file*
 
-- Station ID
+- id_changes_p1.csv
 ```sql
 CREATE TABLE bike_trips.id_changes_p1 (
   old_name varchar, 
@@ -779,7 +805,7 @@ FROM 'D:/Github/divvy-bikeshare/csv files/stations/id_changes_p1.csv'
 DELIMITER ',' CSV HEADER;
 ```
 
-- Station name
+- name_changes_p1.csv
 ```sql
 -- Create table
 CREATE TABLE bike_trips.name_changes_p1 (
@@ -794,29 +820,16 @@ DELIMITER ',' CSV HEADER;
 
 *ID change*
 
-- Stations table
-
+- start_station_id
 ```sql
-UPDATE bike_trips.stations
-SET id = CASE 
-  WHEN name = 'Lakefront Trail & Bryn Mawr Ave' THEN 459
-  WHEN name = 'Michigan Ave & 71st St' THEN 651
-  END
-WHERE name IN (
-  'Lakefront Trail & Bryn Mawr Ave', 
-  'Michigan Ave & 71st St');
-```
-
-- trips table
-```sql
--- start_station_id
 UPDATE bike_trips.trips_p1 as s
 SET start_station_id = c.new_id
 FROM bike_trips.id_changes_p1 as c
 WHERE s.start_station_name = c.old_name;
 ```
+
+- end_station_id
 ```sql
--- end_station_id
 UPDATE bike_trips.trips_p1 as s
 SET end_station_id = c.new_id
 FROM bike_trips.id_changes_p1 as c
@@ -918,14 +931,13 @@ With some minor changes, repeat the steps of analysis done in MS Excel:
 
 *Import csv files*
 
-- Station ID
+- id_changes_p2.csv
 
 ```sql
 -- Create table
 CREATE TABLE bike_trips.id_changes_p2 (
   old_name varchar,
-  new_id varchar
-);
+  new_id varchar);
 
 -- Import
 COPY bike_trips.id_changes_p2 (old_name, new_id)
@@ -933,14 +945,13 @@ FROM 'D:/Github/divvy-bikeshare/csv files/stations/id_changes_p2.csv'
 DELIMITER ',' CSV HEADER NULL 'null';
 ```
 
-- Station name
+- name_changes_p2.csv
 
 ```sql
 -- Create table
 CREATE TABLE bike_trips.name_changes_p2 (
   old_name varchar,
-  new_name varchar
-);
+  new_name varchar);
 
 -- Import
 COPY bike_trips.name_changes_p2 (old_name, new_name)
@@ -1020,24 +1031,169 @@ SET end_station_name = c.new_name
 FROM bike_trips.name_changes_p2 as c
 WHERE s.end_station_name = c.old_name;
 ```
+<h3 align = "center"><strong>Combine table: trips</strong></h3>
 
+Before combining both tables, some changes has to be made first. By checking the schema of the tables we can see the differences in their data. After modifying, merge both tables into one and save as **trips** table. The tools that is used is RStudio, since the tables have different number of columns.
 
-Delete duplicate rows
-```sql
-DELETE FROM bike_trips.trips_p2_stations AS a 
-  USING (
-      SELECT MIN(ctid) AS ctid, name
-        FROM bike_trips.trips_p2_stations
-        GROUP BY name HAVING COUNT(*) > 1
-      ) AS b
-  WHERE a.name = b.name 
-  AND a.ctid <> b.ctid
+<h4><strong>Schema</strong></h4>
+
+*Table Columns*
+
+- trips_p1
+
+```
+| Field name         | Type                        |
+| ------------------ | --------------------------- |
+| trip_id            | numeric                     |
+| start_time         | timestamp without time zone |
+| end_time           | timestamp without time zone |
+| bike_id            | integer                     |
+| duration           | integer                     |
+| start_station_id   | integer                     |
+| start_station_name | character varying           |
+| end_station_id     | integer                     |
+| end_station_name   | character varying           |
+| user_type          | text                        |
+| gender             | text                        |
+| birthyear          | integer                     |
 ```
 
-<h3 align = "center"><strong>Missing Stations</strong></h3>
+- trips_p2
+```
+| Field name         | Type                        |
+| ------------------ | --------------------------- |
+| ride_id            | character varying           |
+| rideable_type      | character varying           |
+| start_time         | timestamp without time zone |
+| end_time           | timestamp without time zone |
+| start_station_id   | character varying           |
+| start_station_name | character varying           |
+| end_station_id     | character varying           |
+| end_station_name   | character varying           |
+| start_lat          | numeric                     |
+| start_lng          | numeric                     |
+| end_lat            | numeric                     |
+| end_lng            | numeric                     |
+| user_type          | text                        |
+```
+Changes to be made on trips_p1:
 
- Cleaning **Stations** table
- ```sql
+- change data type of column trip_id: numeric to character varying
+- rename column: trip_id to ride_id
 
- ```
+Changes to be made on trips_p2:
+
+- remove columns: start_lat, start_lng, end_lat & end_lng
+- fill missing data: duration, using start_time and end_time
+- change data type of column start_station_id & end_station_id: character varying to integer
+
+**SQL Queries:**
+
+*trips_p1*
+
+- change data type of column trip_id: numeric to character varying
+```sql
+ALTER TABLE bike_trips.trips_p1
+ALTER COLUMN trip_id varchar;
+```
+
+- rename column trip_id to ride_id
+```sql
+ALTER TABLE bike_trips.trips_p1
+RENAME COLUMN trip_id TO ride_id;
+```
+
+*trips_p2*
+- remove columns: start_lat, start_lng, end_lat & end_lng
+```sql
+ALTER TABLE bike_trips.trips_p2
+DROP COLUMN start_lat, start_lng, end_lat, end_lng;
+```
+
+- fill missing data: duration, using start_time and end_time
+```sql
+INSERT INTO bike_trips.trips_p2
+SELECT EXTRACT(EPOCH FROM(end_time - start_time))::int as duration 
+FROM bike_trips.trips_p2;
+```
+
+- change data type of column start_station_id & end_station_id: character varying to integer
+```sql
+-- start_station_id
+ALTER TABLE bike_trips.trips_p2
+ALTER COLUMN start_station_id integer;
+```
+```sql
+-- end_station_id
+ALTER TABLE bike_trips.trips_p2
+ALTER COLUMN end_station_id integer;
+```
+
+Export the table trips_p1 & trips_p2 and save it to a folder named as **trips**.
+
+- path = D:/Github/large csv files/divvy-bikeshare/trips/cleaned/
+- trips_p1.csv
+- trips_p2.csv
+
+By using RStudio to merge the files, run this code.
+```r
+# Merge trips table
+df_trips <- list.files(path="D:/Github/large csv files/divvy-bikeshare/trips/cleaned", full.names = TRUE) %>% 
+  lapply(read_csv) %>% 
+  bind_rows 
+```
+```r
+# Export the combined trips data
+write.csv(df_trips,"D:/Github/large csv files/divvy-bikeshare/trips/cleaned/trips.csv", row.names = FALSE)
+```
+Next, import the file into the database.
+```sql
+CREATE TABLE bike_trips.
+```
+
+
+<h2 align = "center">Stations table</h2>
+
+*Import csv files*
+
+- missing_stations.csv
+
+Adding the missing stations to Stations table
+
+```sql
+-- Import
+COPY bike_trips.stations (
+  id, 
+  name, 
+  docks, 
+  latitude, 
+  longitude, 
+  coordinates)
+FROM 'D:/Github/divvy-bikeshare/csv files/stations/missing_stations.csv'
+DELIMITER ',' CSV HEADER;
+```
+- id_changes_stations.csv
+```sql
+-- Create table
+CREATE TABLE bike_trips.id_changes_stations (
+  old_name varchar,
+  new_id int
+);
+```
+```sql
+-- Import
+COPY bike_trips.id_changes_stations (old_name, new_id)
+FROM 'D:/Github/divvy-bikeshare/csv files/stations/id_changes_stations.csv'
+DELIMITER ',' CSV HEADER;
+```
+
+*ID change*
+
+```sql
+UPDATE bike_trips.stations as s
+SET id = c.new_id
+FROM bike_trips.id_changes_stations as c
+WHERE s.name = c.old_name;
+```
+
 

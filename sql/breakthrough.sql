@@ -1,3 +1,15 @@
+-- BACK UP tables
+CREATE TABLE bike_trips.trips_p1 AS
+SELECT * FROM bike_trips.trips_p1_original;
+
+CREATE TABLE bike_trips.trips_p2 AS
+SELECT * FROM bike_trips.trips_p2_original;
+
+CREATE TABLE bike_trips.stations
+SELECT * FROM bike_trips.stations_original;
+
+
+
 SELECT
   trip_id,
   bike_id,
@@ -65,6 +77,39 @@ GROUP BY name, id
 HAVING start_station_id = '704';
 
 
+SELECT DISTINCT start_station_name, start_station_id FROM bike_trips.trips_p2
+WHERE start_station_name LIKE 'DIVVY%';
+
+-- DELETING DUPLICATE ROWS
+DELETE FROM bike_trips.trips_p2_stations AS a 
+  USING (
+      SELECT MIN(ctid) AS ctid, name
+        FROM bike_trips.trips_p2_stations
+        GROUP BY name 
+	    HAVING COUNT(*) > 1
+      ) AS b
+  WHERE a.name = b.name 
+  AND a.ctid <> b.ctid	
+
 SELECT * FROM bike_trips.trips_p2
-WHERE start_station_id = '387';
+order by ride_id
+
+SELECT COUNT(ride_id), rideable_type
+FROM bike_trips.trips_p2
+GROUP BY rideable_type HAVING COUNT(ride_id) > 1
+ORDER BY COUNT(ride_id) DESC;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
