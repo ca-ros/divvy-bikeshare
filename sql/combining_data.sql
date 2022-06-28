@@ -3,7 +3,7 @@
 -- 2013
 -- Create table
 CREATE TABLE bike_trips.trips_2013 (
-  trip_id numeric, 
+  trip_id bigint, 
   start_time timestamp without time zone, 
   end_time timestamp without time zone, 
   bike_id int, 
@@ -28,14 +28,14 @@ COPY bike_trips.trips_2013 (
   end_station_name, 
   user_type, 
   gender, 
-  birthyear) 
+  birth_year) 
 FROM 'D:/Github/divvy-bikeshare/csv files/trips/2013-divvy-tripdata.csv' 
 DELIMITER ',' CSV HEADER;
 
 -- 2014
 -- Create table
 CREATE TABLE bike_trips.trips_2014 (
-  trip_id numeric, 
+  trip_id bigint, 
   start_time timestamp without time zone, 
   end_time timestamp without time zone, 
   bike_id int, 
@@ -67,7 +67,7 @@ DELIMITER ',' CSV HEADER QUOTE '"' NULL 'NA';
 -- 2015
 -- Create table
 CREATE TABLE bike_trips.trips_2015 (
-  trip_id numeric, 
+  trip_id bigint, 
   start_time timestamp without time zone, 
   end_time timestamp without time zone, 
   bike_id int, 
@@ -99,7 +99,7 @@ DELIMITER ',' CSV HEADER QUOTE '"' NULL 'NA';
 -- 2016
 -- Create table
 CREATE TABLE bike_trips.trips_2016 (
-  trip_id numeric, 
+  trip_id bigint, 
   start_time timestamp without time zone, 
   end_time timestamp without time zone, 
   bike_id int, 
@@ -131,7 +131,7 @@ DELIMITER ',' CSV HEADER QUOTE '"' NULL 'NA';
 -- 2017
 -- Create table
 CREATE TABLE bike_trips.trips_2017 (
-  trip_id numeric, 
+  trip_id bigint, 
   start_time timestamp without time zone, 
   end_time timestamp without time zone, 
   bike_id int, 
@@ -163,7 +163,7 @@ DELIMITER ',' CSV HEADER QUOTE '"' NULL 'NA';
 -- 2018
 -- Create table
 CREATE TABLE bike_trips.trips_2018 (
-  trip_id numeric, 
+  trip_id bigint, 
   start_time timestamp without time zone, 
   end_time timestamp without time zone, 
   bike_id int, 
@@ -195,7 +195,7 @@ DELIMITER ',' CSV HEADER QUOTE '"' NULL 'NA';
 -- 2019
 -- Create table
 CREATE TABLE bike_trips.trips_2019 (
-  trip_id numeric, 
+  trip_id bigint, 
   start_time timestamp without time zone, 
   end_time timestamp without time zone, 
   bike_id int, 
@@ -227,7 +227,7 @@ DELIMITER ',' CSV HEADER QUOTE '"' NULL 'NA';
 -- 2020
 -- Create table
 CREATE TABLE bike_trips.trips_2020 (
-  trip_id numeric, 
+  trip_id bigint, 
   start_time timestamp without time zone, 
   end_time timestamp without time zone, 
   bike_id int, 
@@ -259,7 +259,7 @@ DELIMITER ',' CSV HEADER QUOTE '"' NULL 'NA';
 -- 2021
 -- Create table
 CREATE TABLE bike_trips.trips_2021 (
-  trip_id numeric, 
+  trip_id bigint, 
   start_time timestamp without time zone, 
   end_time timestamp without time zone, 
   bike_id int, 

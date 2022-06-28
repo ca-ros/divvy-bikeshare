@@ -30,7 +30,8 @@ Data sources:
   - WILDCARDS
   - ALTER TABLE/ ALTER COLUMN
   - IN
-  - CASE 
+  - CASE
+  - CAST
   - EXTRACT: YEAR, EPOCH
   - JOINS
   - UNION
@@ -116,7 +117,7 @@ Import the csv file into the database.
 ```sql
 -- Create table
 CREATE TABLE bike_trips.trips_2013 (
-  trip_id numeric, 
+  trip_id bigint, 
   start_time timestamp without time zone, 
   end_time timestamp without time zone, 
   bike_id int, 
@@ -144,7 +145,7 @@ COPY bike_trips.trips_2013 (
   end_station_name, 
   user_type, 
   gender, 
-  birthyear) 
+  birth_year) 
 FROM 'D:/Github/large csv files/divvy-bikeshare/trips/2013-divvy-tripdata.csv' 
 DELIMITER ',' CSV HEADER;
 ```
@@ -172,7 +173,7 @@ Import the csv file into the database.
 ```sql
 -- Create table
 CREATE TABLE bike_trips.trips_2014 (
-  trip_id numeric, 
+  trip_id bigint, 
   start_time timestamp without time zone, 
   end_time timestamp without time zone, 
   bike_id int, 
@@ -228,7 +229,7 @@ Import the csv file into the database.
 ```sql
 -- Create table
 CREATE TABLE bike_trips.trips_2015 (
-  trip_id numeric, 
+  trip_id bigint, 
   start_time timestamp without time zone, 
   end_time timestamp without time zone, 
   bike_id int, 
@@ -284,7 +285,7 @@ Import the csv file into the database.
 ```sql
 -- Create table
 CREATE TABLE bike_trips.trips_2016 (
-  trip_id numeric, 
+  trip_id bigint, 
   start_time timestamp without time zone, 
   end_time timestamp without time zone, 
   bike_id int, 
@@ -340,7 +341,7 @@ Import the csv file into the database.
 ```sql
 -- Create table
 CREATE TABLE bike_trips.trips_2017 (
-  trip_id numeric, 
+  trip_id bigint, 
   start_time timestamp without time zone, 
   end_time timestamp without time zone, 
   bike_id int, 
@@ -396,7 +397,7 @@ Import the csv file into the database.
 ```sql
 -- Create table
 CREATE TABLE bike_trips.trips_2018 (
-  trip_id numeric, 
+  trip_id bigint, 
   start_time timestamp without time zone, 
   end_time timestamp without time zone, 
   bike_id int, 
@@ -454,7 +455,7 @@ Import the csv file into the database.
 ```sql
 -- Create table
 CREATE TABLE bike_trips.trips_2019 (
-  trip_id numeric, 
+  trip_id bigint, 
   start_time timestamp without time zone, 
   end_time timestamp without time zone, 
   bike_id int, 
@@ -510,7 +511,7 @@ Import the csv file into the database.
 ```sql
 -- Create table
 CREATE TABLE bike_trips.trips_2020 (
-  trip_id numeric, 
+  trip_id bigint, 
   start_time timestamp without time zone, 
   end_time timestamp without time zone, 
   bike_id int, 
@@ -566,7 +567,7 @@ Import the csv file into the database.
 ```sql
 -- Create table
 CREATE TABLE bike_trips.trips_2021 (
-  trip_id numeric, 
+  trip_id bigint, 
   start_time timestamp without time zone, 
   end_time timestamp without time zone, 
   bike_id int, 
@@ -601,7 +602,7 @@ DELIMITER ',' CSV HEADER QUOTE '"' NULL 'NA';
 
 Upon checking the structure of the tables in each year, we can notice that 2013-2019 have same data structure, while 2020-2021 have a different type of structure.
 
-Since the type of data from year 2020-2021 is different, where the station_ids are varchar instead of numeric and tables have an additional columns for stations' latitude and longitude, we will compile the two range of years separately.
+Since the type of data from year 2020-2021 is different; where the station_ids are varchar instead of bigint and tables have an additional columns for stations' latitude and longitude, we will compile the two range of years separately.
 
 Combine all the trips from year 2020-2021, and do the same for year 2020-2021.
 
@@ -642,7 +643,7 @@ Import the csv file from [Chicago Data Portal](https://data.cityofchicago.org).
 ```sql
 -- Create table
 CREATE TABLE bike_trips.stations (
-  id numeric,
+  id bigint,
   name varchar,
   docks int,
   latitude numeric,
@@ -691,7 +692,7 @@ FROM (
   FROM bike_trips.trips_p1) as t
 WHERE NOT EXISTS (SELECT id, name
 				 FROM bike_trips.stations as s
-				 WHERE s.name = t.name)
+				 WHERE s.name = t.name);
 -- 149 records
 ```
 
@@ -901,7 +902,7 @@ With some minor changes, repeat the steps of analysis done in MS Excel:
 
 > The **id_status** column represents the existing station_id of the selected station name to the official **Stations** table and **new_name** column represents the correct station name. Also, the column E **status**, gives information if the ID used to the name is either already exist or free in the official Stations table.
  
- > Upon checking we can obviously identify which names are duplicated, used a wrong station_id and missing from the official **Stations** table. By sorting the column by **id_status**, we can see that all the station_id in column A has a mixed of *varchar* and *numeric* types of data.
+ > Upon checking we can obviously identify which names are duplicated, used a wrong station_id and missing from the official **Stations** table. By sorting the column by **id_status**, we can see that all the station_id in column A has a mixed types of data, *varchar* and *bigint*.
 
 **Cleaning process:**
 
@@ -937,7 +938,7 @@ With some minor changes, repeat the steps of analysis done in MS Excel:
 -- Create table
 CREATE TABLE bike_trips.id_changes_p2 (
   old_name varchar,
-  new_id varchar);
+  new_id int);
 
 -- Import
 COPY bike_trips.id_changes_p2 (old_name, new_id)
@@ -974,7 +975,7 @@ WHERE start_station_id IN ('13221', '20215', 'WL-008');
 ```
 ```sql
 UPDATE bike_trips.trips_p2 as s
-SET start_station_id = c.new_id
+SET start_station_id = CAST(c.new_id AS varchar)
 FROM bike_trips.id_changes_p2 as c
 WHERE s.start_station_name = c.old_name;
 ```
@@ -991,7 +992,7 @@ WHERE end_station_id IN ('13221', '20215', 'WL-008');
 ```
 ```sql
 UPDATE bike_trips.trips_p2 as s
-SET end_station_id = c.new_id
+SET end_station_id = CAST(c.new_id AS varchar)
 FROM bike_trips.id_changes_p2 as c
 WHERE s.end_station_name = c.old_name;
 ```
@@ -1033,7 +1034,7 @@ WHERE s.end_station_name = c.old_name;
 ```
 <h3 align = "center"><strong>Combine table: trips</strong></h3>
 
-Before combining both tables, some changes has to be made first. By checking the schema of the tables we can see the differences in their data. After modifying, merge both tables into one and save as **trips** table. The tools that is used is RStudio, since the tables have different number of columns.
+Before combining both tables, some changes has to be made first. By checking the schema of the tables we can see the differences in their data. After modifying, merge both tables into one and save as **trips** table.
 
 <h4><strong>Schema</strong></h4>
 
@@ -1044,7 +1045,7 @@ Before combining both tables, some changes has to be made first. By checking the
 ```
 | Field name         | Type                        |
 | ------------------ | --------------------------- |
-| trip_id            | numeric                     |
+| trip_id            | bigint                     |
 | start_time         | timestamp without time zone |
 | end_time           | timestamp without time zone |
 | bike_id            | integer                     |
@@ -1055,7 +1056,7 @@ Before combining both tables, some changes has to be made first. By checking the
 | end_station_name   | character varying           |
 | user_type          | text                        |
 | gender             | text                        |
-| birthyear          | integer                     |
+| birth_year         | integer                     |
 ```
 
 - trips_p2
@@ -1078,7 +1079,7 @@ Before combining both tables, some changes has to be made first. By checking the
 ```
 Changes to be made on trips_p1:
 
-- change data type of column trip_id: numeric to character varying
+- change data type of column trip_id: bigint to character varying
 - rename column: trip_id to ride_id
 
 Changes to be made on trips_p2:
@@ -1087,70 +1088,41 @@ Changes to be made on trips_p2:
 - fill missing data: duration, using start_time and end_time
 - change data type of column start_station_id & end_station_id: character varying to integer
 
-**SQL Queries:**
+**SQL Query:**
 
-*trips_p1*
-
-- change data type of column trip_id: numeric to character varying
 ```sql
-ALTER TABLE bike_trips.trips_p1
-ALTER COLUMN trip_id varchar;
+CREATE TABLE bike_trips.trips AS
+SELECT 
+  CAST(trip_id AS varchar) AS ride_id,
+  CAST(null AS varchar) AS rideable_type,
+  bike_id,
+  start_time,
+  end_time,
+  trip_duration,
+  start_station_id,
+  start_station_name,
+  end_station_id,
+  end_station_name,
+  user_type,
+  gender,
+  birth_year
+FROM bike_trips.trips_p1
+UNION ALL
+SELECT
+  ride_id,
+  rideable_type,
+  CAST(null AS int) AS bike_id,
+  start_time,
+  end_time,
+  EXTRACT(EPOCH FROM(end_time - start_time))::int as trip_duration,
+  CAST(start_station_id AS int),
+  start_station_name,
+  CAST(end_station_id AS int),
+  end_station_name,
+  user_type,
+  CAST(null AS text) AS gender,
+  CAST(null AS int) AS birth_year;
 ```
-
-- rename column trip_id to ride_id
-```sql
-ALTER TABLE bike_trips.trips_p1
-RENAME COLUMN trip_id TO ride_id;
-```
-
-*trips_p2*
-- remove columns: start_lat, start_lng, end_lat & end_lng
-```sql
-ALTER TABLE bike_trips.trips_p2
-DROP COLUMN start_lat, start_lng, end_lat, end_lng;
-```
-
-- fill missing data: duration, using start_time and end_time
-```sql
-INSERT INTO bike_trips.trips_p2
-SELECT EXTRACT(EPOCH FROM(end_time - start_time))::int as duration 
-FROM bike_trips.trips_p2;
-```
-
-- change data type of column start_station_id & end_station_id: character varying to integer
-```sql
--- start_station_id
-ALTER TABLE bike_trips.trips_p2
-ALTER COLUMN start_station_id integer;
-```
-```sql
--- end_station_id
-ALTER TABLE bike_trips.trips_p2
-ALTER COLUMN end_station_id integer;
-```
-
-Export the table trips_p1 & trips_p2 and save it to a folder named as **trips**.
-
-- path = D:/Github/large csv files/divvy-bikeshare/trips/cleaned/
-- trips_p1.csv
-- trips_p2.csv
-
-By using RStudio to merge the files, run this code.
-```r
-# Merge trips table
-df_trips <- list.files(path="D:/Github/large csv files/divvy-bikeshare/trips/cleaned", full.names = TRUE) %>% 
-  lapply(read_csv) %>% 
-  bind_rows 
-```
-```r
-# Export the combined trips data
-write.csv(df_trips,"D:/Github/large csv files/divvy-bikeshare/trips/cleaned/trips.csv", row.names = FALSE)
-```
-Next, import the file into the database.
-```sql
-CREATE TABLE bike_trips.
-```
-
 
 <h2 align = "center">Stations table</h2>
 
@@ -1168,7 +1140,7 @@ COPY bike_trips.stations (
   docks, 
   latitude, 
   longitude, 
-  coordinates)
+  coordinate)
 FROM 'D:/Github/divvy-bikeshare/csv files/stations/missing_stations.csv'
 DELIMITER ',' CSV HEADER;
 ```
@@ -1177,8 +1149,7 @@ DELIMITER ',' CSV HEADER;
 -- Create table
 CREATE TABLE bike_trips.id_changes_stations (
   old_name varchar,
-  new_id int
-);
+  new_id int);
 ```
 ```sql
 -- Import

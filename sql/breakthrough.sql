@@ -7,46 +7,11 @@ SELECT * FROM bike_trips.trips_p2_original;
 
 CREATE TABLE bike_trips.stations
 SELECT * FROM bike_trips.stations_original;
-
-
-
-SELECT
-  trip_id,
-  bike_id,
-  start_time,
-  end_time,
-  trip_duration,
-  start_station_id,
-  start_station_name,
-  end_station_id,
-  end_station_name,
-  user_type,
-  gender,
-  birthyear
-FROM bike_trips.trips_p1_test
-UNION ALL
-SELECT
-  ride_id as trip_id,
-  rideable_type as ride_type,
-  start_time,
-  end_time,
-  EXTRACT(EPOCH FROM(end_time - start_time))::int as duration,
-  CAST(start_station_id as int) as start_station_id,
-  start_station_name,
-  CAST(end_station_id as int) as end_station_id,
-  end_station_name,
-  user_type
-FROM bike_trips.trips_p2_test
   
   
-  
-SELECT (end_time - start_time) as duration FROM bike_trips.trips_p2
-WHERE ride_id = 'EACB19130B0CDA4A'
-
 -- extracting duration
 SELECT EXTRACT(EPOCH FROM(end_time - start_time))::int as duration FROM bike_trips.trips_p2
 WHERE ride_id = 'EACB19130B0CDA4A'
-
 
 
 --FOR CHECKING
@@ -89,7 +54,7 @@ DELETE FROM bike_trips.trips_p2_stations AS a
 	    HAVING COUNT(*) > 1
       ) AS b
   WHERE a.name = b.name 
-  AND a.ctid <> b.ctid	
+  AND a.ctid <> b.ctid;
 
 SELECT * FROM bike_trips.trips_p2
 order by ride_id
@@ -100,6 +65,53 @@ GROUP BY rideable_type HAVING COUNT(ride_id) > 1
 ORDER BY COUNT(ride_id) DESC;
 
 
+-- since original table has modified column
+CREATE TABLE bike_trips.trips_p1 AS
+SELECT
+  CAST(trip_id AS bigint), 
+  start_time, end_time, 
+  bike_id, 
+  trip_duration, 
+  start_station_id, 
+  start_station_name, 
+  end_station_id, 
+  end_station_name, 
+  user_type, 
+  gender, 
+  birthyear
+FROM bike_trips.trips_p1_original;
+
+
+SELECT * FROM bike_trips.trips_p1;
+
+SELECT * FROM bike_trips.trips_p2;
+
+SELECT DISTINCT start_station_id as id, start_station_name as name
+FROM bike_trips.trips_p2
+UNION
+SELECT DISTINCT end_station_id as id, end_station_name as name
+FROM bike_trips.trips_p2
+
+SELECT *
+FROM (
+  SELECT DISTINCT start_station_id as id, start_station_name as name
+  FROM bike_trips.trips_p2
+  UNION
+  SELECT DISTINCT end_station_id as id, end_station_name as name
+  FROM bike_trips.trips_p2) as t
+ORDER BY CAST(id AS int);
+
+
+SELECT *, EXTRACT(EPOCH FROM(end_time - start_time))::int as duration 
+FROM bike_trips.trips_p2;
+
+
+
+CREATE TABLE bike_trips.trips_p1_cleaned AS
+SELECT * FROM bike_trips.trips_p1;
+
+CREATE TABLE bike_trips.trips_p2_cleaned AS
+SELECT * FROM bike_trips.trips_p2;
 
 
 

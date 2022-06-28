@@ -1,12 +1,5 @@
 -- Cleaning trips table
 
--- back-up tables
-CREATE TABLE bike_trips.trips_p1_original AS
-SELECT * FROM bike_trips.trips_p1;
-
-CREATE TABLE bike_trips.trips_p2_original AS
-SELECT * FROM bike_trips.trips_p2;
-
 -- Import Data
 -- Create table
 CREATE TABLE bike_trips.stations (
@@ -15,8 +8,7 @@ CREATE TABLE bike_trips.stations (
   docks int,
   latitude numeric,
   longitude numeric,
-  coordinate point
-);
+  coordinate point);
 -- Import csv file
 COPY bike_trips.stations (
   id,
@@ -51,7 +43,7 @@ FROM (
   FROM bike_trips.trips_p1) as t
 WHERE NOT EXISTS (SELECT id, name
 				 FROM bike_trips.stations as s
-				 WHERE s.name = t.name)
+				 WHERE s.name = t.name);
 
 -- Import csv file
 -- id_changes_p1.csv
@@ -130,7 +122,7 @@ WHERE NOT EXISTS (SELECT s.id, s.name
 -- Create table
 CREATE TABLE bike_trips.id_changes_p2 (
   old_name varchar,
-  new_id varchar);
+  new_id int);
 -- Import
 COPY bike_trips.id_changes_p2 (old_name, new_id)
 FROM 'D:/Github/divvy-bikeshare/csv files/stations/id_changes_p2.csv' 
@@ -158,7 +150,7 @@ SET start_station_id = CASE
 WHERE start_station_id IN ('13221', '20215', 'WL-008');
 
 UPDATE bike_trips.trips_p2 as s
-SET start_station_id = c.new_id
+SET start_station_id = CAST(c.new_id as varchar)
 FROM bike_trips.id_changes_p2 as c
 WHERE s.start_station_name = c.old_name;
 
@@ -172,9 +164,9 @@ SET end_station_id = CASE
 WHERE end_station_id IN ('13221', '20215', 'WL-008');
 
 UPDATE bike_trips.trips_p2 as s
-SET end_station_id = c.new_id
+SET end_station_id = CAST(c.new_id as varchar)
 FROM bike_trips.id_changes_p2 as c
-WHERE s.end_station_name = c.old_name; 
+WHERE s.end_station_name = c.old_name;
 
 
 -- Name change
@@ -210,27 +202,48 @@ WHERE s.end_station_name = c.old_name;
 
 --------------------- Combine table: trips --------------------
 
--- trips_p1
--- change data type of column trip_id: numeric to character varying
-ALTER TABLE bike_trips.trips_p1
-ALTER COLUMN trip_id varchar;
--- rename column trip_id to ride_id
-ALTER TABLE bike_trips.trips_p1
-RENAME COLUMN trip_id TO ride_id;
+CREATE TABLE bike_trips.trips AS
+SELECT 
+  CAST(trip_id AS varchar) AS ride_id,
+  CAST(null AS varchar) AS rideable_type,
+  bike_id,
+  start_time,
+  end_time,
+  trip_duration,
+  start_station_id,
+  start_station_name,
+  end_station_id,
+  end_station_name,
+  user_type,
+  gender,
+  birth_year
+FROM bike_trips.trips_p1
+UNION ALL
+SELECT
+  ride_id,
+  rideable_type,
+  CAST(null AS int) AS bike_id,
+  start_time,
+  end_time,
+  EXTRACT(EPOCH FROM(end_time - start_time))::int as trip_duration,
+  CAST(start_station_id AS int),
+  start_station_name,
+  CAST(end_station_id AS int),
+  end_station_name,
+  user_type,
+  CAST(null AS text) AS gender,
+  CAST(null AS int) AS birth_year;
 
--- trips_p2
--- remove columns: start_lat, start_lng, end_lat & end_lng
-ALTER TABLE bike_trips.trips_p2
-DROP COLUMN start_lat, start_lng, end_lat, end_lng;
--- fill missing data: duration, using start_time and end_time
-INSERT INTO bike_trips.trips_p2
-SELECT EXTRACT(EPOCH FROM(end_time - start_time))::int as duration 
-FROM bike_trips.trips_p2;
--- change data type of column start_station_id & end_station_id: character varying to integer
--- start_station_id
-ALTER TABLE bike_trips.trips_p2
-ALTER COLUMN start_station_id integer;
--- end_station_id
-ALTER TABLE bike_trips.trips_p2
-ALTER COLUMN end_station_id integer;
+
+
+
+
+
+
+
+
+
+
+
+
 
