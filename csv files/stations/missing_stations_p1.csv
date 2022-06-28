@@ -1,4 +1,4 @@
-id,name
+old_id,old_name
 1,Special Events
 360,DIVVY Map Frame B/C Station
 361,DIVVY CASSETTE REPAIR MOBILE STATION
@@ -6,7 +6,6 @@ id,name
 372,California Ave & Augusta Blvd
 372,Humboldt Dr & Luis Munoz Marin Dr
 397,Saginaw Ave & Exchange Ave
-459,Lakefront Trail & Bryn Mawr Ave
 512,BBB ~ Divvy Parts Testing
 606,Forest Ave & Chicago Ave
 607,Cuyler Ave & Augusta St
@@ -22,6 +21,5 @@ id,name
 616,Oak Park Ave & Harrison St
 617,East Ave & Garfield St
 618,Lombard Ave & Garfield St
-651,Michigan Ave & 71st St
 669,LBS - BBB La Magie
 671,HUBBARD ST BIKE CHECKING (LBS-WH-TEST)

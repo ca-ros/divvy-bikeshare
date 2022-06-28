@@ -2,23 +2,40 @@
 
 -- Import Data
 -- Create table
-CREATE TABLE bike_trips.stations (
-  id numeric,
+CREATE TABLE bike_trips.stations_original (
+  id bigint,
   name varchar,
   docks int,
+  docks_in_service int,
+  in_service text,
   latitude numeric,
   longitude numeric,
   coordinate point);
 -- Import csv file
-COPY bike_trips.stations (
+COPY bike_trips.stations_original (
   id,
   name,
   docks,
+  docks_in_service,
+  in_service,
   latitude,
   longitude,
   coordinate)
 FROM 'D:/Github/divvy-bikeshare/csv files/stations/Divvy_Bicycle_Stations.csv'
 DELIMITER ',' CSV HEADER;
+
+-- modify and create a back-up table
+CREATE TABLE bike_trips.stations AS
+SELECT 
+  id,
+  name,
+  docks,
+  in_service,
+  latitude,
+  longitude,
+  coordinate
+FROM bike_trips.stations_original
+ORDER BY id;
 
 
 ----------------------- trips_p1 -------------------------
