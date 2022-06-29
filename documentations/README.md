@@ -2,9 +2,13 @@
 
 Data sources:
 - [Divvy bikes](https://divvybikes.com), download the raw data-sets [here](https://divvy-tripdata.s3.amazonaws.com/index.html)
-- [Chicago Data Portal](https://data.cityofchicago.org/), download the raw stations-table [here](https://data.cityofchicago.org/api/views/bbyy-e7gq/rows.csv?accessType=DOWNLOAD)
+- [Chicago Data Portal](https://data.cityofchicago.org/), download the raw stations-table:
+  - Download the updated version [here](https://data.cityofchicago.org/api/views/bbyy-e7gq/rows.csv?accessType=DOWNLOAD).
+  - Download the version I used [here](). June 28, 2022
 
-<sub>Tool used:</sub>
+> The Stations table kept updating. I noticed some changes since I downloaded the data on May 18, 2022 and redownload on June 28, 2022.
+
+<sub>Tools used:</sub>
 - *PostgreSQL*
 - *RStudio*
 
@@ -90,6 +94,8 @@ We need to create another schema named "bike_trips" to compile all our files und
 
 Lastly, to open the **Query Tool** press *ALT + SHIFT + Q*, or click the Query tool icon on the upper-left corner of pgAdmin.
 
+&nbsp;
+
 <h2 align = "center">Combining data</h2>
 
 The process of combining all the data into one table as a yearly data and using the **File Naming Convention (FNC)**.
@@ -109,6 +115,9 @@ Steps:
 install.library(tidyverse)
 library(tidyverse)
 ```
+
+&nbsp;
+
 <h3 align = "center"><strong>2013</strong></h3>
 
 Rename the trip data "Divvy-Trips_2013.csv" to "2013-divvy-tripdata.csv"
@@ -151,6 +160,8 @@ COPY bike_trips.trips_2013 (
 FROM 'D:/Github/large csv files/divvy-bikeshare/trips/2013-divvy-tripdata.csv' 
 DELIMITER ',' CSV HEADER;
 ```
+
+&nbsp;
 
 <h3 align = "center"><strong>2014</strong></h3>
 
@@ -208,6 +219,8 @@ FROM 'D:/Github/large csv files/divvy-bikeshare/trips/2014-divvy-tripdata.csv'
 DELIMITER ',' CSV HEADER QUOTE '"' NULL 'NA';
 ```
 
+&nbsp;
+
 <h3 align = "center"><strong>2015</strong></h3>
 
 <sub>*RStudio*</sub>
@@ -263,6 +276,8 @@ COPY bike_trips.trips_2015 (
 FROM 'D:/Github/large csv files/divvy-bikeshare/trips/2015-divvy-tripdata.csv' 
 DELIMITER ',' CSV HEADER QUOTE '"' NULL 'NA';
 ```
+
+&nbsp;
 
 <h3 align = "center"><strong>2016</strong></h3>
 
@@ -320,6 +335,8 @@ FROM 'D:/Github/large csv files/divvy-bikeshare/trips/2016-divvy-tripdata.csv'
 DELIMITER ',' CSV HEADER QUOTE '"' NULL 'NA';
 ```
 
+&nbsp;
+
 <h3 align = "center"><strong>2017</strong></h3>
 
 <sub>*RStudio*</sub>
@@ -376,6 +393,8 @@ FROM 'D:/Github/large csv files/divvy-bikeshare/trips/2017-divvy-tripdata.csv'
 DELIMITER ',' CSV HEADER QUOTE '"' NULL 'NA';
 ```
 
+&nbsp;
+
 <h3 align = "center"><strong>2018</strong></h3>
 
 <sub>*RStudio*</sub>
@@ -431,6 +450,8 @@ COPY bike_trips.trips_2018 (
 FROM 'D:/Github/large csv files/divvy-bikeshare/trips/2018-divvy-tripdata.csv' 
 DELIMITER ',' CSV HEADER QUOTE '"' NULL 'NA';
 ```
+
+&nbsp;
 
 <h3 align = "center"><strong>2019</strong></h3>
 
@@ -490,6 +511,8 @@ FROM 'D:/Github/large csv files/divvy-bikeshare/trips/2019-divvy-tripdata.csv'
 DELIMITER ',' CSV HEADER QUOTE '"' NULL 'NA';
 ```
 
+&nbsp;
+
 <h3 align = "center"><strong>2020</strong></h3>
 
 <sub>*RStudio*</sub>
@@ -545,6 +568,8 @@ COPY bike_trips.trips_2020 (
 FROM 'D:/Github/large csv files/divvy-bikeshare/trips/2020-divvy-tripdata.csv' 
 DELIMITER ',' CSV HEADER QUOTE '"' NULL 'NA';
 ```
+
+&nbsp;
 
 <h3 align = "center"><strong>2021</strong></h3>
 
@@ -636,6 +661,8 @@ CREATE TABLE AS bike_trips.trips_p2
   SELECT * FROM bike_trips.trips_2021;
 ```
 
+&nbsp;
+
 <h2 align = "center">Trips table</h2>
 
 The process of cleaning station names and station IDs in trips table, by verifying and matching the data available in Google Maps and Stations table.
@@ -697,9 +724,13 @@ ORDER BY id;
 
 Export table as [Stations.csv]()
 
-Run a query to find all the missing/ mismatch station names and IDs to the **Stations** table. It includes columns *start_station_name*, *end_station_name*, *start_station_id* and *end_station_id*.
+> P.S. You can open the csv file using Excel but it will mess-up the numbers in id column. You can import the csv file in excel, select **Do not detect data type**, but you can't sort **id** column since the data is recognized as **text**.
+
+&nbsp;
 
 <h3 align = "center"><strong>First table: trips_p1</strong></h3>
+
+Run a query to find all the missing/ mismatch station names and IDs to the **Stations** table. This includes columns *start_station_name*, *end_station_name*, *start_station_id* and *end_station_id*.
 
 ```sql
 -- stations in trips_p1 where not in Stations table, 2013-2019
@@ -712,9 +743,10 @@ FROM (
   UNION
   SELECT DISTINCT end_station_id as id, end_station_name as name
   FROM bike_trips.trips_p1) as t
-WHERE NOT EXISTS (SELECT id, name
-				 FROM bike_trips.stations as s
-				 WHERE s.id = t.id)
+WHERE NOT EXISTS (
+  SELECT id, name
+  FROM bike_trips.stations as s
+  WHERE s.id = t.id)
 UNION
 SELECT t.id, t.name
 FROM (
@@ -723,20 +755,24 @@ FROM (
   UNION
   SELECT DISTINCT end_station_name as name, end_station_id as id
   FROM bike_trips.trips_p1) as t
-WHERE NOT EXISTS (SELECT id, name
-				 FROM bike_trips.stations as s
-				 WHERE s.name = t.name);
+WHERE NOT EXISTS (
+  SELECT id, name
+  FROM bike_trips.stations as s
+  WHERE s.name = t.name);
 -- 149 records
 ```
 
 Export the result as [trips_p1_stations.csv]().
 
-In order to analyze the table, the following is done:
+In order to analyze the table, the following is done.
+
+<h4><strong>Process</strong>:</h4>
+
 1. Open the csv file using MS Excel. Rename columns: **id = old_id** & **name = old_name**.
 2. Create a new header for column C: **new_id**, column D: **new_name**, and column E: **changes**.
 3. **Import the Stations table**: Under *Data* > *Get & Transform Data* > *Get Data* > *From File* > *From Text/CSV* > locate [Stations.csv](). Under *Data Type Detection*, select *Do not detect data types* and click **Load**.
 4. **Remove row1**: Under *Table Design* > *Tools* > click **Convert to Range**, select **OK**. Then delete row1 which contains column#.
-5. *Right Click* column C and select Insert. Copy ColumnA to ColumnC, this will create another column of **ID** but on the right side of station names.
+5. Copy column **id** to the right of column **name**. *Right Click* column C and select Insert, a new empty column C should appear. Copy ColumnA to ColumnC.
 6. **Freeze the header row/ top row**: Under *View* > *Window* > *Freeze Panes* > *Freeze Top Row*. Do the same for the other sheet.
 7. In **trips_p1_stations** sheet:
 
@@ -754,6 +790,42 @@ In order to analyze the table, the following is done:
       - *Text that contains* > "*id*" with **Green Fill with Dark Green Text**.
       
 9. Validate the **new_name** column by searching each names in [Google Maps](https://www.google.com/maps) and locate nearby **divvy-stations**.
+
+    <details><summary>Validating sample:</summary>
+    <p>
+
+    - station_id = 17
+    - Either a missing station_id **17** or station_name **Wood St & Division St**.
+
+    Using [Google Maps](https://www.google.com/maps) to validate the station_name.
+
+    - Search **Chicago** to focus the search in Chicago City.
+
+    ![Chicago](https://snipboard.io/vYIsW9.jpg)
+
+    - Enter the station_name, **Wood St & Division St**, and *press Enter*.
+    - Click **Nearby** and search **divvy**, to search nearby divvy-bike stations.
+
+    ![17](https://snipboard.io/n4qvdG.jpg)
+
+    - Hover over to the nearest station to view the station name.
+
+    ![17.2](https://snipboard.io/LHBqnm.jpg)
+
+    The nearest station is **Honore St & Division St**.
+
+    > Upon checking the **Stations** table on ID number 17, we can confirm that station_id 17 is Honore St & Division St.
+
+    ![17 excel](https://snipboard.io/najrpI.jpg)
+
+    > Thus, **Wood St & Division St** is a wrong station name and must be replaced with correct name **Honore St & Division St**. You can also notice under **changes** column, it says **name**, which means **name change**.
+
+    ![sample excel](https://snipboard.io/ixN0TV.jpg)
+
+    </p></details>
+
+` `  
+
 10. **Create another table**: 
 
     - For **missing stations**:
@@ -765,79 +837,9 @@ In order to analyze the table, the following is done:
 
 > **Optional**: You can hide error values indicators. Under *File* > *Options* > *Formulas* > *Error Checking* > uncheck *Enable background error checking*.
 
-<details><summary>Validating sample:</summary>
-<p>
+> Upon checking, 2 station names from **trips_p1** table has already existing names in **Stations** table. Thus, duplicate station names with a different **station_id**. There are also **24 missing stations** from the offical **Stations** table.
 
-- station_id = 17
-- Either a missing station_id **17** or station_name **Wood St & Division St**.
-
-Using [Google Maps](https://www.google.com/maps) to validate the station_name.
-
-- Search **Chicago** to focus the search in Chicago City.
-
-![Chicago](https://snipboard.io/vYIsW9.jpg)
-
-- Enter the station_name, **Wood St & Division St**, and *press Enter*.
-- Click **Nearby** and search **divvy**, to search nearby divvy-bike stations.
-
-![17](https://snipboard.io/n4qvdG.jpg)
-
-- Hover over to the nearest station to view the station name.
-
-![17.2](https://snipboard.io/LHBqnm.jpg)
-
-The nearest station is **Honore St & Division St**.
-
-> Upon checking the **Stations** table on ID number 17, we can confirm that station_id 17 is Honore St & Division St.
-
-![17 excel](https://snipboard.io/najrpI.jpg)
-
-> Thus, **Wood St & Division St** is a wrong station name and must be replaced with correct name **Honore St & Division St**. You can also notice under **changes** column, it says **name**, which means **name change**.
-
-![sample excel](https://snipboard.io/ixN0TV.jpg)
-
-</p></details>
-
---
-
-> Upon checking, 2 station names from **trips_p1** table has already existing names in **Stations** table. Thus, duplicate station names with a different "station_id". There are also *26 stations* missing from the offical **Stations** table.
-
-Missing stations:
-
-- Filter the **correct_name** column, click the drop-down icon and search **missing**.
-- Copy all the **id** and **name** into a new blank workbook and save the file as [missing_stations_p1.csv](https://github.com/56i8/divvy-bikeshare/blob/master/csv%20files/stations/missing_stations_p1.csv).
-
-<details><summary>missing_stations_p1.csv</summary>
-<p>
-
-Filter the **changes** column with values **missing**.
-
-![filter column](https://snipboard.io/uDPFAE.jpg)
-
-![table here](https://snipboard.io/dFiTNB.jpg)
-
-Copy all the **old_id** and **old_name** into a new blank workbook and save the file as **missing_stations_p1.csv**.
-
-![missing_stations_p1](https://snipboard.io/EM9P2o.jpg)
-
-</p></details>
-
-<details><summary>name_changes_p1.csv</summary>
-<p>
-
-Filter the **changes** column with values **name**. 
-
-![filter column](https://snipboard.io/AUq4Nm.jpg)
-
-![table here](https://snipboard.io/IgMjfP.jpg)
-
-Copy columns **old_name** and **new_name** into a new blank workbook and save the file as **name_changes_p1.csv**.
-
-![name_changes_p1](https://snipboard.io/E8vH4w.jpg)
-
-</p></details>
-
---
+` `  
 
 Going back to PostgreSQL:
 
@@ -910,6 +912,8 @@ WHERE s.end_station_name = c.old_name;
 
 > P.S. After cleaning both tables, some data are added into **id_changes_p1.csv** & **name_changes_p1.csv**. Worry not since all the uploaded and linked files are updated.
 
+&nbsp;
+
 <h3 align = "center"><strong>Second table: trips_p2</strong></h3>
 
 ```sql
@@ -922,9 +926,10 @@ FROM (
   UNION
   SELECT DISTINCT end_station_id as id, end_station_name as name 
   FROM bike_trips.trips_p2) as t
-WHERE NOT EXISTS (SELECT id, name
-				 FROM bike_trips.stations as s
-				 WHERE CAST(s.id AS varchar) = t.id)
+WHERE NOT EXISTS (
+  SELECT id, name
+  FROM bike_trips.stations as s
+  WHERE CAST(s.id AS varchar) = t.id)
 UNION
 SELECT t.id, t.name
 FROM (
@@ -933,9 +938,10 @@ FROM (
   UNION
   SELECT DISTINCT end_station_name as name, end_station_id as id 
   FROM bike_trips.trips_p2)as t
-WHERE NOT EXISTS (SELECT s.id, s.name
-				 FROM bike_trips.stations as s
-				 WHERE s.name = t.name);
+WHERE NOT EXISTS (
+  SELECT s.id, s.name
+  FROM bike_trips.stations as s
+  WHERE s.name = t.name);
 -- 701 records
 ```
 Export the result as [trips_p2_stations.csv](https://github.com/56i8/divvy-bikeshare/blob/master/csv%20files/stations/trips_p2_stations.csv). 
@@ -948,13 +954,13 @@ With some minor changes, repeat the steps of analysis done in MS Excel:
 2. Create a new header for column C: **new_id**, column D: **new_name** and column E: **changes**.
 3. **Import the Stations table**: Under *Data* > *Get & Transform Data* > *Get Data* > *From File* > *From Text/CSV* > locate [Stations.csv](). Under *Data Type Detection* > select *Do not detect data types* and click **Load**.
 4. **Remove row1**: Under *Table Design* > *Tools* > click **Convert to Range**, select **OK**. Then delete row1 which contains column#.
-5. *Right Click* column C and select Insert. Copy ColumnA to ColumnC, this will create another column of "id" but on the right side of station names.
+5. Copy column **id** to the right of column **name**. *Right Click* column C and select Insert, a new empty column C should appear. Copy ColumnA to ColumnC.
 6. **Freeze the header row/ top row**: Under *View* > *Window* > *Freeze Panes* > *Freeze Top Row*. Do the same for the other sheet.
 7. In **trips_p2_stations** sheet:
 
     - **Cell C2**: enter the formula `=IFNA(VLOOKUP(TEXT(B2,0),Stations!$B:$D,2,FALSE),"same")`, then press Enter. Click the cell again and double-click the bottom-right corner of the cell to copy the formula in the entire row.
     - **Cell D2**: enter the formula `=IFNA(VLOOKUP(TEXT(A2,0),Stations!$A:$B,2,FALSE),"same")`, then press Enter. Click the cell again and double-click the bottom-right corner of the cell to copy the formula in the entire row.
-    - **Cell E2**: enter the formula `=IF(AND(D2="same",C2="same"),"missing",IF(B2=D2,"same",IF(AND(A2<>C2,D2="same"),"id",IF(AND(B2<>D2,C2="same"),"name",IF(AND(A2<>C2,B2<>D2),"conflict")))))`, then press Enter. Click cell E2 again and double-click the bottom-right corner of the cell to copy the formula in the entire row.
+    - **Cell E2**: enter the formula `=IF(AND(D2="same",C2="same"),"missing",IF(B2=D2,"same",IF(AND(A2<>C2,D2="same"),"id",IF(AND(B2<>D2,C2="same"),"name",IF(AND(A2<>C2,B2<>D2),"both")))))`, then press Enter. Click cell E2 again and double-click the bottom-right corner of the cell to copy the formula in the entire row.
 
 8. **Use conditinal formatting**: Under *Home* > *Styles* > *Conditional Formatting* > *Highlight Cell Rules* > *Text that contains*
 
@@ -964,9 +970,54 @@ With some minor changes, repeat the steps of analysis done in MS Excel:
       - *Text that contains* > "*missing*" with **Light Red Fill with Dark Red Text**.
       - *Text that contains* > "*name*" with **Yellow Fill with Dark Yellow Text**.
       - *Text that contains* > "*id*" with **Green Fill with Dark Green Text**.
-      - *Text that contains* > "*conflict*" with **Custom Format**. I used **Light Blue fill with Dark Blue Text**.
+      - *Text that contains* > "*both*" with **Custom Format**. I used **Light Blue fill with Dark Blue Text**.
 9. Validate the **new_name** column by searching each names in [Google Maps](https://www.google.com/maps) and locate nearby **divvy-stations**.
-10. **Create another table**: 
+
+    <details><summary>Validating sample:</summary>
+    <p>
+
+    - station_id = 17
+    - Either a missing station_id **17** or station_name **Wood St & Division St**.
+
+    Using [Google Maps](https://www.google.com/maps) to validate the station_name.
+
+    - Search **Chicago** to focus the search in Chicago City.
+
+    ![Chicago](https://snipboard.io/vYIsW9.jpg)
+
+    - Enter the station_name, **Wood St & Division St**, and *press Enter*.
+    - Click **Nearby** and search **divvy**, to search nearby divvy-bike stations.
+
+    ![17](https://snipboard.io/n4qvdG.jpg)
+
+    - Hover over to the nearest station to view the station name.
+
+    ![17.2](https://snipboard.io/LHBqnm.jpg)
+
+    The nearest station is **Honore St & Division St**.
+
+    > Upon checking the **Stations** table on ID number 17, we can confirm that station_id 17 is Honore St & Division St.
+
+    ![17 excel](https://snipboard.io/najrpI.jpg)
+
+    > Thus, **Wood St & Division St** is a wrong station name and must be replaced with correct name **Honore St & Division St**. You can also notice under **changes** column, it says **name**, which means **name change**.
+
+    ![sample excel](https://snipboard.io/ixN0TV.jpg)
+
+    </p></details>
+
+` `  
+
+10. **Cleaning process**: aside from `VLOOKUP`, we will use **Find** to match the data.
+
+    - **Example**: 
+      1. Filter changes column by **missing** and sort the sheet by **old_name** in ascending order.
+      2. First row of **old_name** column is **Archer (Damen) Ave & 37th St** with ID = **18022**. Then, *Find* **Archer** in **Stations** sheet and click *Find all*.
+      3. Among the results, we can find **Archer Damen Ave & 37th St** with ID = **645**.
+      4. Go back to **trips_p2_stations** sheet, and replace the values in column **new_id** and **new_name** with **645** and **Archer Damen Ave & 37th St** respectively.
+      5. Then proceed to the next row and repeat the steps.
+
+11. **Create another table**: 
 
     - For **missing stations**:
       - Filter changes column with values **missing**. Copy columns **old_id** and **old_name** into a new blank workbook and save it as [missing_stations_p2.csv]().
@@ -980,29 +1031,11 @@ With some minor changes, repeat the steps of analysis done in MS Excel:
 
 > Upon checking we can identify which names are duplicated, used a wrong station_id and missing from the official **Stations** table. By sorting the column by **id_status**, we can see that all the station_id in column A has a mixed types of data, *varchar* and *bigint*.
 
-**Cleaning process:**
-
-1. Sort the sheet by **status** column in descending order
-2. Replace all values in **id_status** column with values in **id** column that has a **status** as **free**.
-3. Replace all the **not found** values in **id_status** column with values in **id** column.
-4. ID change:
 > Upon checking the IDs, we will find duplicate IDs with different station names. If we verify each names using [Google Maps](https://www.google.com/maps), we can confirm that the other Station name also exists. Thus, different station name with an invalid ID (since the used ID is already on the records), the ID is then changed to **null**.
-- 13221 > 61
-- 20215 > 732
-- WL-008 > 57
-- table here [id_changes_p2.csv](https://github.com/56i8/divvy-bikeshare/blob/master/csv%20files/stations/id_changes_p2.csv)
 
-> Import the csv file into the database.
-5. Name change:
 > Some stations names have null values, data are filled after finding same station ID. Also by comparing same station IDs we can see different station names, the station name that has recorded station ID in **Stations** table are used.
-- 61 = Wood St & Milwaukee Ave
-- 732 = Hegewisch Metra Station
-- 57 = Clinton St & Roosevelt Rd
-- table here: [name_changes_p2.csv](https://github.com/56i8/divvy-bikeshare/blob/master/csv%20files/stations/name_changes_p2.csv)
 
-> Import the csv file into the database.
-6. List of missing stations from **Stations** table.
-- table here [missing_stations_p2.csv](https://github.com/56i8/divvy-bikeshare/blob/master/csv%20files/stations/missing_stations_p2.csv)
+&nbsp;
 
 **SQL Queries:**
 
@@ -1111,7 +1144,7 @@ WHERE s.end_station_name = c.old_name;
 
 > P.S. After cleaning both tables, some data are added into **id_changes_p1.csv** & **name_changes_p1.csv**. Worry not since all the uploaded and linked files are updated.
 
-
+&nbsp;
 
 <h3 align = "center"><strong>Combine table: trips</strong></h3>
 
@@ -1158,16 +1191,17 @@ Before combining both tables, some changes has to be made first. By checking the
 | end_lng            | numeric                     |
 | user_type          | text                        |
 ```
-Changes to be made on trips_p1:
 
-- change data type of column trip_id: bigint to character varying
-- rename column: trip_id to ride_id
+**Table changes**:
+- *trips_p1*
+  - change data type of column trip_id: bigint to character varying
+  - rename column: trip_id to ride_id
+- **trips_p2**
+  - remove columns: start_lat, start_lng, end_lat & end_lng
+  - fill missing data: duration, using start_time and end_time
+  - change data type of column start_station_id & end_station_id: character varying to integer
 
-Changes to be made on trips_p2:
-
-- remove columns: start_lat, start_lng, end_lat & end_lng
-- fill missing data: duration, using start_time and end_time
-- change data type of column start_station_id & end_station_id: character varying to integer
+&nbsp;
 
 **SQL Query:**
 
@@ -1205,19 +1239,49 @@ SELECT
   CAST(null AS int) AS birth_year;
 ```
 
-Data omitted:
+**Data omitted**:
 
-Omitted some data in trips_p2 that has null **station_names** AND **station_id**. This data will be filled in the future after finishing my studies in Webscraping in Python. These records doesn't contain any data about its station_names and station_IDs, but they have a coordinates which then can be used to identify the nearby **DIVVY** station name.
+Some data are omitted in table **trips_p2** that has NULL **station_names** & **station_id**. The data will be filled in the future after finishing my studies on Webscraping in Python. Although these records doesn't contain any data about its *station_names* and *station_IDs*, these have a coordinates which then can be used to identify the nearby **DIVVY** station name.
 
-**12.68%** of data is omitted from trips_p2 table.
+*Number of records*
+```
+| Data     | No. of records |
+| -------- | -------------- |
+| trips_p1 |     24,426,783 |       
+| trips_p2 |      9,136,746 |
+| trips    |     33,563,529 |
+| NULL     |      1,158,190 |
+```
 
-**1,158,190** records has both null names and null IDs on *start_station* and *end_station* columns.
+*Percent of NULL values*
+```
+| Table    | NULL values |
+| -------- | ----------- |
+| trips_p1 |         0 % |
+| trips_p2 |     12.68 % |
+| trips    |      3.45 % |
+```
 
-**9,136,746** total count of data in trips_p2
+Divvy-bikeshare dataset contains 3.45% of NULL values. Since the percentage is small, we can then omit these records and proceed with the analysis.
 
+&nbsp;    
+
+**SQL Queries**:
+
+*Percent of NULL values*
+```sql
+SELECT COUNT(*) 
+FROM bike_trips.trips_p1
+WHERE (start_station_name IS NULL 
+AND start_station_id IS NULL)
+OR (end_station_name IS NULL
+AND end_station_id IS NULL)
+
+-- none
+```
 
 ```sql
--- Check the percent of omitted data
+-- trips_p2
 SELECT round(100 * 
  (SELECT CAST(COUNT(*) AS numeric) 
   FROM bike_trips.trips_p2
@@ -1230,8 +1294,47 @@ SELECT round(100 *
   FROM bike_trips.trips_p2)
 			 , 2) AS omitted_data_percent
 
--- 12.68% of data is omitted
+-- 12.68% of data is NULL
 ```
+
+```sql
+-- entire dataset
+SELECT round(100 * 
+ (SELECT CAST(COUNT(*) AS numeric) 
+  FROM bike_trips.trips_p2
+  WHERE (start_station_name IS NULL 
+  AND start_station_id IS NULL)
+  OR (end_station_name IS NULL
+  AND end_station_id IS NULL)
+  ) /	
+ (SELECT CAST(COUNT(*) AS numeric)
+  FROM bike_trips.trips)
+			 , 2) AS omitted_data_percent
+
+-- 3.45% of data is NULL
+```
+
+*Number of records*
+```sql
+-- trips_p1: 24,426,783
+SELECT COUNT(*) FROM bike_trips.trips_p1;
+
+-- trips_p2: 9,136,746
+SELECT COUNT(*) FROM bike_trips.trips_p2;
+
+-- total: 33,563,529
+SELECT COUNT(*) FROM bike_trips.trips;
+
+-- total NULL records: 1,158,190
+SELECT CAST(COUNT(*) AS numeric) 
+  FROM bike_trips.trips_p2
+  WHERE (start_station_name IS NULL 
+  AND start_station_id IS NULL)
+  OR (end_station_name IS NULL
+  AND end_station_id IS NULL);
+```
+
+&nbsp;
 
 <h2 align = "center">Stations table</h2>
 
