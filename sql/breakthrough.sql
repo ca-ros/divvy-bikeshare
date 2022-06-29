@@ -5,8 +5,18 @@ SELECT * FROM bike_trips.trips_p1_original;
 CREATE TABLE bike_trips.trips_p2 AS
 SELECT * FROM bike_trips.trips_p2_original;
 
-CREATE TABLE bike_trips.stations
+CREATE TABLE bike_trips.stations AS
 SELECT * FROM bike_trips.stations_original;
+
+-- BACK UP cleaned tables
+CREATE TABLE bike_trips.trips_p1_cleaned AS
+SELECT * FROM bike_trips.trips_p1
+
+CREATE TABLE bike_trips.trips_p2_cleaned AS
+SELECT * FROM bike_trips.trips_p2
+
+CREATE TABLE bike_trips.sattions_cleaned AS
+SELECT * FROM bike_trips.stations
   
   
 -- extracting duration

@@ -1,1 +1,0 @@
-stations in "trips" table that are not in "official stations" table

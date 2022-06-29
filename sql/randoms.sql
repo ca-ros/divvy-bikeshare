@@ -30,7 +30,7 @@ SELECT
  (SELECT CAST(COUNT(*) AS numeric)
   FROM bike_trips.trips_p2) * 100 AS omitted_data
 
--- finding the percent of omiited data
+-- finding the percent of omitted data
 SELECT round(100 * 
  (SELECT CAST(COUNT(*) AS numeric) 
   FROM bike_trips.trips_p2
@@ -50,4 +50,22 @@ WHERE start_station_name = 'WEST CHI-WATSON'
 
 SELECT * FROM bike_trips.trips_p2
 WHERE start_station_name = 'WATSON TESTING - DIVVY'
+
+SELECT * FROM bike_trips.stations
+ORDER BY id
+
+ALTER TABLE bike_trips.stations
+ALTER COLUMN id TYPE bigint
+
+
+
+
+
+
+
+
+
+
+
+
 

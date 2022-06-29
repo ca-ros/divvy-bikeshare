@@ -434,7 +434,7 @@ DELIMITER ',' CSV HEADER QUOTE '"' NULL 'NA';
 
 <h3 align = "center"><strong>2019</strong></h3>
 
-This data set has inconsistent column naming. By using Notepad ++ to open large datasets, each quarterly files are opened and inspected. We can see that 2019_Q2 table has different column names than the other tables, which will affect the merging process of the csv files. 2019_Q2 column name was matched to the rest of the other quarterly tables.
+This data set has inconsistent column naming. By using [Notepad++](https://notepad-plus-plus.org/downloads/) to open large datasets, each quarterly files are opened and inspected. We can see that 2019_Q2 table has different column names than the other tables, which will affect the merging process of the csv files. 2019_Q2 column name was matched to the rest of the other quarterly tables.
 
 <sub>*RStudio*</sub>
 
@@ -740,22 +740,28 @@ In order to analyze the table, the following is done:
 6. **Freeze the header row/ top row**: Under *View* > *Window* > *Freeze Panes* > *Freeze Top Row*. Do the same for the other sheet.
 7. In **trips_p1_stations** sheet:
 
-   - Enter the formula in cell C2 `=IFNA(VLOOKUP(TEXT(B2,0),Stations!$B:$D,2,FALSE),"same")`, then press Enter. Click cell C2 again and double-click the *bottom-right* corner of the cell to copy the formula in the entire row.
-   - Enter the formula in cell D2 `=IFNA(VLOOKUP(TEXT(A2,0),Stations!$A:$B,2,FALSE),"same")`, then press Enter. Click cell D2 again and double-click the *bottom-right* corner of the cell to copy the formula in the entire row.
-   - Enter the formula in cell E2 `=IF(AND(D2="same",C2="same"),"missing",IF(B2=D2,"same",IF(AND(A2<>C2,D2="same"),"id",IF(B2<>D2,"name"))))`, then press Enter. Click cell E2 again and double-click the *bottom-right* corner of the cell to copy the formula in the entire row.
+   - **Cell C2**: enter the formula `=IFNA(VLOOKUP(TEXT(B2,0),Stations!$B:$D,2,FALSE),"same")`, then press Enter. Click the cell again and double-click the *bottom-right* corner of the cell to copy the formula in the entire row.
+   - **Cell D2**: enter the formula `=IFNA(VLOOKUP(TEXT(A2,0),Stations!$A:$B,2,FALSE),"same")`, then press Enter. Click the cell again and double-click the *bottom-right* corner of the cell to copy the formula in the entire row.
+   - **Cell E2**: enter the formula `=IF(AND(D2="same",C2="same"),"missing",IF(B2=D2,"same",IF(AND(A2<>C2,D2="same"),"id",IF(B2<>D2,"name"))))`, then press Enter. Click the cell again and double-click the *bottom-right* corner of the cell to copy the formula in the entire row.
    
 8. **Use conditinal formatting**: Under *Home* > *Styles* > *Conditional Formatting* > *Highlight Cell Rules* > *Text that contains*
 
-    - Column C: *Text that contains* > "*none*" with **Green Fill with Dark Green Text**.
-    - Column D: *Text that contains* > "*missing*" with **Light Red Fill with Dark Red Text**.
-    - Column E: 
+    - **Column C**: *Text that contains* > "*same*" with **Green Fill with Dark Green Text**.
+    - **Column D**: *Text that contains* > "*same*" with **Green Fill with Dark Green Text**.
+    - **Column E**: 
       - *Text that contains* > "*missing*" with **Light Red Fill with Dark Red Text**.
       - *Text that contains* > "*name*" with **Yellow Fill with Dark Yellow Text**.
       - *Text that contains* > "*id*" with **Green Fill with Dark Green Text**.
+      
+9. Validate the **new_name** column by searching each names in [Google Maps](https://www.google.com/maps) and locate nearby **divvy-stations**.
+10. **Create another table**: 
 
-9. Validate the **new_name** column by searching each names in [Google Maps]() and locate nearby **divvy-stations**.
-10. Create another table for **missing stations** and save it as **missing_stations_p1.csv**.
-11. Create another table for **name changes** and save it as **name_changes_p1.csv**.
+    - For **missing stations**:
+      - Filter changes column with values **missing**. Copy columns **old_id** and **old_name** into a new blank workbook and save it as [missing_stations_p1.csv]().
+    - For **id changes**:
+      - Filter changes column with values **id**. Copy columns **old_name** and **new_id** into a new blank workbook and save it as [id_changes_p1.csv]().
+    - For **name changes**:
+      - Filter changes column with values **name**. Copy columns **old_name** and **new_name** into a new blank workbook and save it as [name_changes_p1.csv]().
 
 > **Optional**: You can hide error values indicators. Under *File* > *Options* > *Formulas* > *Error Checking* > uncheck *Enable background error checking*.
 
@@ -938,22 +944,41 @@ With some minor changes, repeat the steps of analysis done in MS Excel:
 
 **Analysis:**
 
-1. Open the saved file using MS Excel.
-2. Create a new header for column C: **id_status**, column D: **new_name** and column E: **status**.
+1. Open the csv file using MS Excel. Rename columns: **id = old_id** & **name = old_name**.
+2. Create a new header for column C: **new_id**, column D: **new_name** and column E: **changes**.
 3. **Import the Stations table**: Under *Data* > *Get & Transform Data* > *Get Data* > *From File* > *From Text/CSV* > locate [Stations.csv](). Under *Data Type Detection* > select *Do not detect data types* and click **Load**.
 4. **Remove row1**: Under *Table Design* > *Tools* > click **Convert to Range**, select **OK**. Then delete row1 which contains column#.
 5. *Right Click* column C and select Insert. Copy ColumnA to ColumnC, this will create another column of "id" but on the right side of station names.
 6. **Freeze the header row/ top row**: Under *View* > *Window* > *Freeze Panes* > *Freeze Top Row*. Do the same for the other sheet.
-7. Sort **trips_p2_stations** sheet by column **id** in **Ascending Order**. Under *Data* > *Sort & Filter* > click *Filter*. Click the dropdown arrow on cell A1 and select **Sort Smallest to Largest**.
-8. Then, enter a formula in cell C2 `=IFNA(VLOOKUP(B2,Stations!$B$2:$C$1270,2,FALSE),"not found")` and then press Enter. Click the cell again and double-click the *bottom-right* corner of the cell to copy the formula in the entire row.
-9. On cell D2 `=IFNA(VLOOKUP(A2,Stations!$A$2:$B$1270,2,FALSE),"missing")` and then press Enter. Click the cell again and double-click the *bottom-right* corner of the cell to copy the formula in the entire row.
-10. Also on cell E2 enter a formula `=IFNA(IF(VLOOKUP(A2,Stations!A:A,1,FALSE)=A2,"taken"),"free")` and copy the formula all the way down to **Row 63**, where ID is 704 and name is Jeffery Blvd & 91st St.
+7. In **trips_p2_stations** sheet:
+
+    - **Cell C2**: enter the formula `=IFNA(VLOOKUP(TEXT(B2,0),Stations!$B:$D,2,FALSE),"same")`, then press Enter. Click the cell again and double-click the bottom-right corner of the cell to copy the formula in the entire row.
+    - **Cell D2**: enter the formula `=IFNA(VLOOKUP(TEXT(A2,0),Stations!$A:$B,2,FALSE),"same")`, then press Enter. Click the cell again and double-click the bottom-right corner of the cell to copy the formula in the entire row.
+    - **Cell E2**: enter the formula `=IF(AND(D2="same",C2="same"),"missing",IF(B2=D2,"same",IF(AND(A2<>C2,D2="same"),"id",IF(AND(B2<>D2,C2="same"),"name",IF(AND(A2<>C2,B2<>D2),"conflict")))))`, then press Enter. Click cell E2 again and double-click the bottom-right corner of the cell to copy the formula in the entire row.
+
+8. **Use conditinal formatting**: Under *Home* > *Styles* > *Conditional Formatting* > *Highlight Cell Rules* > *Text that contains*
+
+    - **Column C**: Text that contains > "*same*" with **Green Fill with Dark Green Text**.
+    - **Column D**: Text that contains > "*same*" with **Green Fill with Dark Green Text**.
+    - **Column E**:
+      - *Text that contains* > "*missing*" with **Light Red Fill with Dark Red Text**.
+      - *Text that contains* > "*name*" with **Yellow Fill with Dark Yellow Text**.
+      - *Text that contains* > "*id*" with **Green Fill with Dark Green Text**.
+      - *Text that contains* > "*conflict*" with **Custom Format**. I used **Light Blue fill with Dark Blue Text**.
+9. Validate the **new_name** column by searching each names in [Google Maps](https://www.google.com/maps) and locate nearby **divvy-stations**.
+10. **Create another table**: 
+
+    - For **missing stations**:
+      - Filter changes column with values **missing**. Copy columns **old_id** and **old_name** into a new blank workbook and save it as [missing_stations_p2.csv]().
+    - For **id changes**:
+      - Filter changes column with values **id**. Copy columns **old_name** and **new_id** into a new blank workbook and save it as [id_changes_p2.csv]().
+    - For **name changes**:
+      - Filter changes column with values **name**. Copy columns **old_name** and **new_name** into a new blank workbook and save it as [name_changes_p2.csv]().
+
 
 > **Optional**: You can hide error values indicators. Under *File* > *Options* > *Formulas* > *Error Checking* > uncheck *Enable background error checking*.
 
-> The **id_status** column represents the existing station_id of the selected station name to the official **Stations** table and **new_name** column represents the correct station name. Also, the column E **status**, gives information if the ID used to the name is either already exist or free in the official Stations table.
- 
- > Upon checking we can obviously identify which names are duplicated, used a wrong station_id and missing from the official **Stations** table. By sorting the column by **id_status**, we can see that all the station_id in column A has a mixed types of data, *varchar* and *bigint*.
+> Upon checking we can identify which names are duplicated, used a wrong station_id and missing from the official **Stations** table. By sorting the column by **id_status**, we can see that all the station_id in column A has a mixed types of data, *varchar* and *bigint*.
 
 **Cleaning process:**
 
@@ -1083,6 +1108,11 @@ SET end_station_name = c.new_name
 FROM bike_trips.name_changes_p2 as c
 WHERE s.end_station_name = c.old_name;
 ```
+
+> P.S. After cleaning both tables, some data are added into **id_changes_p1.csv** & **name_changes_p1.csv**. Worry not since all the uploaded and linked files are updated.
+
+
+
 <h3 align = "center"><strong>Combine table: trips</strong></h3>
 
 Before combining both tables, some changes has to be made first. By checking the schema of the tables we can see the differences in their data. After modifying, merge both tables into one and save as **trips** table.
