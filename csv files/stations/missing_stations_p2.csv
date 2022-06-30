@@ -1,34 +1,15 @@
-﻿id,name,status
-20,Damen Ave & Wabansia Ave,taken
-329,Central Park Ave & Douglas Blvd,taken
-330,Keeler Ave & Roosevelt Rd,taken
-331,Pulaski Rd & 21st St,taken
-332,Harding Ave & 26th St,taken
-334,Lawndale Ave & 30th St,taken
-335,Komensky Ave & 31st St,taken
-357,Lamon Ave & Armitage Ave,free
-358,Kilpatrick Ave & Parker Ave,free
-360,Kilbourn & Roscoe,free
-361,Kenosha & Wellington,free
-362,Lawndale Ave & 16th St,free
-363,Tripp Ave & 15th St,free
-364,Homan Ave & Fillmore St,taken
-365,Kildare Ave & 26th St,taken
-366,Spaulding Ave & 16th St,taken
-368,Tripp Ave & 31st St,taken
-371,Kildare Ave & Chicago Ave,free
-379,Rockwell St & Archer Ave,free
-380,Fairfield Ave & 44th St,free
-387,St Louis Ave & 59th St,free
-389,Maplewood Ave & 59th St,free
-397,Narragansett Ave & School St,free
-404,Pulaski Rd & 60th St,free
-459,Lakefront Trail & Bryn Mawr Ave,free
-473,Mason Ave & Belmont Ave,free
-566,Ashland Ave & 69th St,taken
-625,Chicago Ave & Dempster St,taken
-651,Michigan Ave & 71st St,free
-670,MTL-ECO5.1-01,free
-675,HQ QR,free
-676,WATSON TESTING - DIVVY,free
-704,Jeffery Blvd & 91st St,taken
+﻿old_id,old_name
+,Ashland Ave & 69th St
+,Chicago Ave & Dempster St
+,Chicago Ave & Dempster St
+,DIVVY CASSETTE REPAIR MOBILE STATION
+,DuSable Lake Shore Dr & Ohio St
+675,HQ QR
+,Jeffery Blvd & 91st St
+,Lake Shore Dr & Ohio St
+,Lake Shore Dr & Ohio St
+20999,Lyft Driver Center Private Rack
+,Marshfield Ave & Cortland St
+670,MTL-ECO5.1-01
+,Throop/Hastings Mobile Station
+676,WATSON TESTING - DIVVY

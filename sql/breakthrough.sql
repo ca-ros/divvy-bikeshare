@@ -74,12 +74,13 @@ FROM bike_trips.trips_p2
 GROUP BY rideable_type HAVING COUNT(ride_id) > 1
 ORDER BY COUNT(ride_id) DESC;
 
-
+-- back-up trips_p1
 -- since original table has modified column
 CREATE TABLE bike_trips.trips_p1 AS
 SELECT
   CAST(trip_id AS bigint), 
-  start_time, end_time, 
+  start_time, 
+  end_time, 
   bike_id, 
   trip_duration, 
   start_station_id, 

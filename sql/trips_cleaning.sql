@@ -253,7 +253,7 @@ SELECT
 
 
 
-
+SELECT * FROM bike_trips.stations
 
 
 
