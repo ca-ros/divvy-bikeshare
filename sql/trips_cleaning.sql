@@ -2,41 +2,25 @@
 
 -- Import Data
 -- Create table
-CREATE TABLE bike_trips.stations_original (
+CREATE TABLE bike_trips.stations (
   id bigint,
   name varchar,
   docks int,
-  docks_in_service int,
   in_service text,
   latitude numeric,
   longitude numeric,
   coordinate point);
 -- Import csv file
-COPY bike_trips.stations_original (
+COPY bike_trips.stations (
   id,
   name,
   docks,
-  docks_in_service,
   in_service,
   latitude,
   longitude,
   coordinate)
-FROM 'D:/Github/divvy-bikeshare/csv files/stations/Divvy_Bicycle_Stations.csv'
+FROM 'D:/Github/divvy-bikeshare/csv files/stations/Stations.csv'
 DELIMITER ',' CSV HEADER;
-
--- modify and create a back-up table
-CREATE TABLE bike_trips.stations AS
-SELECT 
-  id,
-  name,
-  docks,
-  in_service,
-  latitude,
-  longitude,
-  coordinate
-FROM bike_trips.stations_original
-ORDER BY id;
-
 
 ----------------------- trips_p1 -------------------------
 -- Check missing/ dirty data
@@ -66,7 +50,7 @@ WHERE NOT EXISTS (SELECT id, name
 -- id_changes_p1.csv
 CREATE TABLE bike_trips.id_changes_p1 (
   old_name varchar, 
-  new_id int);
+  new_id bigint);
 -- Import
 COPY bike_trips.id_changes_p1 (old_name, new_id)
 FROM 'D:/Github/divvy-bikeshare/csv files/stations/id_changes_p1.csv' 
@@ -139,7 +123,7 @@ WHERE NOT EXISTS (SELECT s.id, s.name
 -- Create table
 CREATE TABLE bike_trips.id_changes_p2 (
   old_name varchar,
-  new_id int);
+  new_id bigint);
 -- Import
 COPY bike_trips.id_changes_p2 (old_name, new_id)
 FROM 'D:/Github/divvy-bikeshare/csv files/stations/id_changes_p2.csv' 
@@ -227,13 +211,13 @@ SELECT
   start_time,
   end_time,
   trip_duration,
-  start_station_id,
+  CAST(start_station_id AS bigint),
   start_station_name,
-  end_station_id,
+  CAST(end_station_id AS bigint),
   end_station_name,
   user_type,
   gender,
-  birth_year
+  birthyear as birth_year
 FROM bike_trips.trips_p1
 UNION ALL
 SELECT
@@ -243,17 +227,14 @@ SELECT
   start_time,
   end_time,
   EXTRACT(EPOCH FROM(end_time - start_time))::int as trip_duration,
-  CAST(start_station_id AS int),
+  CAST(start_station_id AS bigint),
   start_station_name,
-  CAST(end_station_id AS int),
+  CAST(end_station_id AS bigint),
   end_station_name,
   user_type,
   CAST(null AS text) AS gender,
-  CAST(null AS int) AS birth_year;
-
-
-
-SELECT * FROM bike_trips.stations
+  CAST(null AS int) AS birth_year
+FROM bike_trips.trips_p2;
 
 
 

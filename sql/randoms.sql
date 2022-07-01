@@ -90,9 +90,8 @@ WHERE NOT EXISTS (
   FROM bike_trips.stations as s
   WHERE s.name = t.name);
 
-SELECT * FROM bike_trips.trips_p2
 
 
-
+SELECT * FROM bike_trips.stations
 
 

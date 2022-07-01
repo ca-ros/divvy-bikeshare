@@ -667,24 +667,28 @@ CREATE TABLE AS bike_trips.trips_p2
 
 The process of cleaning station names and station IDs in trips table, by verifying and matching the data available in Google Maps and Stations table.
 
-Import the csv file from [Chicago Data Portal](https://data.cityofchicago.org).
+We need to import the **Stations** table to serve as a reference for our cleaning proces. But, before importing the file we need to make some changes:
 
-Before importing the file:
-
-- By using **Find and Replace**, remove the all the parenthesis on **coordinates** column. Find "(" or ")" then leave the *Replace with* field as blank. Do it for both open and close parenthesis.
-- Change data: Not in Service = No, In Service = Yes.
-- Save the file.
+Steps:
+1. **Open Excel**: *Under Data* > *Get & Transform Data* > *Get Data* > *From File* > *From Text/CSV* > locate and import [Divvy_Bicycle_Stations.csv](). Under *Data Type Detection* select *Do not detect data types* and click **Load**. Delete **Sheet1**.
+2. **Remove row1**: Under *Table Design* > *Tools* > click *Convert to Range*, select **OK**. Then delete row1 which contains column#.
+3. **Freeze the header row/ top row**: Under *View* > *Window* > *Freeze Panes* > *Freeze Top Row*.
+4. **Delete duplicate stations**: Use conditional formatting on ColumnB (Station Name) to easily identify duplicate values. Under *Home* > *Styles* > *Conditional Formatting* > *Highlight Cell Rules* > *Duplicate Values*.
+5. Sort sheet by **Station Name** and look for duplicate values. Delete the record which has larger station ID. Then proceed to the next process.
+6. By using **Find and Replace**, remove all the parenthesis on **coordinates** column. Find "(" or ")" then leave the *Replace with* field as blank. Do it for both open and close parenthesis.
+7. **Remove column**: **Docks in Service**
+8. Change the values under **Status** column: Not in Service = No, In Service = Yes.
+9. **Rename columns**: Station Name = **name**, Total Docks = **docks**, Status = **in_service**, and Location = **coordinate**.
+12. Save as [Stations.csv]().
 
 *Import csv file*
 
-- Rename column: Station Name = name, Total Docks = docks, Status = in_service, Location = coordinate. 
 ```sql
 -- Create table
-CREATE TABLE bike_trips.stations_original (
+CREATE TABLE bike_trips.stations (
   id bigint,
   name varchar,
   docks int,
-  docks_in_service int,
   in_service text,
   latitude numeric,
   longitude numeric,
@@ -693,38 +697,19 @@ CREATE TABLE bike_trips.stations_original (
 
 ```sql
 -- Import csv file
-COPY bike_trips.stations_original (
+COPY bike_trips.stations (
   id,
   name,
   docks,
-  docks_in_service,
   in_service,
   latitude,
   longitude,
   coordinate)
-FROM 'D:/Github/divvy-bikeshare/csv files/stations/Divvy_Bicycle_Stations.csv'
+FROM 'D:/Github/divvy-bikeshare/csv files/stations/Stations.csv'
 DELIMITER ',' CSV HEADER;
 ```
 
-- Remove column: Docks in Service. Create a back-up table.
-```sql
--- Create modified table
-CREATE TABLE bike_trips.stations AS
-SELECT 
-  id,
-  name,
-  docks,
-  in_service,
-  latitude,
-  longitude,
-  coordinate
-FROM bike_trips.stations_original
-ORDER BY id;
-```
-
-Export table as [Stations.csv]()
-
-> P.S. You can open the csv file using Excel but it will mess-up the numbers in id column. You can import the csv file in excel, select **Do not detect data type**, but you can't sort **id** column since the data is recognized as **text**.
+> P.S. You can open normally the csv file using Excel but it will mess-up the station IDs.
 
 &nbsp;
 
@@ -781,7 +766,7 @@ In order to analyze the table, the following is done.
    - **Cell D2**: enter the formula `=IFNA(VLOOKUP(TEXT(A2,0),Stations!$A:$B,2,FALSE),"same")`, then press Enter. Click the cell again and double-click the *bottom-right* corner of the cell to copy the formula in the entire row.
    - **Cell E2**: enter the formula `=IF(AND(D2="same",C2="same"),"missing",IF(B2=D2,"same",IF(AND(A2<>C2,D2="same"),"id",IF(B2<>D2,"name"))))`, then press Enter. Click the cell again and double-click the *bottom-right* corner of the cell to copy the formula in the entire row.
    
-8. **Use conditinal formatting**: Under *Home* > *Styles* > *Conditional Formatting* > *Highlight Cell Rules* > *Text that contains*
+8. **Use conditinal formatting**: Under *Home* > *Styles* > *Conditional Formatting* > *Highlight Cell Rules* > ...
 
     - **Column C**: *Text that contains* > "*same*" with **Green Fill with Dark Green Text**.
     - **Column D**: *Text that contains* > "*same*" with **Green Fill with Dark Green Text**.
@@ -1127,11 +1112,11 @@ DELIMITER ',' CSV HEADER NULL 'null';
 ```sql
 UPDATE bike_trips.trips_p2
 SET start_station_id = CASE
+  WHEN start_station_id = 'WL-008' THEN '57'
   WHEN start_station_id = '13221' THEN '61'
   WHEN start_station_id = '20215' THEN '732'
-  WHEN start_station_id = 'WL-008' THEN '57'
   END
-WHERE start_station_id IN ('13221', '20215', 'WL-008');
+WHERE start_station_id IN ('WL-008', '13221', '20215');
 ```
 ```sql
 UPDATE bike_trips.trips_p2 as s
@@ -1148,7 +1133,7 @@ SET end_station_id = CASE
   WHEN end_station_id = '13221' THEN '61'
   WHEN end_station_id = '20215' THEN '732'
   END
-WHERE end_station_id IN ('13221', '20215', 'WL-008');
+WHERE end_station_id IN ('WL-008', '13221', '20215');
 ```
 ```sql
 UPDATE bike_trips.trips_p2 as s
@@ -1167,7 +1152,7 @@ SET start_station_name = CASE
   WHEN start_station_id = '61' THEN 'Wood St & Milwaukee Ave'
   WHEN start_station_id = '732' THEN 'Hegewisch Metra Station'
   END
-WHERE start_station_id IN ('61', '732', '57');
+WHERE start_station_id IN ('57', '61', '732');
 ```
 ```sql
 UPDATE bike_trips.trips_p2 as s
@@ -1180,11 +1165,11 @@ WHERE s.start_station_name = c.old_name;
 ```sql
 UPDATE bike_trips.trips_p2
 SET end_station_name = CASE
+  WHEN end_station_id = '57' THEN 'Clinton St & Roosevelt Rd'
   WHEN end_station_id = '61' THEN 'Wood St & Milwaukee Ave'
   WHEN end_station_id = '732' THEN 'Hegewisch Metra Station'
-  WHEN end_station_id = '57' THEN 'Clinton St & Roosevelt Rd'
   END
-WHERE end_station_id IN ('61', '732', '57');
+WHERE end_station_id IN ('57', '61', '732');
 ```
 ```sql
 UPDATE bike_trips.trips_p2 as s
@@ -1196,7 +1181,7 @@ WHERE s.end_station_name = c.old_name;
 > P.S. After cleaning both tables, some data are added into **id_changes_p1.csv** & **name_changes_p1.csv**. Worry not since all the uploaded and linked files are updated.
 
 &nbsp;
-
+~
 <h3 align = "center"><strong>Combine table: trips</strong></h3>
 
 Before combining both tables, some changes has to be made first. By checking the schema of the tables we can see the differences in their data. After modifying, merge both tables into one and save as **trips** table.
@@ -1210,7 +1195,7 @@ Before combining both tables, some changes has to be made first. By checking the
 ```
 | Field name         | Type                        |
 | ------------------ | --------------------------- |
-| trip_id            | bigint                     |
+| trip_id            | bigint                      |
 | start_time         | timestamp without time zone |
 | end_time           | timestamp without time zone |
 | bike_id            | integer                     |
@@ -1245,12 +1230,12 @@ Before combining both tables, some changes has to be made first. By checking the
 
 **Table changes**:
 - *trips_p1*
-  - change data type of column trip_id: bigint to character varying
-  - rename column: trip_id to ride_id
+  - change data type of column **trip_id**: *bigint* to *varchar*.
+  - rename column: **trip_id** to **ride_id**
 - **trips_p2**
-  - remove columns: start_lat, start_lng, end_lat & end_lng
-  - fill missing data: duration, using start_time and end_time
-  - change data type of column start_station_id & end_station_id: character varying to integer
+  - remove columns: **start_lat**, **start_lng**, **end_lat** & **end_lng**.
+  - fill missing data: **duration** by using start_time and end_time.
+  - change data type of columns **start_station_id** & **end_station_id**: from *varchar* to *bigint*.
 
 &nbsp;
 
@@ -1265,9 +1250,9 @@ SELECT
   start_time,
   end_time,
   trip_duration,
-  start_station_id,
+  CAST(start_station_id AS bigint),
   start_station_name,
-  end_station_id,
+  CAST(end_station_id AS bigint),
   end_station_name,
   user_type,
   gender,
@@ -1281,13 +1266,14 @@ SELECT
   start_time,
   end_time,
   EXTRACT(EPOCH FROM(end_time - start_time))::int as trip_duration,
-  CAST(start_station_id AS int),
+  CAST(start_station_id AS bigint),
   start_station_name,
-  CAST(end_station_id AS int),
+  CAST(end_station_id AS bigint),
   end_station_name,
   user_type,
   CAST(null AS text) AS gender,
-  CAST(null AS int) AS birth_year;
+  CAST(null AS int) AS birth_year
+FROM bike_trips.trips_p2;
 ```
 
 **Data omitted**:
@@ -1409,7 +1395,8 @@ Add the missing stations to Stations table
 COPY bike_trips.stations (
   id, 
   name, 
-  docks, 
+  docks,
+  in_service, 
   latitude, 
   longitude, 
   coordinate)
@@ -1420,12 +1407,12 @@ DELIMITER ',' CSV HEADER;
 ```sql
 -- Create table
 CREATE TABLE bike_trips.id_changes_stations (
-  old_name varchar,
-  new_id int);
+  name varchar,
+  id bigint);
 ```
 ```sql
 -- Import
-COPY bike_trips.id_changes_stations (old_name, new_id)
+COPY bike_trips.id_changes_stations (name, id)
 FROM 'D:/Github/divvy-bikeshare/csv files/stations/id_changes_stations.csv'
 DELIMITER ',' CSV HEADER;
 ```
@@ -1439,3 +1426,4 @@ FROM bike_trips.id_changes_stations as c
 WHERE s.name = c.old_name;
 ```
 
+-- END Data Wrangling

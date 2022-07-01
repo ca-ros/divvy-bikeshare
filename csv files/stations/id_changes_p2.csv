@@ -115,6 +115,7 @@ Central Park Blvd & 5th Ave,533
 Central St & Girard Ave,602
 Central St Metra,601
 Cherry Ave & Blackhawk St,666
+Chicago Ave & Dempster St,
 Chicago Ave & Sheridan Rd,603
 Chicago Ave & Washington St,597
 Chicago State University,737
@@ -205,6 +206,7 @@ Delano Ct & Roosevelt Rd,626
 Desplaines St & Jackson Blvd,107
 Desplaines St & Kinzie St,56
 Desplaines St & Randolph St,96
+DIVVY CASSETTE REPAIR MOBILE STATION,361
 Dodge Ave & Main St,625
 Dorchester Ave & 49th St,416
 Dorchester Ave & 63rd St,428
@@ -231,13 +233,13 @@ Ellis Ave & 55th St,420
 Ellis Ave & 58th St,328
 Ellis Ave & 60th St,426
 Elston Ave & Cortland St,58
+Elston Ave & Cortland St,58
 Elston Ave & Wabansia Ave,315
 Emerald Ave & 28th St,207
 Emerald Ave & 31st St,339
 Ewing Ave & Burnham Greenway,718
 Fairbanks Ct & Grand Ave,24
 Fairbanks St & Superior St,635
-Fairfield Ave & 44th St,1582242293862782512
 Fairfield Ave & Roosevelt Rd,436
 Federal St & Polk St,41
 Field Blvd & South Water St,7
@@ -328,9 +330,7 @@ Keystone Ave & Montrose Ave,495
 Kilbourn & Roscoe,1563698701206292486
 Kilbourn Ave & Milwaukee Ave,591
 Kildare Ave & 26th St,1561012895895892548
-Kildare Ave & Chicago Ave,1575949515273532130
 Kildare Ave & Montrose Ave,630
-Kilpatrick Ave & Parker Ave,1563698705501259788
 Kimball Ave & Belmont Ave,497
 Kimbark Ave & 53rd St,322
 Kingsbury St & Erie St,74
@@ -347,10 +347,7 @@ Lake Shore Dr & Diversey Pkwy,329
 Lake Shore Dr & Monroe St,76
 Lake Shore Dr & North Blvd,268
 Lake Shore Dr & Wellington Ave,157
-Lakefront Trail & Bryn Mawr Ave,760
-Lakefront Trail & Bryn Mawr Ave,760
 Lakeview Ave & Fullerton Pkwy,313
-Lamon Ave & Armitage Ave,1563698692616359930
 Larrabee St & Armitage Ave,288
 Larrabee St & Division St,359
 Larrabee St & Kingsbury St,48
@@ -364,7 +361,7 @@ LaSalle St & Illinois St,181
 LaSalle St & Jackson Blvd,283
 LaSalle St & Washington St,98
 Lawndale Ave & 111th St,730
-Lawndale Ave & 16th St,1561012887305957948
+Lawndale Ave & 16th St,362
 Lawndale Ave & 30th St,1561012878716023346
 Leavitt St & Addison St,492
 Leavitt St & Archer Ave,9
@@ -387,19 +384,16 @@ Lincolnwood Dr & Central St,663
 Logan Blvd & Elston Ave,258
 Loomis Blvd & 84th St,687
 Loomis St & 89th St,740
-Loomis St & 89th St,740
 Loomis St & Archer Ave,366
 Loomis St & Jackson Blvd,146
 Loomis St & Lexington St,320
 Major Taylor Trail & 115th St,713
 Major Taylor Trail & 124th St,715
 Manor Ave & Leland Ave,477
-Maplewood Ave & 59th St,1582242285272847904
 Maplewood Ave & Peterson Ave,455
 Marine Dr & Ainslie St,465
 Marquette Ave & 89th St,692
 Maryland Ave & 104th St,1448642183732401788
-Mason Ave & Belmont Ave,1563698718386161684
 May St & Cullerton St,171
 May St & Taylor St,22
 McClurg Ct & Erie St,142
@@ -408,7 +402,6 @@ McCormick Place,62
 Michigan Ave & 114th St,709
 Michigan Ave & 14th St,168
 Michigan Ave & 18th St,273
-Michigan Ave & 71st St,674
 Michigan Ave & Ida B Wells Dr,45
 Michigan Ave & Jackson Blvd,284
 Michigan Ave & Lake St,52
@@ -440,7 +433,6 @@ Morgan St & Polk St,241
 Museum of Science and Industry,424
 N Carpenter St & W Lake St,1436495105198659246
 N Clark St & W Elm St,176
-N Clark St & W Elm St,176
 N Damen Ave & W Chicago Ave,1436495119852630436
 N Damen Ave & W Wabansia St,1521686986436309688
 N Green St & W Lake St,1436495109493626546
@@ -453,9 +445,6 @@ Narragansett Ave & School St,1571105050820616196
 New St & Illinois St,26
 Noble St & Milwaukee Ave,29
 Normal Ave & Archer Ave,209
-NULL,57
-NULL,61
-NULL,732
 Oakley Ave & Irving Park Rd,486
 Oakley Ave & Touhy Ave,526
 Ogden Ave & Chicago Ave,54
@@ -481,7 +470,6 @@ Princeton Ave & 47th St,412
 Princeton Ave & Garfield Blvd,385
 Prospect Sq & 91st St,684
 Pulaski Rd & 21st St,1561012874421056044
-Pulaski Rd & 60th St,1593766343243326364
 Pulaski Rd & Eddy St (Temp),488
 Racine Ave & 13th St,136
 Racine Ave & 15th St,274
@@ -500,13 +488,11 @@ Rhodes Ave & 32nd St,263
 Richmond St & Diversey Ave,501
 Ridge Blvd & Touhy Ave,466
 Ritchie Ct & Banks St,180
-Rockwell St & Archer Ave,1582242293862782510
 Rockwell St & Eastwood Ave,478
 Rush St & Cedar St,172
 Rush St & Hubbard St,125
 Rush St & Superior St,161
 S Aberdeen St & W 106th St,1448642162257565290
-S Michigan Ave & E 118th St,1448642175142467180
 S Michigan Ave & E 118th St,1448642175142467180
 S Wentworth Ave & W 111th St,1448642162257565286
 Sacramento Blvd & Franklin Blvd,375
@@ -549,7 +535,6 @@ Southport Ave & Wrightwood Ave,190
 Spaulding Ave & 16th St,1561012895895892552
 Spaulding Ave & Armitage Ave,506
 Spaulding Ave & Division St,510
-St Louis Ave & 59th St,1582242280977880602
 St. Clair St & Erie St,211
 St. Louis Ave & Balmoral Ave,469
 St. Louis Ave & Fullerton Ave,503
@@ -580,6 +565,7 @@ Summit Ave & 86th St,685
 Talman Ave & Addison St,491
 Theater on the Lake,177
 Throop St & Taylor St,19
+Throop/Hastings Mobile Station,
 Torrence Ave & 106th St,707
 Torrence Ave & 126th Pl,720
 Tripp Ave & 15th St,1561012887305957952
@@ -593,8 +579,6 @@ Vincennes Ave & 104th St,726
 Vincennes Ave & 75th St,568
 W 103rd St & S Avers Ave,1448642179437434482
 W Armitage Ave & N Sheffield Ave,1436495105198659242
-W Armitage Ave & N Sheffield Ave,1436495105198659242
-W Oakdale Ave & N Broadway,1436495100903691938
 W Oakdale Ave & N Broadway,1436495100903691938
 W Washington Blvd & N Peoria St,1436495109493626544
 Wabash Ave & 16th St,72
@@ -659,3 +643,8 @@ Woodlawn Ave & 55th St,248
 Woodlawn Ave & Lake Park Ave,413
 Yates Blvd & 75th St,396
 Yates Blvd & 93rd St,741
+Michigan Ave & 71st St,651
+Lakefront Trail & Bryn Mawr Ave,459
+Marshfield Ave & Cortland St,58
+DuSable Lake Shore Dr & Ohio St,
+Lake Shore Dr & Ohio St,

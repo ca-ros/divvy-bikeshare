@@ -33,7 +33,7 @@ FROM (
 	UNION
 	SELECT DISTINCT end_station_name as name, end_station_id as id
 	FROM bike_trips.trips_p1) as t
-WHERE t.id = '20';
+WHERE t.id = 387;
 
 -- trips_p2
 SELECT *

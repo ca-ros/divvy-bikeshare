@@ -3,7 +3,9 @@
 Company:
 [Divvy](https://divvybikes.com) from Chicago
 
-Status: On-going. Check the Data Wrangling documentation [here](https://github.com/56i8/divvy-bikeshare/tree/main/documentations#readme).
+Status: On-going 
+
+Check the Data Wrangling documentation [here](https://github.com/56i8/divvy-bikeshare/tree/main/documentations#readme).
 
 Tasks:
 - [x] Combine trips 2013-2019 save as trips_p1
@@ -18,5 +20,7 @@ Tasks:
 - [x] Remove unused stations in Stations table
 - [ ] Fill the null values in Stations table using all the data in other tables
 - [x] Combine trips_p1 & trips_p2
-- [ ] Start analyzing the data
-- [ ] Start analyzing the data
+- [ ] Analyzing the data
+- [ ] Create charts, power points and documentation
+- [ ] Create insights
+- [ ] List the problems to be solved

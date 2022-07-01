@@ -1,6 +1,10 @@
 id,name,docks,in_service,latitude,longitude,coordinate
 1,Special Events,,,,,
+360,DIVVY Map Frame B/C Station,,,,,
+361,DIVVY CASSETTE REPAIR MOBILE STATION,,,41.88104,-87.61673,"41.88104, -87.61673"
+363,TS ~ DIVVY PARTS TESTING,,,,,
 372,Humboldt Dr & Luis Munoz Marin Dr,15,,41.900146,-87.702882,"41.900146, -87.702882"
+397,Saginaw Ave & Exchange Ave,11,,41.75874584,-87.56011478,"41.75874584, -87.56011478"
 512,BBB ~ Divvy Parts Testing,,,,,
 606,Forest Ave & Chicago Ave,19,,41.894071,-87.800367,"41.894071, -87.800367"
 607,Cuyler Ave & Augusta St,11,,41.898168,-87.783055,"41.898168, -87.783055"
@@ -17,15 +21,13 @@ id,name,docks,in_service,latitude,longitude,coordinate
 618,Lombard Ave & Garfield St,19,,41.870699,-87.778797,"41.870699, -87.778797"
 669,LBS - BBB La Magie,,,,,
 670,MTL-ECO5.1-01,,,41.9171,-87.7482,"41.9171, -87.7482"
-671,Base - 2132 W Hubbard Warehouse,,,41.88994,-87.68026,"41.88994, -87.68026"
+671,Divvy Service Warehouse,,,41.88994,-87.68026,"41.88994, -87.68026"
 675,HQ QR,,,41.8899,-87.6803,"41.8899, -87.6803"
 676,WATSON TESTING - DIVVY,,No,41.89484,-87.7309305,"41.89484, -87.7309305"
+20999,Lyft Driver Center Private Rack,,No,41.900273,-87.65675,"41.900273, -87.65675"
 ,Ashland Ave & 69th St,11,,41.768726,-87.664069,"41.768726, -87.664069"
 ,Chicago Ave & Dempster St,15,,42.041691,-87.680687,"42.041691, -87.680687"
-,DIVVY CASSETTE REPAIR MOBILE STATION,,,41.88104,-87.61673,"41.88104, -87.61673"
-,DIVVY Map Frame B/C Station,,,,,
 ,Jeffery Blvd & 91st St,,,41.72975808,-87.575524,"41.72975808, -87.575524"
-,Saginaw Ave & Exchange Ave,11,,41.75874584,-87.56011478,"41.75874584, -87.56011478"
-,TS ~ DIVVY PARTS TESTING,,,,,
 ,Throop/Hastings Mobile Station,,,41.85156,-87.65911,"41.85156, -87.65911"
-20999,Lyft Driver Center Private Rack,,No,41.900273,-87.65675,"41.900273, -87.65675"
+,DuSable Lake Shore Dr & Ohio St,,,41.89257,-87.61449,"41.89257, -87.61449"
+,Marshfield Ave & Cortland St,,,41.916,-87.6689,"41.916, -87.6689"
