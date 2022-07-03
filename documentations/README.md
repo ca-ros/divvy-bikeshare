@@ -1403,6 +1403,7 @@ COPY bike_trips.stations (
 FROM 'D:/Github/divvy-bikeshare/csv files/stations/missing_stations.csv'
 DELIMITER ',' CSV HEADER;
 ```
+
 - id_changes_stations.csv
 ```sql
 -- Create table
