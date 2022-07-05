@@ -4,7 +4,7 @@ Data sources:
 - [Divvy bikes](https://divvybikes.com), download the raw data-sets [here](https://divvy-tripdata.s3.amazonaws.com/index.html)
 - [Chicago Data Portal](https://data.cityofchicago.org/), download the raw stations-table:
   - Download the updated version [here](https://data.cityofchicago.org/Transportation/Divvy-Bicycle-Stations/bbyy-e7gq).
-  - Download the version I used [here](). June 28, 2022
+  - Download the version I used [here](https://github.com/56i8/divvy-bikeshare/blob/master/data%20wrangling/csv%20files/stations_raw/Divvy_Bicycle_Stations.csv). June 28, 2022
 
 > The Stations table continues to get updates. I noticed some changes since I downloaded the data on May 15, 2022 and redownload on June 28, 2022. When I check the site, there is an update on May 18, 2022 hence the change in data.
 
@@ -51,31 +51,33 @@ Data sources:
 - googling hard hehe
 </p></details>
 
-<h2 align = "center">Table of Contents</h2>
+<h2 align = "center">Table of Content</h2>
 
-I. [Setting up SQL Environment](https://github.com/56i8/divvy-bikeshare/tree/master/documentations#setting-up-sql-environment)
+I. [Setting up SQL Environment](https://github.com/56i8/divvy-bikeshare/tree/master/data%20wrangling#setting-up-sql-environment)
 
-II. [Combining Data](https://github.com/56i8/divvy-bikeshare/tree/master/documentations#combining-data)
+II. [Combining Data](https://github.com/56i8/divvy-bikeshare/tree/master/data%20wrangling#combining-data)
 
-- [2013](https://github.com/56i8/divvy-bikeshare/tree/master/documentations#2013)
-- [2014](https://github.com/56i8/divvy-bikeshare/tree/master/documentations#2014)
-- [2015](https://github.com/56i8/divvy-bikeshare/tree/master/documentations#2015)
-- [2016](https://github.com/56i8/divvy-bikeshare/tree/master/documentations#2016)
-- [2017](https://github.com/56i8/divvy-bikeshare/tree/master/documentations#2017)
-- [2018](https://github.com/56i8/divvy-bikeshare/tree/master/documentations#2018)
-- [2019](https://github.com/56i8/divvy-bikeshare/tree/master/documentations#2019)
-- [2020](https://github.com/56i8/divvy-bikeshare/tree/master/documentations#2020)
-- [2021](https://github.com/56i8/divvy-bikeshare/tree/master/documentations#2021)
+- [2013](https://github.com/56i8/divvy-bikeshare/tree/master/data%20wrangling#2013)
+- [2014](https://github.com/56i8/divvy-bikeshare/tree/master/data%20wrangling#2014)
+- [2015](https://github.com/56i8/divvy-bikeshare/tree/master/data%20wrangling#2015)
+- [2016](https://github.com/56i8/divvy-bikeshare/tree/master/data%20wrangling#2016)
+- [2017](https://github.com/56i8/divvy-bikeshare/tree/master/data%20wrangling#2017)
+- [2018](https://github.com/56i8/divvy-bikeshare/tree/master/data%20wrangling#2018)
+- [2019](https://github.com/56i8/divvy-bikeshare/tree/master/data%20wrangling#2019)
+- [2020](https://github.com/56i8/divvy-bikeshare/tree/master/data%20wrangling#2020)
+- [2021](https://github.com/56i8/divvy-bikeshare/tree/master/data%20wrangling#2021)
 
-III. [Trips table](https://github.com/56i8/divvy-bikeshare/tree/master/documentations#trips-table)
+III. [Trips table](https://github.com/56i8/divvy-bikeshare/tree/master/data%20wrangling#trips-table)
 
-- [First table: trips_p1](https://github.com/56i8/divvy-bikeshare/tree/master/documentations#first-table-trips_p1)
-- [Second table: trips_p2](https://github.com/56i8/divvy-bikeshare/tree/master/documentations#second-table-trips_p2)
-- [Combining tables: trips]()
+- [First table: trips_p1](https://github.com/56i8/divvy-bikeshare/tree/master/data%20wrangling#first-table-trips_p1)
+- [Second table: trips_p2](https://github.com/56i8/divvy-bikeshare/tree/master/data%20wrangling#second-table-trips_p2)
+- [Combining tables: trips](https://github.com/56i8/divvy-bikeshare/tree/master/data%20wrangling#combine-table-trips)
+-[NULL values](https://github.com/56i8/divvy-bikeshare/tree/master/data%20wrangling#null-values)
 
-IV. [Stations table]()
+IV. [Stations table](https://github.com/56i8/divvy-bikeshare/tree/master/data%20wrangling#stations-table)
 
-- [Cleaning]()
+- [Missing stations](https://github.com/56i8/divvy-bikeshare/tree/master/data%20wrangling#missing-stations)
+- [Cleaning](https://github.com/56i8/divvy-bikeshare/tree/master/data%20wrangling#cleaning)
 
 
 <h2 align = "center">Setting up SQL Environment</h2>
@@ -1181,7 +1183,7 @@ WHERE s.end_station_name = c.old_name;
 > P.S. After cleaning both tables, some data are added into **id_changes_p1.csv** & **name_changes_p1.csv**. Worry not since all the uploaded and linked files are updated.
 
 &nbsp;
-~
+
 <h3 align = "center"><strong>Combine table: trips</strong></h3>
 
 Before combining both tables, some changes has to be made first. By checking the schema of the tables we can see the differences in their data. After modifying, merge both tables into one and save as **trips** table.
@@ -1276,9 +1278,9 @@ SELECT
 FROM bike_trips.trips_p2;
 ```
 
-**Data omitted**:
+<h3 align = "center"><strong>NULL values</strong></h3>
 
-Some data are omitted in table **trips_p2** that has NULL **station_names** & **station_id**. Although these records doesn't contain any data about its *station_names* and *station_IDs*, these have a coordinates which then can be used to identify the nearby **DIVVY** station name. The data will be filled in the future after finishing my studies on Webscraping in Python.
+Some data are omitted in table **trips_p2** that has NULL **station_names** & **station_id**. Although these records doesn't contain any data about its *station_names* and *station_IDs*, these have a coordinates which then can be used later on to identify the nearby **DIVVY** station name. The data will be filled in the future after finishing my studies on Webscraping in Python.
 
 *Number of records*
 ```
@@ -1382,9 +1384,11 @@ SELECT round(100 *
 
 <h2 align = "center">Stations table</h2>
 
-<h3><strong>Cleaning</strong></h3>
+<h3><strong>Missing stations</strong></h3>
 
-*Import csv files*
+Now that we have the missing stations from the 2 tables, trips_p1 & trips_p2, combine them into one table and save as [missing_stations.csv](https://github.com/56i8/divvy-bikeshare/blob/master/data%20wrangling/csv%20files/stations_cleaning/missing_stations.csv).
+
+*Import csv file*
 
 - missing_stations.csv
 
@@ -1403,6 +1407,13 @@ COPY bike_trips.stations (
 FROM 'D:/Github/divvy-bikeshare/csv files/stations/missing_stations.csv'
 DELIMITER ',' CSV HEADER;
 ```
+
+
+<h3><strong>Cleaning</strong></h3>
+
+Some IDs need to change from the table.
+
+*Import csv file*
 
 - id_changes_stations.csv
 ```sql
