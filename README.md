@@ -74,8 +74,6 @@ Check the Data Wrangling documentation [here](https://github.com/56i8/divvy-bike
 │               ├── 2019_trip-stations.xlsx
 │               ├── 2020_trip-stations.xlsx
 │               ├── 2021_trip-stations.xlsx
-│       ├── anaylsis
-│           ├── count_name.csv
 │   ├── sql
 │       ├── analysis.sql
 │       ├── breakthrough.sql
