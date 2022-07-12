@@ -5,7 +5,7 @@ Company:
 
 Status: On-going 
 
-Check the Data Wrangling documentation [here](https://github.com/56i8/divvy-bikeshare/tree/master/data%20wrangling#data-wrangling).
+Check the Data Wrangling documentation [here](https://github.com/ca-ros/divvy-bikeshare/tree/master/data%20wrangling#data-wrangling).
 
 ## Table of Content
 
