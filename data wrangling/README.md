@@ -53,31 +53,31 @@ Data sources:
 
 <h2 align = "center">Table of Content</h2>
 
-I. [Setting up SQL Environment](https://github.com/56i8/divvy-bikeshare/tree/master/data%20wrangling#setting-up-sql-environment)
+I. [Setting up SQL Environment](#setting-up-sql-environment)
 
-II. [Combining Data](https://github.com/56i8/divvy-bikeshare/tree/master/data%20wrangling#combining-data)
+II. [Combining Data](#combining-data)
 
-- [2013](https://github.com/56i8/divvy-bikeshare/tree/master/data%20wrangling#2013)
-- [2014](https://github.com/56i8/divvy-bikeshare/tree/master/data%20wrangling#2014)
-- [2015](https://github.com/56i8/divvy-bikeshare/tree/master/data%20wrangling#2015)
-- [2016](https://github.com/56i8/divvy-bikeshare/tree/master/data%20wrangling#2016)
-- [2017](https://github.com/56i8/divvy-bikeshare/tree/master/data%20wrangling#2017)
-- [2018](https://github.com/56i8/divvy-bikeshare/tree/master/data%20wrangling#2018)
-- [2019](https://github.com/56i8/divvy-bikeshare/tree/master/data%20wrangling#2019)
-- [2020](https://github.com/56i8/divvy-bikeshare/tree/master/data%20wrangling#2020)
-- [2021](https://github.com/56i8/divvy-bikeshare/tree/master/data%20wrangling#2021)
+- [2013](#2013)
+- [2014](#2014)
+- [2015](#2015)
+- [2016](#2016)
+- [2017](#2017)
+- [2018](#2018)
+- [2019](#2019)
+- [2020](#2020)
+- [2021](#2021)
 
-III. [Trips table](https://github.com/56i8/divvy-bikeshare/tree/master/data%20wrangling#trips-table)
+III. [Trips table](#trips-table)
 
-- [First table: trips_p1](https://github.com/56i8/divvy-bikeshare/tree/master/data%20wrangling#first-table-trips_p1)
-- [Second table: trips_p2](https://github.com/56i8/divvy-bikeshare/tree/master/data%20wrangling#second-table-trips_p2)
-- [Combining tables: trips](https://github.com/56i8/divvy-bikeshare/tree/master/data%20wrangling#combine-table-trips)
--[NULL values](https://github.com/56i8/divvy-bikeshare/tree/master/data%20wrangling#null-values)
+- [First table: trips_p1](#first-table-trips_p1)
+- [Second table: trips_p2](#second-table-trips_p2)
+- [Combining tables: trips](#combine-table-trips)
+- [NULL values](#null-values)
 
-IV. [Stations table](https://github.com/56i8/divvy-bikeshare/tree/master/data%20wrangling#stations-table)
+IV. [Stations table](#stations-table)
 
-- [Missing stations](https://github.com/56i8/divvy-bikeshare/tree/master/data%20wrangling#missing-stations)
-- [Cleaning](https://github.com/56i8/divvy-bikeshare/tree/master/data%20wrangling#cleaning)
+- [Missing stations](#missing-stations)
+- [Cleaning](#cleaning)
 
 
 <h2 align = "center">Setting up SQL Environment</h2>
@@ -1080,7 +1080,6 @@ Export the result as [trips_p2_stations.csv](https://github.com/56i8/divvy-bikes
 *Import csv files*
 
 - id_changes_p2.csv
-
 ```sql
 -- Create table
 CREATE TABLE bike_trips.id_changes_p2 (
@@ -1094,7 +1093,6 @@ DELIMITER ',' CSV HEADER NULL 'null';
 ```
 
 - name_changes_p2.csv
-
 ```sql
 -- Create table
 CREATE TABLE bike_trips.name_changes_p2 (
@@ -1110,7 +1108,6 @@ DELIMITER ',' CSV HEADER NULL 'null';
 *ID change*
 
 - start_station_id
-
 ```sql
 UPDATE bike_trips.trips_p2
 SET start_station_id = CASE
@@ -1145,7 +1142,7 @@ WHERE s.end_station_name = c.old_name;
 ```
 
 *Name change*
-CASE
+
 - start_station
 ```sql
 UPDATE bike_trips.trips_p2
@@ -1193,7 +1190,6 @@ Before combining both tables, some changes has to be made first. By checking the
 *Table Columns*
 
 - trips_p1
-
 ```
 | Field name         | Type                        |
 | ------------------ | --------------------------- |
@@ -1328,6 +1324,7 @@ SELECT CAST(COUNT(*) AS numeric)
 ```
 
 *Percent of NULL values*
+
 ```sql
 -- trips_p1
 SELECT round(100 * 
@@ -1393,7 +1390,6 @@ Now that we have the missing stations from the 2 tables, trips_p1 & trips_p2, co
 - missing_stations.csv
 
 Add the missing stations to Stations table
-
 ```sql
 -- Import
 COPY bike_trips.stations (
