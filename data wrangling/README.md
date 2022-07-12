@@ -1013,6 +1013,7 @@ Export the result as [trips_p2_stations.csv](https://github.com/56i8/divvy-bikes
       2. Second row of **old_name** column is **Base - 2132 W Hubbard Warehouse** with ID = **Hubbard Bike-checking (LBS-WH-TEST)**. The station_id is **varchar** data type, so we need to confirm the station name. If you remember, in **missing_stations_p1.csv** there is a missing station that contains **Hubbard**.
       3. Upon checking we can see ID = **671** and name = **HUBBARD ST BIKE CHECKING (LBS-WH-TEST)**. We should check if these two stations are the same by checking out its coordinate and locate it on **Google Maps**.
       4. **Run a query**:
+      
           - Base - 2132 W Hubbard Warehouse
           ```sql
           SELECT start_lat, start_lng FROM bike_trips.trips_p2
