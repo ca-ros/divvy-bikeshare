@@ -12,7 +12,7 @@ Data sources:
 - *PostgreSQL*
 - *RStudio*
 
-<details><summary>Skills applied</summary>
+<details><summary>Skills applied:</summary>
 <p>
 
 - Git - version control
@@ -43,12 +43,8 @@ Data sources:
   - ROUND (percentage)
 - R
 
-  -
-  -
-  -
-  -
-  -
-- googling hard hehe
+  - dplyr
+  - readr
 </p></details>
 
 <h2 align = "center">Table of Content</h2>
