@@ -4,7 +4,7 @@
 
 This dataset contains a list of biketrips in Chicago with trip duration greater than 60 seconds. It is provided by [Divvy bikes](https://divvybikes.com) according to the [Divvy Data License Agreement](https://ride.divvybikes.com/data-license-agreement).
 
-### The Data
+### 🚴‍♀️ The Data
 
 Each trip is anonymized and includes:
 - Trip start day and time
@@ -1423,8 +1423,7 @@ WHERE s.name = c.old_name;
 
 ---
 
-## Cleaned Dataset
+## 🧹 Cleaned Dataset
 
-- [Trips table](https://www.dropbox.com/s/qb3ndglnmf7gwh5/trips.csv?dl=0)(4.5 gb)
-- [Stations table]()(120 kb)
-- []
+- [Trips table](https://www.dropbox.com/s/qb3ndglnmf7gwh5/trips.csv?dl=0) (4.5 gb)
+- [Stations table](https://github.com/ca-ros/divvy-bikeshare/blob/master/data%20wrangling/csv%20files/stations_cleaning/Stations_cleaned.csv) (120 kb)
