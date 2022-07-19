@@ -93,7 +93,7 @@ Steps:
 4. Start compiling the data.
 5. For file naming convention, all combined trip-data must named by "year" followed by "-divvy-tripdata.csv"
 
-> There are two (2) options in merging csv files by using **R** or **Python**. Choose base on your preference.
+> There are two (2) options in merging csv files, by using **R** or **Python**. Choose base on your preference.
 
 *Using RStudio*
 ```r
