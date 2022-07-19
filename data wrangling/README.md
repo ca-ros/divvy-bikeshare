@@ -1,6 +1,23 @@
 <h1 align = "center">Data Wrangling</h1>
 
-Data sources:
+<h2 align = "center">Introduction</h2>
+
+This dataset contains a list of biketrips in Chicago with trip duration greater than 60 seconds. It is provided by [Divvy bikes](https://divvybikes.com) according to the [Divvy Data License Agreement](https://ride.divvybikes.com/data-license-agreement).
+
+### The Data
+
+Each trip is anonymized and includes:
+- Trip start day and time
+- Trip end day and time
+- Trip start station
+- Trip end station
+- Rider type (Member, Single Ride, and Day Pass)
+
+The data has been processed to remove trips that are taken by staff as they service and inspect the system; and any trips that were below 60 seconds in length (potentially false starts or users trying to re-dock a bike to ensure it was secure.)
+
+Questions relating to trip data should be sent to <a href = "mailto: bike-data@lyft.com">bike-data@lyft.com</a>. Requests to use trademarks and trade names should be sent to <a href = "mailto: trademarks@lyft.com">trademarks@lyft.com</a>.
+
+### 🔗 Data sources:
 - [Divvy bikes](https://divvybikes.com), download the raw data-sets [here](https://divvy-tripdata.s3.amazonaws.com/index.html)
 - [Chicago Data Portal](https://data.cityofchicago.org/), download the raw stations-table:
   - Download the updated version [here](https://data.cityofchicago.org/Transportation/Divvy-Bicycle-Stations/bbyy-e7gq).
@@ -8,44 +25,14 @@ Data sources:
 
 > The Stations table continues to get updates. I noticed some changes since I downloaded the data on May 15, 2022 and redownload on June 28, 2022. When I check the site, there is an update on May 18, 2022 hence the change in data.
 
-<sub>Tools used:</sub>
-- *PostgreSQL*
-- *RStudio*
+&nbsp;
 
-<details><summary>Skills applied:</summary>
-<p>
-
-- Git - version control
-- Excel
-
-  - Conditional Formatting
-  - Data filter
-  - VLOOKUP
-  - Pivot table
-  - IF/ IFNA
-- SQL 
-
-  - CREATE TABLE
-  - CREATE DB
-  - SELECT DISTINCT
-  - UPDATE TABLE
-  - HAVING
-  - LIKE
-  - WILDCARDS
-  - ALTER TABLE/ ALTER COLUMN
-  - IN
-  - CASE
-  - CAST
-  - EXTRACT: YEAR, EPOCH
-  - JOINS
-  - UNION
-  - SUB QUERY
-  - ROUND (percentage)
-- R
-
-  - dplyr
-  - readr
-</p></details>
+### Tools used:
+- MS Excel
+- [Notepad++](https://notepad-plus-plus.org/downloads/)
+- [PostgreSQL](https://www.postgresql.org/download/)
+- [RStudio](https://www.rstudio.com/products/rstudio/download/)
+- [Python](https://www.python.org/downloads/)
 
 <h2 align = "center">Table of Content</h2>
 
@@ -76,7 +63,7 @@ IV. [Stations table](#stations-table)
 - [Cleaning](#cleaning)
 
 
-<h2 align = "center">Setting up SQL Environment</h2>
+<h2 align = "center" id = "setting-up-sql-environment">Set up SQL Environment</h2>
 
 The SQL database that I used in this analysis is [PostgreSQL](https://www.postgresql.org) and I used [pgAdmin 4](https://www.pgadmin.org/download/) as the database tool.
 
@@ -94,7 +81,7 @@ Lastly, to open the **Query Tool** press *ALT + SHIFT + Q*, or click the Query t
 
 &nbsp;
 
-<h2 align = "center">Combining data</h2>
+<h2 align = "center" id = "combining-data">Combining data</h2>
 
 The process of combining all the data into one table as a yearly data and using the **File Naming Convention (FNC)**.
 
@@ -106,12 +93,23 @@ Steps:
 4. Start compiling the data.
 5. For file naming convention, all combined trip-data must named by "year" followed by "-divvy-tripdata.csv"
 
+> There are two (2) options in merging csv files by using **R** or **Python**. Choose base on your preference.
+
 *Using RStudio*
 ```r
 # load the necessary library
 
 install.library(tidyverse)
 library(tidyverse)
+```
+
+*Using Python*
+```python
+# load the necessary libararies
+
+import pandas as pd
+import glob
+import os
 ```
 
 &nbsp;
@@ -777,9 +775,6 @@ In order to analyze the table, the following is done.
 
     - **Example**:
 
-      <details><summary>Click Me!</summary>
-      <p>
-
       ID = **17**, name = **Wood St & Division St**. Use [Google Maps](https://www.google.com/maps) to validate the station_name.
 
       - Search Chicago to focus the search in Chicago City.
@@ -804,9 +799,6 @@ In order to analyze the table, the following is done.
       > Thus, **Wood St & Division St** is a wrong station name and must be replaced with correct name **Honore St & Division St**. You can also notice under **changes** column, it says **name**, which means **name change**.
 
       ![sample excel](https://snipboard.io/ixN0TV.jpg)
-
-      </p>
-      </details>
 
 &nbsp;
 
@@ -959,9 +951,8 @@ Export the result as [trips_p2_stations.csv](https://github.com/ca-ros/divvy-bik
     - **Column F**: *Text that contains* > "*y*" with **Green Fill with Dark Green Text**.
 9. Validate the **new_name** column by searching each names in [Google Maps](https://www.google.com/maps) and locate nearby **divvy-stations**.
 
-    <details><summary>Validating sample:</summary>
-    <p>
-
+    Validating sample:
+    
     - station_id = 17
     - Either a missing station_id **17** or station_name **Wood St & Division St**.
 
@@ -990,7 +981,6 @@ Export the result as [trips_p2_stations.csv](https://github.com/ca-ros/divvy-bik
 
     ![sample excel](https://snipboard.io/ixN0TV.jpg)
 
-    </p></details>
 
 &nbsp;  
 
@@ -1431,4 +1421,10 @@ FROM bike_trips.id_changes_stations as c
 WHERE s.name = c.old_name;
 ```
 
--- END Data Wrangling
+---
+
+## Cleaned Dataset
+
+- [Trips table](https://www.dropbox.com/s/qb3ndglnmf7gwh5/trips.csv?dl=0)(4.5 gb)
+- [Stations table]()(120 kb)
+- []
