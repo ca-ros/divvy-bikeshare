@@ -17,6 +17,8 @@ The data has been processed to remove trips that are taken by staff as they serv
 
 Questions relating to trip data should be sent to <a href = "mailto: bike-data@lyft.com">bike-data@lyft.com</a>. Requests to use trademarks and trade names should be sent to <a href = "mailto: trademarks@lyft.com">trademarks@lyft.com</a>.
 
+Read [system-data](https://ride.divvybikes.com/system-data).
+
 ### 🔗 Data sources:
 - [Divvy bikes](https://divvybikes.com), download the raw data-sets [here](https://divvy-tripdata.s3.amazonaws.com/index.html)
 - [Chicago Data Portal](https://data.cityofchicago.org/), download the raw stations-table:
@@ -69,7 +71,9 @@ The SQL database that I used in this analysis is [PostgreSQL](https://www.postgr
 
 *PgAdmin 4* has a default schema named "Public", it can be seen under Servers > PostgreSQL 14 > Databases > postgres > Schemas > Public.
 
-We need to create another schema named "bike_trips" to compile all our files under it, instead in "public" schema. Follow the steps:
+### Create new schema
+
+We need another schema named "bike_trips" to compile all our files under it, instead in "public" schema. Follow the steps:
 
 1. *Right click* "Schemas".
 2. *Click* "Create".
@@ -79,19 +83,58 @@ We need to create another schema named "bike_trips" to compile all our files und
 
 Lastly, to open the **Query Tool** press *ALT + SHIFT + Q*, or click the Query tool icon on the upper-left corner of pgAdmin.
 
+### **Change the default schema**
+
+```sql
+ALTER DATABASE postgres
+SET search_path to bike_trips;
+
+SET search_path to bike_trips;
+```
+
+### **Create a function**
+
+We will use this everytime we create a table for yearly trips.
+
+```sql
+CREATE OR REPLACE FUNCTION trips_part(part varchar(30))
+  RETURNS VOID
+  LANGUAGE plpgsql AS
+$func$
+BEGIN
+  EXECUTE format('
+    CREATE TABLE IF NOT EXISTS %I (
+      trip_id bigint, 
+      start_time timestamp without time zone, 
+      end_time timestamp without time zone, 
+      bike_id int, 
+      trip_duration int, 
+      start_station_id int, 
+      start_station_name varchar(50), 
+      end_station_id int, 
+      end_station_name varchar(50), 
+      user_type text, 
+      gender text, 
+      birth_year int
+      )', 'trips_' || part);
+END
+$func$;
+```
+
+> To call a function, use `SELECT` e.g. `SELECT trips_part('p1')`.
+
 &nbsp;
 
 <h2 align = "center" id = "combining-data">Combining data</h2>
 
-The process of combining all the data into one table as a yearly data and using the **File Naming Convention (FNC)**.
+The process of aggregating all the data into one table. In preparation, data will be temporarily separated into two (2) parts due to differences in structure before merging into 1 table. Part 1 contains year 2013-2019 and part 2 contains year 2020-2021. 
 
-Steps:
+### **Preparation**:
 
 1. Download all the data for year 2013 to 2021 [here](https://divvy-tripdata.s3.amazonaws.com/index.html).
 2. Download the stations data [here](https://data.cityofchicago.org/api/views/bbyy-e7gq/rows.csv?accessType=DOWNLOAD), this data is from [Chicago Data Portal](https://data.cityofchicago.org/). For this analysis, I will refer to the table as **Stations table**.
-3. After extracting the zip files, compile separately all the yearly bike-trips data and the stations data included in that folder. Name the folder as the year it represents.
-4. Start compiling the data.
-5. For file naming convention, all combined trip-data must named by "year" followed by "-divvy-tripdata.csv"
+3. After extracting the zip files, compile separately the bike-trips data and the stations data included in that folder. Name the folder as the part it represents *e.g. trips_p1*.
+4. Start compiling the data, **trips_p1** folder must contain data from year *2013-2019* and **trips_p2** folder must contain data from year *2020-2021*.
 
 > There are two (2) options in merging csv files, by using **R** or **Python**. Choose base on your preference.
 
@@ -112,380 +155,34 @@ import glob
 import os
 ```
 
-&nbsp;
+### **Inspection**
 
-<h3 align = "center"><strong>2013</strong></h3>
-
-Rename the trip data "Divvy-Trips_2013.csv" to "2013-divvy-tripdata.csv"
-
-Import the csv file into the database.
-
-<sub>*PostgreSQL*</sub>
-```sql
--- Create table
-CREATE TABLE bike_trips.trips_2013 (
-  trip_id bigint, 
-  start_time timestamp without time zone, 
-  end_time timestamp without time zone, 
-  bike_id int, 
-  trip_duration int, 
-  start_station_id int, 
-  start_station_name varchar(50), 
-  end_station_id int, 
-  end_station_name varchar(50), 
-  user_type text, 
-  gender text, 
-  birth_year int);
-```
-
-```sql
--- Import csv file
-COPY bike_trips.trips_2013 (
-  trip_id, 
-  start_time, 
-  end_time, 
-  bike_id, 
-  trip_duration, 
-  start_station_id, 
-  start_station_name, 
-  end_station_id, 
-  end_station_name, 
-  user_type, 
-  gender, 
-  birth_year) 
-FROM 'D:/Github/large csv files/divvy-bikeshare/trips/2013-divvy-tripdata.csv' 
-DELIMITER ',' CSV HEADER;
-```
+Before merging the files, we should ensure the consistency of column names in each tables. To easily open large csv files we will be using [Notepad++](https://notepad-plus-plus.org/downloads/), each files are opened and inspected. Upon inspection, we saw that **Divvy_Trips_2019_Q2.csv** table has different column names than the rest, which will affect the merging process of the csv files. Thus, its column names was matched to the rest of the other tables.
 
 &nbsp;
 
-<h3 align = "center"><strong>2014</strong></h3>
+<h3 align = "center"><strong>Trips_p1</strong></h3>
 
 <sub>*RStudio*</sub>
 
 ```r
-# Merge 2014_tripdata
-df_2014 <- list.files(path="D:/Github/large csv files/divvy-bikeshare/trips/2014", full.names = TRUE) %>% 
+# Merge trips_p1
+trips_p1 <- list.files(path="D:/Github/large csv files/divvy-bikeshare/trips_p1", full.names = TRUE) %>% 
   lapply(read_csv) %>% 
   bind_rows 
 ```
 
 ```r
-# Export the combined 2014_tripdata
-write.csv(df_2014,"D:/Github/large csv files/divvy-bikeshare/trips/2014-divvy-tripdata.csv", row.names = FALSE)
+# Export trips_p1
+write.csv(trips_p1,"D:/Github/large csv files/divvy-bikeshare/trips_p1_raw.csv", row.names = FALSE)
 ```
-> Follow the file naming guideline, file name should be "2014-divvy-tripdata.csv".
 
 Import the csv file into the database.
 
 <sub>*PostgreSQL*</sub>
 ```sql
 -- Create table
-CREATE TABLE bike_trips.trips_2014 (
-  trip_id bigint, 
-  start_time timestamp without time zone, 
-  end_time timestamp without time zone, 
-  bike_id int, 
-  trip_duration int, 
-  start_station_id int, 
-  start_station_name varchar(50), 
-  end_station_id int, 
-  end_station_name varchar(50), 
-  user_type text, 
-  gender text, 
-  birth_year int);
-```
-
-```sql
--- Import csv file
-COPY bike_trips.trips_2014 (
-  trip_id, 
-  start_time, 
-  end_time, 
-  bike_id, 
-  trip_duration, 
-  start_station_id, 
-  start_station_name, 
-  end_station_id, 
-  end_station_name, 
-  user_type, 
-  gender, 
-  birth_year) 
-FROM 'D:/Github/large csv files/divvy-bikeshare/trips/2014-divvy-tripdata.csv' 
-DELIMITER ',' CSV HEADER QUOTE '"' NULL 'NA';
-```
-
-&nbsp;
-
-<h3 align = "center"><strong>2015</strong></h3>
-
-<sub>*RStudio*</sub>
-
-```r
-# Merge 2015_tripdata
-df_2015 <- list.files(path="D:/Github/large csv files/divvy-bikeshare/trips/2015", full.names = TRUE) %>% 
-  lapply(read_csv) %>% 
-  bind_rows 
-```
-
-```r
-# Export the combined 2015_tripdata
-write.csv(df_2015,"D:/Github/large csv files/divvy-bikeshare/trips/2015-divvy-tripdata.csv", row.names = FALSE)
-```
-> Follow the file naming guideline, file name should be "2015-divvy-tripdata.csv".
-
-Import the csv file into the database.
-
-<sub>*PostgreSQL*</sub>
-```sql
--- Create table
-CREATE TABLE bike_trips.trips_2015 (
-  trip_id bigint, 
-  start_time timestamp without time zone, 
-  end_time timestamp without time zone, 
-  bike_id int, 
-  trip_duration int, 
-  start_station_id int, 
-  start_station_name varchar(50), 
-  end_station_id int, 
-  end_station_name varchar(50), 
-  user_type text, 
-  gender text, 
-  birth_year int);
-```
-
-```sql
--- Import csv file
-COPY bike_trips.trips_2015 (
-  trip_id, 
-  start_time, 
-  end_time, 
-  bike_id, 
-  trip_duration, 
-  start_station_id, 
-  start_station_name, 
-  end_station_id, 
-  end_station_name, 
-  user_type, 
-  gender, 
-  birth_year) 
-FROM 'D:/Github/large csv files/divvy-bikeshare/trips/2015-divvy-tripdata.csv' 
-DELIMITER ',' CSV HEADER QUOTE '"' NULL 'NA';
-```
-
-&nbsp;
-
-<h3 align = "center"><strong>2016</strong></h3>
-
-<sub>*RStudio*</sub>
-
-```r
-# Merge 2016_tripdata
-df_2016 <- list.files(path="D:/Github/large csv files/divvy-bikeshare/trips/2016", full.names = TRUE) %>% 
-  lapply(read_csv) %>% 
-  bind_rows 
-```
-
-```r
-# Export the combined 2016_tripdata
-write.csv(df_2016,"D:/Github/large csv files/divvy-bikeshare/trips/2016-divvy-tripdata.csv", row.names = FALSE)
-```
-> Follow the file naming guideline, file name should be "2016-divvy-tripdata.csv".
-
-Import the csv file into the database.
-
-<sub>*PostgreSQL*</sub>
-```sql
--- Create table
-CREATE TABLE bike_trips.trips_2016 (
-  trip_id bigint, 
-  start_time timestamp without time zone, 
-  end_time timestamp without time zone, 
-  bike_id int, 
-  trip_duration int, 
-  start_station_id int, 
-  start_station_name varchar(50), 
-  end_station_id int, 
-  end_station_name varchar(50), 
-  user_type text, 
-  gender text, 
-  birth_year int);
-  ```
-
-```sql
--- Import csv file
-COPY bike_trips.trips_2016 (
-  trip_id, 
-  start_time, 
-  end_time, 
-  bike_id, 
-  trip_duration, 
-  start_station_id, 
-  start_station_name, 
-  end_station_id, 
-  end_station_name, 
-  user_type, 
-  gender, 
-  birth_year) 
-FROM 'D:/Github/large csv files/divvy-bikeshare/trips/2016-divvy-tripdata.csv' 
-DELIMITER ',' CSV HEADER QUOTE '"' NULL 'NA';
-```
-
-&nbsp;
-
-<h3 align = "center"><strong>2017</strong></h3>
-
-<sub>*RStudio*</sub>
-
-```r
-# Merge 2017_tripdata
-df_2017 <- list.files(path="D:/Github/large csv files/divvy-bikeshare/trips/2017", full.names = TRUE) %>% 
-  lapply(read_csv) %>% 
-  bind_rows 
-```
-
-```r
-# Export the combined 2017_tripdata
-write.csv(df_2017,"D:/Github/large csv files/divvy-bikeshare/trips/2017-divvy-tripdata.csv", row.names = FALSE)
-```
-> Follow the file naming guideline, file name should be "2017-divvy-tripdata.csv".
-
-Import the csv file into the database.
-
-<sub>*PostgreSQL*</sub>
-```sql
--- Create table
-CREATE TABLE bike_trips.trips_2017 (
-  trip_id bigint, 
-  start_time timestamp without time zone, 
-  end_time timestamp without time zone, 
-  bike_id int, 
-  trip_duration int, 
-  start_station_id int, 
-  start_station_name varchar(50), 
-  end_station_id int, 
-  end_station_name varchar(50), 
-  user_type text, 
-  gender text, 
-  birth_year int);
-```
-
-```sql
--- Import csv file
-COPY bike_trips.trips_2017 (
-  trip_id, 
-  start_time, 
-  end_time, 
-  bike_id, 
-  trip_duration, 
-  start_station_id, 
-  start_station_name, 
-  end_station_id, 
-  end_station_name, 
-  user_type, 
-  gender, 
-  birth_year) 
-FROM 'D:/Github/large csv files/divvy-bikeshare/trips/2017-divvy-tripdata.csv' 
-DELIMITER ',' CSV HEADER QUOTE '"' NULL 'NA';
-```
-
-&nbsp;
-
-<h3 align = "center"><strong>2018</strong></h3>
-
-<sub>*RStudio*</sub>
-
-```r
-# Merge 2018_tripdata
-df_2018 <- list.files(path="D:/Github/large csv files/divvy-bikeshare/trips/2018", full.names = TRUE) %>% 
-  lapply(read_csv) %>% 
-  bind_rows 
-```
-
-```r
-# Export the combined 2018_tripdata
-write.csv(df_2018,"D:/Github/large csv files/divvy-bikeshare/trips/2018-divvy-tripdata.csv", row.names = FALSE)
-```
-> Follow the file naming guideline, file name should be "2018-divvy-tripdata.csv".
-
-Import the csv file into the database.
-
-<sub>*PostgreSQL*</sub>
-```sql
--- Create table
-CREATE TABLE bike_trips.trips_2018 (
-  trip_id bigint, 
-  start_time timestamp without time zone, 
-  end_time timestamp without time zone, 
-  bike_id int, 
-  trip_duration int, 
-  start_station_id int, 
-  start_station_name varchar(50), 
-  end_station_id int, 
-  end_station_name varchar(50), 
-  user_type text, 
-  gender text, 
-  birth_year int);
-```
-
-```sql
--- Import csv file
-COPY bike_trips.trips_2018 (
-  trip_id, 
-  start_time, 
-  end_time, 
-  bike_id, 
-  trip_duration, 
-  start_station_id, 
-  start_station_name, 
-  end_station_id, 
-  end_station_name, 
-  user_type, 
-  gender, 
-  birth_year) 
-FROM 'D:/Github/large csv files/divvy-bikeshare/trips/2018-divvy-tripdata.csv' 
-DELIMITER ',' CSV HEADER QUOTE '"' NULL 'NA';
-```
-
-&nbsp;
-
-<h3 align = "center"><strong>2019</strong></h3>
-
-This data set has inconsistent column naming. By using [Notepad++](https://notepad-plus-plus.org/downloads/) to open large datasets, each quarterly files are opened and inspected. We can see that 2019_Q2 table has different column names than the other tables, which will affect the merging process of the csv files. 2019_Q2 column name was matched to the rest of the other quarterly tables.
-
-<sub>*RStudio*</sub>
-
-```r
-# Merge 2019_tripdata
-df_2019 <- list.files(path="D:/Github/large csv files/divvy-bikeshare/trips/2019", full.names = TRUE) %>% 
-  lapply(read_csv) %>% 
-  bind_rows 
-```
-
-```r
-# Export the combined 2019_tripdata
-write.csv(df_2019,"D:/Github/large csv files/divvy-bikeshare/trips/2019-divvy-tripdata.csv", row.names = FALSE)
-```
-> Follow the file naming guideline, file name should be "2019-divvy-tripdata.csv".
-
-Import the csv file into the database.
-
-<sub>*PostgreSQL*</sub>
-```sql
--- Create table
-CREATE TABLE bike_trips.trips_2019 (
-  trip_id bigint, 
-  start_time timestamp without time zone, 
-  end_time timestamp without time zone, 
-  bike_id int, 
-  trip_duration int, 
-  start_station_id int, 
-  start_station_name varchar(50), 
-  end_station_id int, 
-  end_station_name varchar(50), 
-  user_type text, 
-  gender text, 
-  birth_year int);
+SELECT trips_part('p1');
 ```
 
 ```sql
@@ -1425,5 +1122,5 @@ WHERE s.name = c.old_name;
 
 ## 🧹 Cleaned Dataset
 
-- [Trips table](https://www.dropbox.com/s/qb3ndglnmf7gwh5/trips.csv?dl=0) (4.5 gb)
-- [Stations table](https://github.com/ca-ros/divvy-bikeshare/blob/master/data%20wrangling/csv%20files/stations_cleaning/Stations_cleaned.csv) (120 kb)
+- [Trips_table](https://www.dropbox.com/s/qb3ndglnmf7gwh5/trips.csv?dl=0) (4.5 gb)
+- [Stations_table](https://github.com/ca-ros/divvy-bikeshare/blob/master/data%20wrangling/csv%20files/stations_cleaning/Stations_cleaned.csv) (120 kb)
