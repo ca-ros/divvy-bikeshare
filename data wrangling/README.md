@@ -17,7 +17,7 @@ The data has been processed to remove trips that are taken by staff as they serv
 
 Questions relating to trip data should be sent to <a href = "mailto: bike-data@lyft.com">bike-data@lyft.com</a>. Requests to use trademarks and trade names should be sent to <a href = "mailto: trademarks@lyft.com">trademarks@lyft.com</a>.
 
-Read [system-data](https://ride.divvybikes.com/system-data).
+> Read [system-data](https://ride.divvybikes.com/system-data).
 
 ### 🔗 Data sources:
 - [Divvy bikes](https://divvybikes.com), download the raw data-sets [here](https://divvy-tripdata.s3.amazonaws.com/index.html)
@@ -38,19 +38,11 @@ Read [system-data](https://ride.divvybikes.com/system-data).
 
 <h2 align = "center">Table of Content</h2>
 
-I. [Setting up SQL Environment](#setting-up-sql-environment)
+I. [Set up SQL Environment](#setting-up-sql-environment)
 
 II. [Combining Data](#combining-data)
 
-- [2013](#2013)
-- [2014](#2014)
-- [2015](#2015)
-- [2016](#2016)
-- [2017](#2017)
-- [2018](#2018)
-- [2019](#2019)
-- [2020](#2020)
-- [2021](#2021)
+
 
 III. [Trips table](#trips-table)
 
@@ -203,7 +195,7 @@ SELECT trips_part('p2');
 
 ```sql
 -- Import p1
-COPY bike_trips.trips_p1 (
+COPY trips_p1 (
   trip_id, 
   start_time, 
   end_time, 
@@ -222,7 +214,7 @@ DELIMITER ',' CSV HEADER QUOTE '"' NULL 'NA';
 
 ```sql
 -- Import p2
-COPY bike_trips.trips_p2 (
+COPY trips_p2 (
   trip_id, 
   start_time, 
   end_time, 
@@ -283,9 +275,11 @@ DELIMITER ',' CSV HEADER QUOTE '"' NULL 'NA';
 
 <h2 align = "center">Trips table</h2>
 
-The process of cleaning station names and station IDs in trips table, by verifying and matching the data available in Google Maps and Stations table.
+The process of cleaning station names and station IDs in trips table, by verifying and matching the data available in Google Maps and Stations table. In this process we will be using Excel and macros to record and easily repeat the process.
 
 We need to import the **Stations** table to serve as a reference for our cleaning proces. But, before importing the file we need to make some changes:
+
+### Preparation
 
 Steps:
 1. **Open Excel**: *Under Data* > *Get & Transform Data* > *Get Data* > *From File* > *From Text/CSV* > locate and import [Divvy_Bicycle_Stations.csv](https://github.com/ca-ros/divvy-bikeshare/blob/master/data%20wrangling/csv%20files/stations_raw/Divvy_Bicycle_Stations.csv). Under *Data Type Detection* select *Do not detect data types* and click **Load**. Delete **Sheet1**.
@@ -299,11 +293,36 @@ Steps:
 9. **Rename columns**: Station Name = **name**, Total Docks = **docks**, Status = **in_service**, and Location = **coordinate**.
 12. Save as [Stations.csv](https://github.com/ca-ros/divvy-bikeshare/blob/master/data%20wrangling/csv%20files/stations_cleaning/Stations.csv).
 
-*Import csv file*
+
+### Show the Developer tab
+
+The **Developer** tab isn't displayed by default, but you can add it to the ribbon.
+
+Steps:
+1. On the **File** tab, go to **Options** > **Customize Ribbon**.
+2. Under **Customize the Ribbon** and under **Main tabs**, select the **Developer** check box.
+
+After you show the tab, the Developer tab stays visible, unless you clear the check box or have to reinstall a Microsoft Office program.
+
+The Developer tab is the place to go when you want to do or use the following:
+- Write macros.
+- Run macros that you previously recorded.
+- Use XML commands.
+- Use ActiveX controls.
+- Create applications to use with Microsoft Office programs.
+- Use form controls in Microsoft Excel.
+- Work with the ShapeSheet in Microsoft Visio.
+- Create new shapes and stencils in Microsoft Visio.
+
+A macro is a series of commands that you can use to automate a repeated task, and can be run when you have to perform the task.
+
+> Read [Show the Developer tab](https://support.microsoft.com/en-us/topic/show-the-developer-tab-e1192344-5e56-4d45-931b-e5fd9bea2d45) and [Macros in Office files](https://support.microsoft.com/en-us/office/macros-in-office-files-12b036fd-d140-4e74-b45e-16fed1a7e5c6).
+
+### Import Stations table
 
 ```sql
 -- Create table
-CREATE TABLE bike_trips.stations (
+CREATE TABLE stations (
   id bigint,
   name varchar,
   docks int,
@@ -315,7 +334,7 @@ CREATE TABLE bike_trips.stations (
 
 ```sql
 -- Import csv file
-COPY bike_trips.stations (
+COPY stations (
   id,
   name,
   docks,
@@ -339,28 +358,23 @@ Run a query to find all the missing/ mismatch station names and IDs to the **Sta
 -- stations in trips_p1 where not in Stations table, 2013-2019
 -- check the data
 
-SELECT t.id, t.name
-FROM (
-  SELECT DISTINCT start_station_id as id, start_station_name as name 
-  FROM bike_trips.trips_p1
+WITH distinct_stations (id, name) AS
+  (SELECT DISTINCT start_station_id as id, start_station_name as name 
+  FROM trips_p1
   UNION
   SELECT DISTINCT end_station_id as id, end_station_name as name
-  FROM bike_trips.trips_p1) as t
+  FROM trips_p1)
+  
+SELECT * FROM distinct_stations as t
 WHERE NOT EXISTS (
   SELECT id, name
-  FROM bike_trips.stations as s
+  FROM stations as s
   WHERE s.id = t.id)
 UNION
-SELECT t.id, t.name
-FROM (
-  SELECT DISTINCT start_station_name as name, start_station_id as id
-  FROM bike_trips.trips_p1
-  UNION
-  SELECT DISTINCT end_station_name as name, end_station_id as id
-  FROM bike_trips.trips_p1) as t
+SELECT * FROM distinct_stations as t
 WHERE NOT EXISTS (
   SELECT id, name
-  FROM bike_trips.stations as s
+  FROM stations as s
   WHERE s.name = t.name);
 
 -- 163 records
@@ -372,19 +386,21 @@ In order to analyze the table, the following is done.
 
 <h4><strong>Process</strong>:</h4>
 
-1. Open the csv file using MS Excel. Rename columns: **id = old_id** & **name = old_name**.
-2. Create a new header for column C: **new_id**, column D: **new_name**, and column E: **changes**.
-3. **Import the Stations table**: Under *Data* > *Get & Transform Data* > *Get Data* > *From File* > *From Text/CSV* > locate [Stations.csv](https://github.com/ca-ros/divvy-bikeshare/blob/master/data%20wrangling/csv%20files/stations_cleaning/Stations.csv). Under *Data Type Detection*, select *Do not detect data types* and click **Load**.
-4. **Remove row1**: Under *Table Design* > *Tools* > click **Convert to Range**, select **OK**. Then delete row1 which contains column#.
-5. Copy column **id** to the right of column **name**. *Right Click* column C and select Insert, a new empty column C should appear. Copy ColumnA to ColumnC.
-6. **Freeze the header row/ top row**: Under *View* > *Window* > *Freeze Panes* > *Freeze Top Row*. Do the same for the other sheet.
-7. In **trips_p1_stations** sheet:
+1. Open the csv file using MS Excel.
+2. **Start recording macro**: Under *Developer* > *Code* > *Record Macro*. Macro name: **divvy**, and shortcut key: **Ctrl + Shift + Y**. Then click **OK**. 
+3. Rename columns: **id = old_id** & **name = old_name**.
+4. Create a new header for column C: **new_id**, column D: **new_name**, and column E: **changes**.
+5. **Import the Stations table**: Under *Data* > *Get & Transform Data* > *Get Data* > *From File* > *From Text/CSV* > locate [Stations.csv](https://github.com/ca-ros/divvy-bikeshare/blob/master/data%20wrangling/csv%20files/stations_cleaning/Stations.csv). Under *Data Type Detection*, select *Do not detect data types* and click **Load**.
+6. **Remove row1**: Under *Table Design* > *Tools* > click **Convert to Range**, select **OK**. Then delete row1 which contains column#.
+7. Copy column **id** to the right of column **name**. *Right Click* column C and select Insert, a new empty column C should appear. Copy ColumnA to ColumnC.
+8. **Freeze the header row/ top row**: Under *View* > *Window* > *Freeze Panes* > *Freeze Top Row*. Do the same for the other sheet.
+9. In **trips_p1_stations** sheet:
 
    - **Cell C2**: enter the formula `=IFNA(VLOOKUP(TEXT(B2,0),Stations!$B:$D,2,FALSE),"same")`, then press Enter. Click the cell again and double-click the *bottom-right* corner of the cell to copy the formula in the entire row.
    - **Cell D2**: enter the formula `=IFNA(VLOOKUP(TEXT(A2,0),Stations!$A:$B,2,FALSE),"same")`, then press Enter. Click the cell again and double-click the *bottom-right* corner of the cell to copy the formula in the entire row.
    - **Cell E2**: enter the formula `=IF(AND(D2="same",C2="same"),"missing",IF(B2=D2,"same",IF(AND(A2<>C2,D2="same"),"id",IF(B2<>D2,"name"))))`, then press Enter. Click the cell again and double-click the *bottom-right* corner of the cell to copy the formula in the entire row.
    
-8. **Use conditinal formatting**: Under *Home* > *Styles* > *Conditional Formatting* > *Highlight Cell Rules* > ...
+10. **Use conditinal formatting**: Under *Home* > *Styles* > *Conditional Formatting* > *Highlight Cell Rules* > ...
 
     - **Column C**: *Text that contains* > "*same*" with **Green Fill with Dark Green Text**.
     - **Column D**: *Text that contains* > "*same*" with **Green Fill with Dark Green Text**.
@@ -393,11 +409,15 @@ In order to analyze the table, the following is done.
       - *Text that contains* > "*name*" with **Yellow Fill with Dark Yellow Text**.
       - *Text that contains* > "*id*" with **Green Fill with Dark Green Text**.
       
-9. Validate the **new_name** column by searching each names in [Google Maps](https://www.google.com/maps) and locate nearby **divvy-stations**.
+11. Validate the **new_name** column by searching each names in [Google Maps](https://www.google.com/maps) and locate nearby **divvy-stations**.
 
-    - **Example**:
+    <div id = "validating-sample">Validating sample:</div>
 
-      ID = **17**, name = **Wood St & Division St**. Use [Google Maps](https://www.google.com/maps) to validate the station_name.
+    - station_id = **17**, station_name = Wood St & Division St
+
+    > Either a missing station_id or station_name. 
+      
+    Using [Google Maps](https://www.google.com/maps) to validate the station_name.
 
       - Search Chicago to focus the search in Chicago City.
 
@@ -424,7 +444,7 @@ In order to analyze the table, the following is done.
 
 &nbsp;
 
-10. **Create another table**: 
+12. **Create another table**: 
 
     - For **missing stations**: (24 records)
       - Filter changes column with values **missing**. Copy columns **old_id** and **old_name** into a new blank workbook and save it as [missing_stations_p1.csv](https://github.com/ca-ros/divvy-bikeshare/blob/master/data%20wrangling/csv%20files/stations_cleaning/missing_stations_p1.csv).
@@ -517,28 +537,23 @@ WHERE s.end_station_name = c.old_name;
 ```sql
 -- stations in trips_p2 where not in Stations table, 2020-2021
 -- check the data
-SELECT t.id, t.name
-FROM (
-  SELECT DISTINCT start_station_id as id, start_station_name as name 
-  FROM bike_trips.trips_p2
+WITH distinct_stations (id, name) AS
+  (SELECT DISTINCT start_station_id as id, start_station_name as name 
+  FROM trips_p2
   UNION
-  SELECT DISTINCT end_station_id as id, end_station_name as name 
-  FROM bike_trips.trips_p2) as t
+  SELECT DISTINCT end_station_id as id, end_station_name as name
+  FROM trips_p2)
+  
+SELECT * FROM distinct_stations as t
 WHERE NOT EXISTS (
   SELECT id, name
-  FROM bike_trips.stations as s
+  FROM stations as s
   WHERE CAST(s.id AS varchar) = t.id)
 UNION
-SELECT t.id, t.name
-FROM (
-  SELECT DISTINCT start_station_name as name, start_station_id as id 
-  FROM bike_trips.trips_p2
-  UNION
-  SELECT DISTINCT end_station_name as name, end_station_id as id 
-  FROM bike_trips.trips_p2)as t
+SELECT * FROM distinct_stations as t
 WHERE NOT EXISTS (
-  SELECT s.id, s.name
-  FROM bike_trips.stations as s
+  SELECT id, name
+  FROM stations as s
   WHERE s.name = t.name);
 
 -- 716 records
@@ -573,38 +588,7 @@ Export the result as [trips_p2_stations.csv](https://github.com/ca-ros/divvy-bik
     - **Column F**: *Text that contains* > "*y*" with **Green Fill with Dark Green Text**.
 9. Validate the **new_name** column by searching each names in [Google Maps](https://www.google.com/maps) and locate nearby **divvy-stations**.
 
-    Validating sample:
-    
-    - station_id = 17
-    - Either a missing station_id **17** or station_name **Wood St & Division St**.
-
-    Using [Google Maps](https://www.google.com/maps) to validate the station_name.
-
-    - Search **Chicago** to focus the search in Chicago City.
-
-    ![Chicago](https://snipboard.io/vYIsW9.jpg)
-
-    - Enter the station_name, **Wood St & Division St**, and *press Enter*.
-    - Click **Nearby** and search **divvy**, to search nearby divvy-bike stations.
-
-    ![17](https://snipboard.io/n4qvdG.jpg)
-
-    - Hover over to the nearest station to view the station name.
-
-    ![17.2](https://snipboard.io/LHBqnm.jpg)
-
-    The nearest station is **Honore St & Division St**.
-
-    > Upon checking the **Stations** table on ID number 17, we can confirm that station_id 17 is Honore St & Division St.
-
-    ![17 excel](https://snipboard.io/9MqQhg.jpg)
-
-    > Thus, **Wood St & Division St** is a wrong station name and must be replaced with correct name **Honore St & Division St**. You can also notice under **changes** column, it says **name**, which means **name change**.
-
-    ![sample excel](https://snipboard.io/tHhYAR.jpg)
-
-
-&nbsp;  
+    - Refer to earlier [sample](#validating-sample)
 
 10. **Cleaning process**: aside from `VLOOKUP`, we will use **Find**, **Google Maps**, and manual process to match the data.
 
