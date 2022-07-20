@@ -129,7 +129,9 @@ $func$;
 
 The process of aggregating all the data into one table. In preparation, data will be temporarily separated into two (2) parts due to differences in structure before merging into 1 table. Part 1 contains year 2013-2019 and part 2 contains year 2020-2021. 
 
-### Data preparation:
+### Data preparation
+
+Steps:
 
 1. Download all the data for year 2013 to 2021 [here](https://divvy-tripdata.s3.amazonaws.com/index.html).
 2. Download the stations data [here](https://data.cityofchicago.org/api/views/bbyy-e7gq/rows.csv?accessType=DOWNLOAD), this data is from [Chicago Data Portal](https://data.cityofchicago.org/). For this analysis, I will refer to the table as **Stations table**.
@@ -201,7 +203,7 @@ SELECT trips_part('p2');
 
 ```sql
 -- Import p1
-COPY bike_trips.trips_2019 (
+COPY bike_trips.trips_p1 (
   trip_id, 
   start_time, 
   end_time, 
@@ -214,7 +216,26 @@ COPY bike_trips.trips_2019 (
   user_type, 
   gender, 
   birth_year) 
-FROM 'D:/Github/large csv files/divvy-bikeshare/trips/2019-divvy-tripdata.csv' 
+FROM 'D:/Github/large csv files/divvy-bikeshare/trips_p1_raw.csv' 
+DELIMITER ',' CSV HEADER QUOTE '"' NULL 'NA';
+```
+
+```sql
+-- Import p2
+COPY bike_trips.trips_p2 (
+  trip_id, 
+  start_time, 
+  end_time, 
+  bike_id, 
+  trip_duration, 
+  start_station_id, 
+  start_station_name, 
+  end_station_id, 
+  end_station_name, 
+  user_type, 
+  gender, 
+  birth_year) 
+FROM 'D:/Github/large csv files/divvy-bikeshare/trips_p2_raw.csv' 
 DELIMITER ',' CSV HEADER QUOTE '"' NULL 'NA';
 ```
 
@@ -395,11 +416,11 @@ In order to analyze the table, the following is done.
 
       > Upon checking the **Stations** table on ID number 17, we can confirm that station_id 17 is Honore St & Division St.
 
-      ![17 excel](https://snipboard.io/najrpI.jpg)
+      ![17 excel](https://snipboard.io/9MqQhg.jpg)
 
       > Thus, **Wood St & Division St** is a wrong station name and must be replaced with correct name **Honore St & Division St**. You can also notice under **changes** column, it says **name**, which means **name change**.
 
-      ![sample excel](https://snipboard.io/ixN0TV.jpg)
+      ![sample excel](https://snipboard.io/tHhYAR.jpg)
 
 &nbsp;
 
@@ -576,11 +597,11 @@ Export the result as [trips_p2_stations.csv](https://github.com/ca-ros/divvy-bik
 
     > Upon checking the **Stations** table on ID number 17, we can confirm that station_id 17 is Honore St & Division St.
 
-    ![17 excel](https://snipboard.io/najrpI.jpg)
+    ![17 excel](https://snipboard.io/9MqQhg.jpg)
 
     > Thus, **Wood St & Division St** is a wrong station name and must be replaced with correct name **Honore St & Division St**. You can also notice under **changes** column, it says **name**, which means **name change**.
 
-    ![sample excel](https://snipboard.io/ixN0TV.jpg)
+    ![sample excel](https://snipboard.io/tHhYAR.jpg)
 
 
 &nbsp;  
@@ -771,14 +792,12 @@ WHERE s.end_station_name = c.old_name;
 
 <h3 align = "center"><strong>Combine table: trips</strong></h3>
 
-Before combining both tables, some changes has to be made first. By checking the schema of the tables we can see the differences in their data. After modifying, merge both tables into one and save as **trips** table.
+Before combining both tables, some changes has to be made first. By checking the schema of the tables we can see the differences in their data. After modification, merge both tables into one and save as **trips** table.
 
 <h4><strong>Schema</strong></h4>
 
-*Table Columns*
-
 - trips_p1
-```
+
 | Field name         | Type                        |
 | ------------------ | --------------------------- |
 | trip_id            | bigint                      |
@@ -793,10 +812,10 @@ Before combining both tables, some changes has to be made first. By checking the
 | user_type          | text                        |
 | gender             | text                        |
 | birth_year         | integer                     |
-```
+
 
 - trips_p2
-```
+
 | Field name         | Type                        |
 | ------------------ | --------------------------- |
 | ride_id            | character varying           |
@@ -812,7 +831,7 @@ Before combining both tables, some changes has to be made first. By checking the
 | end_lat            | numeric                     |
 | end_lng            | numeric                     |
 | user_type          | text                        |
-```
+
 
 **Table changes**:
 - *trips_p1*
@@ -1021,8 +1040,6 @@ SET id = c.new_id
 FROM bike_trips.id_changes_stations as c
 WHERE s.name = c.old_name;
 ```
-
----
 
 ## 🧹 Cleaned Dataset
 
