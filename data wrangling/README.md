@@ -390,19 +390,19 @@ In order to analyze the table, the following is done.
 
 <h4><strong>Process</strong>:</h4>
 
-1. Open the csv file using MS Excel.
+1. Open the csv file using MS Excel, and save the workbook as "**trips_p1_stations.xlsm**".
 2. **Start recording macro**: Under *Developer* > *Code* > *Record Macro*. Macro name: **divvy**, and shortcut key: **Ctrl + Shift + Y**. Then click **OK**. 
-3. Rename columns: **id = old_id** & **name = old_name**.
-4. Create a new header for column C: **new_id**, column D: **new_name**, and column E: **changes**.
-5. **Import the Stations table**: Under *Data* > *Get & Transform Data* > *Get Data* > *From File* > *From Text/CSV* > locate [Stations.csv](https://github.com/ca-ros/divvy-bikeshare/blob/master/data%20wrangling/csv%20files/stations_cleaning/Stations.csv). Under *Data Type Detection*, select *Do not detect data types* and click **Load**.
+3. Rename sheet to "**trips_stations**". Rename columns: **id = old_id** & **name = old_name**.
+4. Create a new header for column C: **new_id**, column D: **new_name**, column E: **changes**, and column F: **verified**.
+5. **Import the Stations table**: Under *Data* > *Get & Transform Data* > *Get Data* > *From File* > *From Text/CSV* > locate [Stations.csv](https://github.com/ca-ros/divvy-bikeshare/blob/master/data%20wrangling/csv%20files/stations_cleaning/Stations.csv). Then, under *Data Type Detection*, select *Do not detect data types* and click **Load**.
 6. **Remove row1**: Under *Table Design* > *Tools* > click **Convert to Range**, select **OK**. Then delete row1 which contains column#.
 7. Copy column **id** to the right of column **name**. *Right Click* column C and select Insert, a new empty column C should appear. Copy ColumnA to ColumnC.
 8. **Freeze the header row/ top row**: Under *View* > *Window* > *Freeze Panes* > *Freeze Top Row*. Do the same for the other sheet.
-9. In **trips_p1_stations** sheet:
+9. In **trips_stations** sheet:
 
    - **Cell C2**: enter the formula `=IFNA(VLOOKUP(TEXT(B2,0),Stations!$B:$D,2,FALSE),"same")`, then press Enter. Click the cell again and double-click the *bottom-right* corner of the cell to copy the formula in the entire row.
    - **Cell D2**: enter the formula `=IFNA(VLOOKUP(TEXT(A2,0),Stations!$A:$B,2,FALSE),"same")`, then press Enter. Click the cell again and double-click the *bottom-right* corner of the cell to copy the formula in the entire row.
-   - **Cell E2**: enter the formula `=IF(AND(D2="same",C2="same"),"missing",IF(B2=D2,"same",IF(AND(A2<>C2,D2="same"),"id",IF(B2<>D2,"name"))))`, then press Enter. Click the cell again and double-click the *bottom-right* corner of the cell to copy the formula in the entire row.
+   - **Cell E2**: enter the formula `=IF(C2 = "", "missing", IF(AND(D2="same",C2="same"),"missing",IF(B2=D2,"same",IF(AND(A2<>C2,D2="same"),"id",IF(AND(B2<>D2,C2="same"),"name",IF(AND(A2<>C2,B2<>D2),"both"))))))`, then press Enter. Click the cell again and double-click the *bottom-right* corner of the cell to copy the formula in the entire row.
    
 10. **Use conditinal formatting**: Under *Home* > *Styles* > *Conditional Formatting* > *Highlight Cell Rules* > ...
 
@@ -412,8 +412,9 @@ In order to analyze the table, the following is done.
       - *Text that contains* > "*missing*" with **Light Red Fill with Dark Red Text**.
       - *Text that contains* > "*name*" with **Yellow Fill with Dark Yellow Text**.
       - *Text that contains* > "*id*" with **Green Fill with Dark Green Text**.
-      
-11. Validate the **new_name** column by searching each names in [Google Maps](https://www.google.com/maps) and locate nearby **divvy-stations**.
+
+11. **End macro recording**: Under *Developer* > *Code* > *Stop Recording*.
+12. Validate the **new_name** column by searching each names in [Google Maps](https://www.google.com/maps) and locate nearby **divvy-stations**.
 
     <div id = "validating-sample">Validating sample:</div>
 
@@ -446,18 +447,221 @@ In order to analyze the table, the following is done.
 
       ![sample excel](https://snipboard.io/tHhYAR.jpg)
 
-12. **Create another table**: 
+13. **Create new tables**
 
     - For **missing stations**: (24 records)
-      - Filter changes column with values **missing**. Copy columns **old_id** and **old_name** into a new blank workbook and save it as [missing_stations_p1.csv](https://github.com/ca-ros/divvy-bikeshare/blob/master/data%20wrangling/csv%20files/stations_cleaning/missing_stations_p1.csv).
+
+      1. **Start macro recording**: Macro name: missingstations, and shortcut key: Ctrl + Shift + M. Then click **OK**.
+      2. Filter **changes** column with values **missing**. Copy columns **old_id** and **old_name** into a new sheet and rename it to **missing_stations**.
+      3. **End macro recording**.
+      4. **Create new table**: Right click sheet **missing_stations** > *Move or Copy* > *To book* > *new book*.
+      5. Save it as [missing_stations_p1.csv](https://github.com/ca-ros/divvy-bikeshare/blob/master/data%20wrangling/csv%20files/stations_cleaning/missing_stations_p1.csv).
+
     - For **id changes**: (2 records)
-      - Filter changes column with values **id**. Copy columns **old_name** and **new_id** into a new blank workbook and save it as [id_changes_p1.csv](https://github.com/ca-ros/divvy-bikeshare/blob/master/data%20wrangling/csv%20files/stations_cleaning/id_changes_p1.csv).
+
+      1. **Start macro recording**: Macro name: idchanges, and shortcut key: Ctrl + Shift + I. Then click **OK**.
+      2. Filter **changes** column with values **id**. Copy columns **old_name** and **new_id** into a new sheet and rename it to **id_changes**.
+      3. **End macro recording**.
+      4. **Create new table**: Right click sheet **id_changes** > *Move or Copy* > *To book* > *new book*.
+      5. Save it as [id_changes_p1.csv](https://github.com/ca-ros/divvy-bikeshare/blob/master/data%20wrangling/csv%20files/stations_cleaning/id_changes_p1.csv).
+
     - For **name changes**: (137 records)
-      - Filter changes column with values **name**. Copy columns **old_name** and **new_name** into a new blank workbook and save it as [name_changes_p1.csv](https://github.com/ca-ros/divvy-bikeshare/blob/master/data%20wrangling/csv%20files/stations_cleaning/name_changes_p1.csv).
+
+      1. **Start macro recording**: Macro name: namechanges, and shortcut key: Ctrl + Shift + N. Then click **OK**.
+      2. Filter **changes** column with values **name**. Copy columns **old_name** and **new_name** into a new sheet and rename it to **name_changes**.
+      3. **End macro recording**.
+      4. **Create new table**: Right click sheet **name_changes** > *Move or Copy* > *To book* > *new book*.
+      5. Save it as [name_changes_p1.csv](https://github.com/ca-ros/divvy-bikeshare/blob/master/data%20wrangling/csv%20files/stations_cleaning/name_changes_p1.csv).
 
 > **Optional**: You can hide error values indicators. Under *File* > *Options* > *Formulas* > *Error Checking* > uncheck *Enable background error checking*.
 
 > Upon checking, 2 station names from **trips_p1** table has already existing names in **Stations** table. Thus, duplicate station names with a different **station_id**.
+
+#### **Debug Macros**
+
+We need debug the macros to make it reusable. Open the Visual Basic: Under *Developer* > *Code* > *Visual Basic*. Under the (*Workbook name*) > *Modules* > *Module1*. The macros recorded must be the same as the codes below.
+
+You can also just import the module. Download the [module](). On Microsoft VBA, right-click *Modules* folder > *Import file* > locate *Module1.bas* > click *Open*. 
+
+- divvy
+
+```vb
+Sub divvy()
+'
+' divvy Macro
+'
+' Keyboard Shortcut: Ctrl+Shift+Y
+'
+    ActiveSheet.Name = "trips_stations"
+    Range("A1").Select
+    ActiveCell.FormulaR1C1 = "old_id"
+    Range("B1").Select
+    ActiveCell.FormulaR1C1 = "old_name"
+    Range("C1").Select
+    ActiveCell.FormulaR1C1 = "new_id"
+    Range("D1").Select
+    ActiveCell.FormulaR1C1 = "new_name"
+    Range("E1").Select
+    ActiveCell.FormulaR1C1 = "changes"
+    Range("F1").Select
+    ActiveCell.FormulaR1C1 = "verified"
+    Range("A1").Select
+    ActiveWorkbook.Queries.Add Name:="Stations", Formula:= _
+        "let" & Chr(13) & "" & Chr(10) & "    Source = Csv.Document(File.Contents(""C:\Users\Chris\Documents\GitHub\divvy-bikeshare\data wrangling\csv files\stations_cleaning\Stations.csv""),[Delimiter="","", Columns=7, Encoding=1252, QuoteStyle=QuoteStyle.None])," & Chr(13) & "" & Chr(10) & "    #""Change Type"" = Table.TransformColumnTypes(Source,{{""Column1"", type text}, {""Column2"", type text}, {""Column3"", type text}, {""" & _
+        "Column4"", type text}, {""Column5"", type text}, {""Column6"", type text}, {""Column7"", type text}})" & Chr(13) & "" & Chr(10) & "in" & Chr(13) & "" & Chr(10) & "    #""Change Type"""
+    ActiveWorkbook.Worksheets.Add
+    With ActiveSheet.ListObjects.Add(SourceType:=0, Source:= _
+        "OLEDB;Provider=Microsoft.Mashup.OleDb.1;Data Source=$Workbook$;Location=Stations;Extended Properties=""""" _
+        , Destination:=Range("$A$1")).QueryTable
+        .CommandType = xlCmdSql
+        .CommandText = Array("SELECT * FROM [Stations]")
+        .RowNumbers = False
+        .FillAdjacentFormulas = False
+        .PreserveFormatting = True
+        .RefreshOnFileOpen = False
+        .BackgroundQuery = True
+        .RefreshStyle = xlInsertDeleteCells
+        .SavePassword = False
+        .SaveData = True
+        .AdjustColumnWidth = True
+        .RefreshPeriod = 0
+        .PreserveColumnInfo = True
+        .ListObject.DisplayName = "Stations"
+        .Refresh BackgroundQuery:=False
+    End With
+    ActiveSheet.ListObjects("Stations").Unlist
+    Application.CommandBars("Queries and Connections").Visible = False
+    Rows("1:1").Select
+    Selection.Delete Shift:=xlUp
+    Cells.Select
+    Selection.Style = "Normal"
+    Rows("1:1").Select
+    Selection.Font.Bold = True
+    Columns("C:C").Select
+    Selection.Insert Shift:=xlToRight, CopyOrigin:=xlFormatFromLeftOrAbove
+    Columns("A:A").Select
+    Selection.Copy
+    Range("C1").Select
+    ActiveSheet.Paste
+    Application.CutCopyMode = False
+    Range("A1").Select
+    Columns("A:A").ColumnWidth = 13.43
+    Columns("B:B").ColumnWidth = 33.29
+    Columns("C:C").ColumnWidth = 8.57
+    Rows("1:1").Select
+    Selection.AutoFilter
+    Sheets("trips_stations").Select
+    Columns("B:B").EntireColumn.AutoFit
+    Columns("B:B").ColumnWidth = 34
+    Rows("1:1").Select
+    Selection.Font.Bold = True
+    With ActiveWindow
+        .SplitColumn = 0
+        .SplitRow = 1
+    End With
+    ActiveWindow.FreezePanes = True
+    Selection.AutoFilter
+    Columns("C:C").EntireColumn.AutoFit
+    Columns("D:D").ColumnWidth = 22.71
+    Columns("E:E").EntireColumn.AutoFit
+    Columns("F:F").EntireColumn.AutoFit
+    ActiveCell.FormulaR1C1 = "old_id"
+    Range("C2").Select
+    ActiveSheet.PasteSpecial Format:="HTML", Link:=False, DisplayAsIcon:= _
+        False, NoHTMLFormatting:=True
+    Selection.AutoFill Destination:=Range("C2:C164")
+    Range("C2:C").Select
+    Range("D2").Select
+    ActiveSheet.PasteSpecial Format:="HTML", Link:=False, DisplayAsIcon:= _
+        False, NoHTMLFormatting:=True
+    Selection.AutoFill Destination:=Range("D2:D164")
+    Range("D2:D").Select
+    Range("E2").Select
+    ActiveSheet.PasteSpecial Format:="HTML", Link:=False, DisplayAsIcon:= _
+        False, NoHTMLFormatting:=True
+    Selection.AutoFill Destination:=Range("E2:E164")
+    Range("E2:E").Select
+    Columns("D:D").EntireColumn.AutoFit
+    Columns("D:D").ColumnWidth = 34.29
+    Columns("C:C").Select
+    Selection.FormatConditions.Add Type:=xlTextString, String:="same", _
+        TextOperator:=xlContains
+    Selection.FormatConditions(Selection.FormatConditions.Count).SetFirstPriority
+    With Selection.FormatConditions(1).Font
+        .Color = -16752384
+        .TintAndShade = 0
+    End With
+    With Selection.FormatConditions(1).Interior
+        .PatternColorIndex = xlAutomatic
+        .Color = 13561798
+        .TintAndShade = 0
+    End With
+    Selection.FormatConditions(1).StopIfTrue = False
+    Columns("D:D").Select
+    Selection.FormatConditions.Add Type:=xlTextString, String:="same", _
+        TextOperator:=xlContains
+    Selection.FormatConditions(Selection.FormatConditions.Count).SetFirstPriority
+    With Selection.FormatConditions(1).Font
+        .Color = -16752384
+        .TintAndShade = 0
+    End With
+    With Selection.FormatConditions(1).Interior
+        .PatternColorIndex = xlAutomatic
+        .Color = 13561798
+        .TintAndShade = 0
+    End With
+    Selection.FormatConditions(1).StopIfTrue = False
+    Columns("E:E").Select
+    Selection.FormatConditions.Add Type:=xlTextString, String:="missing", _
+        TextOperator:=xlContains
+    Selection.FormatConditions(Selection.FormatConditions.Count).SetFirstPriority
+    With Selection.FormatConditions(1).Font
+        .Color = -16383844
+        .TintAndShade = 0
+    End With
+    With Selection.FormatConditions(1).Interior
+        .PatternColorIndex = xlAutomatic
+        .Color = 13551615
+        .TintAndShade = 0
+    End With
+    Selection.FormatConditions(1).StopIfTrue = False
+    Selection.FormatConditions.Add Type:=xlTextString, String:="name", _
+        TextOperator:=xlContains
+    Selection.FormatConditions(Selection.FormatConditions.Count).SetFirstPriority
+    With Selection.FormatConditions(1).Font
+        .Color = -16754788
+        .TintAndShade = 0
+    End With
+    With Selection.FormatConditions(1).Interior
+        .PatternColorIndex = xlAutomatic
+        .Color = 10284031
+        .TintAndShade = 0
+    End With
+    Selection.FormatConditions(1).StopIfTrue = False
+    Selection.FormatConditions.Add Type:=xlTextString, String:="id", _
+        TextOperator:=xlContains
+    Selection.FormatConditions(Selection.FormatConditions.Count).SetFirstPriority
+    With Selection.FormatConditions(1).Font
+        .Color = -16752384
+        .TintAndShade = 0
+    End With
+    With Selection.FormatConditions(1).Interior
+        .PatternColorIndex = xlAutomatic
+        .Color = 13561798
+        .TintAndShade = 0
+    End With
+    Selection.FormatConditions(1).StopIfTrue = False
+    Range("A1").Select
+    Sheets("trips_stations").Select
+    Sheets("trips_stations").Move Before:=Sheets(1)
+    Range("A1").Select
+End Sub
+```
+
+- missingstations
+- idchanges
+- namechanges
+
 
 &nbsp;  
 

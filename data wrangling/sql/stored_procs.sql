@@ -21,28 +21,6 @@ BEGIN
 END
 $func$;
 
-CREATE OR REPLACE FUNCTION trips_copy(part varchar(30))
-  RETURNS VOID
-  LANGUAGE plpgsql AS
-$func$
-BEGIN
-  EXECUTE format('
-    COPY %I (
-      trip_id, 
-      start_time, 
-      end_time, 
-      bike_id, 
-      trip_duration, 
-      start_station_id, 
-      start_station_name, 
-      end_station_id, 
-      end_station_name, 
-      user_type, 
-      gender, 
-      birth_year
-      )', 'trips_' || part);
-END
-$func$;
 
 SELECT trips_part('ewankosss')
 
