@@ -76,7 +76,7 @@ IV. [Stations table](#stations-table)
 - [Missing stations](#missing-stations)
 - [Cleaning](#cleaning)
 
-V. Cleaned Dataset
+V. [Cleaned Dataset](#cleaned-dataset)
 
 
 <h2 align = "center" id = "setting-up-sql-environment">Set up SQL Environment</h2>
@@ -85,7 +85,7 @@ The SQL database that I used in this analysis is [PostgreSQL](https://www.postgr
 
 *PgAdmin 4* has a default schema named "Public", it can be seen under Servers > PostgreSQL 14 > Databases > postgres > Schemas > Public.
 
-### Create new schema
+<h3 id = "create-new-schema">Create new schema</h3>
 
 We need another schema named "bike_trips" to compile all our files under it, instead in "public" schema. Follow the steps:
 
@@ -97,7 +97,7 @@ We need another schema named "bike_trips" to compile all our files under it, ins
 
 Lastly, to open the **Query Tool** press *ALT + SHIFT + Q*, or click the Query tool icon on the upper-left corner of pgAdmin.
 
-### Change the default schema
+<h3 id = "change-the-default-schema">Change the default schema</h3>
 
 ```sql
 ALTER DATABASE postgres
@@ -106,7 +106,7 @@ SET search_path to bike_trips;
 SET search_path to bike_trips;
 ```
 
-### Create a function
+<h3 id = "create-a-function">Create a function</h3>
 
 We will use this everytime we create a table for yearly trips.
 
@@ -143,7 +143,7 @@ $func$;
 
 The process of aggregating all the data into one table. In preparation, data will be temporarily separated into two (2) parts due to differences in structure before merging into 1 table. Part 1 contains year 2013-2019 and part 2 contains year 2020-2021. 
 
-### Data preparation
+<h3 id = "data-preparation">Data preparation</h3>
 
 Steps:
 
@@ -154,7 +154,7 @@ Steps:
 
 > There are two (2) options in merging csv files, by using **R** or **Python**. Choose base on your preference.
 
-### Load the libraries
+<h3 id = "load-the-libraries">Load the libraries</h3>
 
 *Using RStudio*
 
@@ -171,11 +171,11 @@ import glob
 import os
 ```
 
-### Inspection
+<h3 id = "inspection">Inspection</h3>
 
 Before merging the files, we should ensure the consistency of column names in each tables. To easily open large csv files we will be using [Notepad++](https://notepad-plus-plus.org/downloads/), each files are opened and inspected. Upon inspection, we saw that **Divvy_Trips_2019_Q2.csv** table has different column names than the rest, which will affect the merging process of the csv files. Thus, its column names was matched to the rest of the other tables.
 
-### Merge files
+<h3 id = "merge-files">Merge files</h3>
 
 <sub>*RStudio*</sub>
 
@@ -203,7 +203,7 @@ write.csv(trips_p1,"D:/Github/large csv files/divvy-bikeshare/trips_p1_raw.csv",
 write.csv(trips_p2,"D:/Github/large csv files/divvy-bikeshare/trips_p2_raw.csv", row.names = FALSE)
 ```
 
-### Import into the database
+<h3 id = "import-into-the-database">Import into the database</h3>
 
 We will use the SQL functions we create earlier.
 
@@ -257,7 +257,7 @@ FROM 'D:/Github/large csv files/divvy-bikeshare/trips_p2_raw.csv'
 DELIMITER ',' CSV HEADER QUOTE '"' NULL 'NA';
 ```
 
-### Data structure
+<h3 id = "data-structure">Data structure</h3>
 
 - trips_p1
 
@@ -299,13 +299,13 @@ DELIMITER ',' CSV HEADER QUOTE '"' NULL 'NA';
 
 &nbsp;
 
-<h2 align = "center">Trips table</h2>
+<h2 align = "center" id = "trips-table">Trips table</h2>
 
 The process of cleaning station names and station IDs in trips table, by verifying and matching the data available in Google Maps and Stations table. In this process we will be using Excel and macros to record and easily repeat the process.
 
 We need to import the **Stations** table to serve as a reference for our cleaning proces. But, before importing the file we need to make some changes:
 
-### Preparation
+<h3 id = "preparation">Preparation</h3>
 
 Steps:
 1. **Open Excel**: *Under Data* > *Get & Transform Data* > *Get Data* > *From File* > *From Text/CSV* > locate and import [Divvy_Bicycle_Stations.csv](https://github.com/ca-ros/divvy-bikeshare/blob/master/data%20wrangling/csv%20files/stations_raw/Divvy_Bicycle_Stations.csv). Under *Data Type Detection* select *Do not detect data types* and click **Load**. Delete **Sheet1**.
@@ -320,7 +320,7 @@ Steps:
 12. Save as [Stations.csv](https://github.com/ca-ros/divvy-bikeshare/blob/master/data%20wrangling/csv%20files/stations_cleaning/Stations.csv).
 
 
-### Show the Developer tab
+<h3 id = "show-the-developer-tab">Show the Developer tab</h3>
 
 The **Developer** tab isn't displayed by default, but you can add it to the ribbon.
 
@@ -344,7 +344,7 @@ A macro is a series of commands that you can use to automate a repeated task, an
 
 > Read [Show the Developer tab](https://support.microsoft.com/en-us/topic/show-the-developer-tab-e1192344-5e56-4d45-931b-e5fd9bea2d45) and [Macros in Office files](https://support.microsoft.com/en-us/office/macros-in-office-files-12b036fd-d140-4e74-b45e-16fed1a7e5c6).
 
-### Import Stations table
+<h3 id = "import-stations-table">Import Stations table</h3>
 
 ```sql
 -- Create table
@@ -376,7 +376,7 @@ DELIMITER ',' CSV HEADER;
 
 &nbsp;
 
-<h3 align = "center"><strong>First table: trips_p1</strong></h3>
+<h3 align = "center" id = "first-table-trips_p1"><strong>First table: trips_p1</strong></h3>
 
 Run a query to find all the missing/ mismatch station names and IDs to the **Stations** table. This includes columns *start_station_name*, *end_station_name*, *start_station_id* and *end_station_id*.
 
@@ -410,7 +410,7 @@ Export the result as [trips_p1_stations.csv](https://github.com/ca-ros/divvy-bik
 
 In order to analyze the table, the following is done.
 
-#### Process
+<h4 id = "process">Process</h4>
 
 1. Open the csv file using MS Excel, and save the workbook as "**trips_p1_stations.xlsm**".
 2. **Start recording macro**: Under *Developer* > *Code* > *Record Macro*. Macro name: **divvy**, and click **OK**. 
@@ -506,6 +506,7 @@ In order to analyze the table, the following is done.
 
 > Upon checking, 2 station names from **trips_p1** table has already existing names in **Stations** table. Thus, duplicate station names with a different **station_id**.
 
+<h4 id = "clean-macros">Clean Macros</h4>
 #### Clean Macros
 
 We need to debug and clean the macros to remove any possible errors. Not only this will remove errors, the code will also be easy to read. Open the Visual Basic: Under *Developer* > *Code* > *Visual Basic*. Under the (*Workbook name*) > *Modules* > *Module1*. The macros recorded must be the same as the codes below. 
@@ -790,7 +791,7 @@ Sub newtables()
 End Sub
 ```
 
-#### SQL Query
+<h4 id = "sql-query">SQL Query</h4>
 
 Stations names **Lakefront Trail & Bryn Mawr Ave** and **Michigan Ave & 71st St** already have existing IDs in **Stations** table.
 
@@ -867,7 +868,7 @@ WHERE s.end_station_name = c.old_name;
 
 &nbsp;
 
-<h3 align = "center"><strong>Second table: trips_p2</strong></h3>
+<h3 align = "center" id = "second-table-trips_p2"><strong>Second table: trips_p2</strong></h3>
 
 ```sql
 -- stations in trips_p2 where not in Stations table, 2020-2021
@@ -897,7 +898,7 @@ WHERE NOT EXISTS (
 
 Export the result as [trips_p2_stations.csv](https://github.com/ca-ros/divvy-bikeshare/blob/master/csv%20files/stations/trips_p2_stations.csv). 
 
-#### Process
+<h4 id = "process-1">Process</h4>
 
 1. Open the csv file using MS Excel, amd save the workbook as "trips_p2_stations.xlsm". 
 2. **Import macros**: Under *Developer* > *Code* > *Visual Basic*. Right-click *VBAProject* > *Import File* > upload files **divvy.bas** and **newtables.bas**.
@@ -997,7 +998,7 @@ Export the result as [trips_p2_stations.csv](https://github.com/ca-ros/divvy-bik
 
 &nbsp;
 
-#### SQL Query
+<h4 id = "sql-query-1">SQL Query</h4>
 
 *Import csv files*
 
@@ -1117,11 +1118,11 @@ WHERE s.end_station_name = c.old_name;
 
 &nbsp;
 
-<h3 align = "center"><strong>Combine table: trips</strong></h3>
+<h3 align = "center" id = "combine-table-trips"><strong>Combine table: trips</strong></h3>
 
 Before combining both tables, some changes has to be made first. By checking the schema of the tables we can see the differences in their data. After modification, merge both tables into one and save as **trips** table.
 
-<h4><strong>Schema</strong></h4>
+<h4 id = "schema"><strong>Schema</strong></h4>
 
 - trips_p1
 
@@ -1171,7 +1172,7 @@ Before combining both tables, some changes has to be made first. By checking the
 
 &nbsp;
 
-#### SQL Query
+<h4 id = "sql-query-2">SQL Query</h4>
 
 ```sql
 CREATE TABLE bike_trips.trips AS
@@ -1208,7 +1209,7 @@ SELECT
 FROM bike_trips.trips_p2;
 ```
 
-<h3 align = "center"><strong>NULL values</strong></h3>
+<h3 align = "center" id = "null-values"><strong>NULL values</strong></h3>
 
 Some data are omitted in table **trips_p2** that has NULL **station_names** & **station_id**. Although these records doesn't contain any data about its *station_names* and *station_IDs*, these have a coordinates which then can be used later on to identify the nearby **DIVVY** station name. The data will be filled in the future after finishing my studies on Webscraping in Python.
 
@@ -1234,7 +1235,7 @@ Divvy-bikeshare dataset contains 3.45% of NULL values. Since the percentage is s
 
 &nbsp;    
 
-#### SQL Query
+<h4 id = "sql-query-3">SQL Query</h4>
 
 *Number of records*
 
@@ -1314,9 +1315,9 @@ SELECT round(100 *
 
 &nbsp;
 
-<h2 align = "center">Stations table</h2>
+<h2 align = "center" id = "stations-table">Stations table</h2>
 
-<h3><strong>Missing stations</strong></h3>
+<h3 id = "missing-stations"><strong>Missing stations</strong></h3>
 
 Now that we have the missing stations from the 2 tables, trips_p1 & trips_p2, combine them into one table and save as [missing_stations.csv](https://github.com/ca-ros/divvy-bikeshare/blob/master/data%20wrangling/csv%20files/stations_cleaning/missing_stations.csv).
 
@@ -1341,7 +1342,7 @@ DELIMITER ',' CSV HEADER;
 ```
 
 
-<h3><strong>Cleaning</strong></h3>
+<h3 id = "cleaning"><strong>Cleaning</strong></h3>
 
 Some IDs need to change from the table.
 
@@ -1372,7 +1373,7 @@ FROM bike_trips.id_changes_stations as c
 WHERE s.name = c.old_name;
 ```
 
-## 🧹 Cleaned Dataset
+<h2 id = "cleaned-dataset">🧹 Cleaned Dataset</h2>
 
 - [Trips_table](https://www.dropbox.com/s/qb3ndglnmf7gwh5/trips.csv?dl=0) (4.5 gb)
 - [Stations_table](https://github.com/ca-ros/divvy-bikeshare/blob/master/data%20wrangling/csv%20files/stations_cleaning/Stations_cleaned.csv) (120 kb)
