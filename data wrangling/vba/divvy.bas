@@ -49,9 +49,9 @@ Sub divvy()
     ActiveSheet.Paste
     Application.CutCopyMode = False
     Range("A1").Select
-    Columns("A:A").columnwidth = 13.43
-    Columns("B:B").columnwidth = 34
-    Columns("C:C").columnwidth = 8.57
+    Columns("A:A").ColumnWidth = 13.43
+    Columns("B:B").ColumnWidth = 34
+    Columns("C:C").ColumnWidth = 8.57
     Rows("1:1").Select
     Selection.AutoFilter
     Sheets("trips_stations").Select
@@ -63,9 +63,9 @@ Sub divvy()
     End With
     ActiveWindow.FreezePanes = True
     Selection.AutoFilter
-    Columns("B:B").columnwidth = 36.14
+    Columns("B:B").ColumnWidth = 36.14
     Columns("C:C").EntireColumn.AutoFit
-    Columns("D:D").columnwidth = 34.29
+    Columns("D:D").ColumnWidth = 34.29
     Columns("E:E").EntireColumn.AutoFit
     Columns("F:F").EntireColumn.AutoFit
     ActiveCell.FormulaR1C1 = "old_id"
@@ -87,6 +87,48 @@ Sub divvy()
         .AutoFill Destination:=Range("E2:E" & Range("A" & Rows.Count).End(xlUp).Row)
     End With
     Range(Selection, Selection.End(xlDown)).Select
+    Columns("A:A").Select
+    Selection.FormatConditions.AddUniqueValues
+    Selection.FormatConditions(Selection.FormatConditions.Count).SetFirstPriority
+    Selection.FormatConditions(1).DupeUnique = xlDuplicate
+    With Selection.FormatConditions(1).Font
+        .Color = -16383844
+        .TintAndShade = 0
+    End With
+    With Selection.FormatConditions(1).Interior
+        .PatternColorIndex = xlAutomatic
+        .Color = 13551615
+        .TintAndShade = 0
+    End With
+    Selection.FormatConditions(1).StopIfTrue = False
+    Columns("B:B").Select
+    Selection.FormatConditions.AddUniqueValues
+    Selection.FormatConditions(Selection.FormatConditions.Count).SetFirstPriority
+    Selection.FormatConditions(1).DupeUnique = xlDuplicate
+    With Selection.FormatConditions(1).Font
+        .Color = -16383844
+        .TintAndShade = 0
+    End With
+    With Selection.FormatConditions(1).Interior
+        .PatternColorIndex = xlAutomatic
+        .Color = 13551615
+        .TintAndShade = 0
+    End With
+    Selection.FormatConditions(1).StopIfTrue = False
+    Columns("F:F").Select
+    Selection.FormatConditions.Add Type:=xlTextString, String:="y", _
+        TextOperator:=xlContains
+    Selection.FormatConditions(Selection.FormatConditions.Count).SetFirstPriority
+    With Selection.FormatConditions(1).Font
+        .Color = -16752384
+        .TintAndShade = 0
+    End With
+    With Selection.FormatConditions(1).Interior
+        .PatternColorIndex = xlAutomatic
+        .Color = 13561798
+        .TintAndShade = 0
+    End With
+    Selection.FormatConditions(1).StopIfTrue = False
     Columns("C:C").Select
     Selection.FormatConditions.Add Type:=xlTextString, String:="same", _
         TextOperator:=xlContains

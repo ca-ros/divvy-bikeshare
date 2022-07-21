@@ -19,7 +19,7 @@ Questions relating to trip data should be sent to <a href = "mailto:bike-data@ly
 
 > Read [system-data](https://ride.divvybikes.com/system-data).
 
-### 🔗 Data sources:
+### 🔗 Data sources
 - [Divvy bikes](https://divvybikes.com), download the raw data-sets [here](https://divvy-tripdata.s3.amazonaws.com/index.html)
 - [Chicago Data Portal](https://data.cityofchicago.org/), download the raw stations-table:
   - Download the updated version [here](https://data.cityofchicago.org/Transportation/Divvy-Bicycle-Stations/bbyy-e7gq).
@@ -29,7 +29,7 @@ Questions relating to trip data should be sent to <a href = "mailto:bike-data@ly
 
 &nbsp;
 
-### Tools used:
+### Tools used
 - MS Excel
 - [Notepad++](https://notepad-plus-plus.org/downloads/)
 - [PostgreSQL](https://www.postgresql.org/download/)
@@ -388,7 +388,7 @@ Export the result as [trips_p1_stations.csv](https://github.com/ca-ros/divvy-bik
 
 In order to analyze the table, the following is done.
 
-<h4><strong>Process</strong>:</h4>
+<h4><strong>Process</strong></h4>
 
 1. Open the csv file using MS Excel, and save the workbook as "**trips_p1_stations.xlsm**".
 2. **Start recording macro**: Under *Developer* > *Code* > *Record Macro*. Macro name: **divvy**, and click **OK**. 
@@ -406,12 +406,16 @@ In order to analyze the table, the following is done.
    
 10. **Use conditinal formatting**: Under *Home* > *Styles* > *Conditional Formatting* > *Highlight Cell Rules* > ...
 
+    - **Column A**: *Duplicate Values*.
+    - **Column B**: *Duplicate Values*.
     - **Column C**: *Text that contains* > "*same*" with **Green Fill with Dark Green Text**.
     - **Column D**: *Text that contains* > "*same*" with **Green Fill with Dark Green Text**.
     - **Column E**: 
       - *Text that contains* > "*missing*" with **Light Red Fill with Dark Red Text**.
       - *Text that contains* > "*name*" with **Yellow Fill with Dark Yellow Text**.
       - *Text that contains* > "*id*" with **Green Fill with Dark Green Text**.
+      - *Text that contains* > "*both*" with **Custom Format**. I used **Light Blue fill with Dark Blue Text**.
+    - **Column F**: *Text that contains* > "*y*" with **Green Fill with Dark Green Text**.
 
 11. **End macro recording**: Under *Developer* > *Code* > *Stop Recording*.
 12. Validate the **new_name** column by searching each names in [Google Maps](https://www.google.com/maps) and locate nearby **divvy-stations**.
@@ -480,7 +484,7 @@ In order to analyze the table, the following is done.
 
 > Upon checking, 2 station names from **trips_p1** table has already existing names in **Stations** table. Thus, duplicate station names with a different **station_id**.
 
-### Clean Macros
+#### Clean Macros
 
 We need to debug and clean the macros to remove any possible errors. Not only this will remove errors, the code will also be easy to read. Open the Visual Basic: Under *Developer* > *Code* > *Visual Basic*. Under the (*Workbook name*) > *Modules* > *Module1*. The macros recorded must be the same as the codes below. 
 
@@ -499,7 +503,7 @@ Sub divvy()
 '
 ' divvy Macro
 '
-
+' Keyboard Shortcut: Ctrl+Shift+Y
 '
     ActiveSheet.Name = "trips_stations"
     Range("A1").Value = "old_id"
@@ -545,9 +549,9 @@ Sub divvy()
     ActiveSheet.Paste
     Application.CutCopyMode = False
     Range("A1").Select
-    Columns("A:A").columnwidth = 13.43
-    Columns("B:B").columnwidth = 34
-    Columns("C:C").columnwidth = 8.57
+    Columns("A:A").ColumnWidth = 13.43
+    Columns("B:B").ColumnWidth = 34
+    Columns("C:C").ColumnWidth = 8.57
     Rows("1:1").Select
     Selection.AutoFilter
     Sheets("trips_stations").Select
@@ -559,9 +563,9 @@ Sub divvy()
     End With
     ActiveWindow.FreezePanes = True
     Selection.AutoFilter
-    Columns("B:B").columnwidth = 36.14
+    Columns("B:B").ColumnWidth = 36.14
     Columns("C:C").EntireColumn.AutoFit
-    Columns("D:D").columnwidth = 34.29
+    Columns("D:D").ColumnWidth = 34.29
     Columns("E:E").EntireColumn.AutoFit
     Columns("F:F").EntireColumn.AutoFit
     ActiveCell.FormulaR1C1 = "old_id"
@@ -583,6 +587,48 @@ Sub divvy()
         .AutoFill Destination:=Range("E2:E" & Range("A" & Rows.Count).End(xlUp).Row)
     End With
     Range(Selection, Selection.End(xlDown)).Select
+    Columns("A:A").Select
+    Selection.FormatConditions.AddUniqueValues
+    Selection.FormatConditions(Selection.FormatConditions.Count).SetFirstPriority
+    Selection.FormatConditions(1).DupeUnique = xlDuplicate
+    With Selection.FormatConditions(1).Font
+        .Color = -16383844
+        .TintAndShade = 0
+    End With
+    With Selection.FormatConditions(1).Interior
+        .PatternColorIndex = xlAutomatic
+        .Color = 13551615
+        .TintAndShade = 0
+    End With
+    Selection.FormatConditions(1).StopIfTrue = False
+    Columns("B:B").Select
+    Selection.FormatConditions.AddUniqueValues
+    Selection.FormatConditions(Selection.FormatConditions.Count).SetFirstPriority
+    Selection.FormatConditions(1).DupeUnique = xlDuplicate
+    With Selection.FormatConditions(1).Font
+        .Color = -16383844
+        .TintAndShade = 0
+    End With
+    With Selection.FormatConditions(1).Interior
+        .PatternColorIndex = xlAutomatic
+        .Color = 13551615
+        .TintAndShade = 0
+    End With
+    Selection.FormatConditions(1).StopIfTrue = False
+    Columns("F:F").Select
+    Selection.FormatConditions.Add Type:=xlTextString, String:="y", _
+        TextOperator:=xlContains
+    Selection.FormatConditions(Selection.FormatConditions.Count).SetFirstPriority
+    With Selection.FormatConditions(1).Font
+        .Color = -16752384
+        .TintAndShade = 0
+    End With
+    With Selection.FormatConditions(1).Interior
+        .PatternColorIndex = xlAutomatic
+        .Color = 13561798
+        .TintAndShade = 0
+    End With
+    Selection.FormatConditions(1).StopIfTrue = False
     Columns("C:C").Select
     Selection.FormatConditions.Add Type:=xlTextString, String:="same", _
         TextOperator:=xlContains
@@ -722,7 +768,7 @@ Sub newtables()
 End Sub
 ```
 
-#### **Going back to PostgreSQL**:
+#### **Going back to PostgreSQL**
 
 Stations names **Lakefront Trail & Bryn Mawr Ave** and **Michigan Ave & 71st St** already have existing IDs in **Stations** table.
 
@@ -833,36 +879,14 @@ Export the result as [trips_p2_stations.csv](https://github.com/ca-ros/divvy-bik
 
 **Process:**
 
-1. Open the csv file using MS Excel. Rename columns: **id = old_id** & **name = old_name**.
-2. Create a new header for column C: **new_id**, column D: **new_name** and column E: **changes**, and column F: **verified**.
-3. **Import the Stations table**: Under *Data* > *Get & Transform Data* > *Get Data* > *From File* > *From Text/CSV* > locate [Stations.csv](https://github.com/ca-ros/divvy-bikeshare/blob/master/data%20wrangling/csv%20files/stations_cleaning/Stations.csv). Under *Data Type Detection* > select *Do not detect data types* and click **Load**.
-4. **Remove row1**: Under *Table Design* > *Tools* > click **Convert to Range**, select **OK**. Then delete row1 which contains column#.
-5. Copy column **id** to the right of column **name**. *Right Click* column C and select Insert, a new empty column C should appear. Copy ColumnA to ColumnC.
-6. **Freeze the header row/ top row**: Under *View* > *Window* > *Freeze Panes* > *Freeze Top Row*. Do the same for the other sheet.
-7. In **trips_p2_stations** sheet:
-
-    - **Cell C2**: enter the formula `=IFNA(VLOOKUP(TEXT(B2,0),Stations!$B:$D,2,FALSE),"same")`, then press Enter. Click the cell again and double-click the bottom-right corner of the cell to copy the formula in the entire row.
-    - **Cell D2**: enter the formula `=IFNA(VLOOKUP(TEXT(A2,0),Stations!$A:$B,2,FALSE),"same")`, then press Enter. Click the cell again and double-click the bottom-right corner of the cell to copy the formula in the entire row.
-    - **Cell E2**: enter the formula `=IF(C2 = "", "missing", IF(AND(D2="same",C2="same"),"missing",IF(B2=D2,"same",IF(AND(A2<>C2,D2="same"),"id",IF(AND(B2<>D2,C2="same"),"name",IF(AND(A2<>C2,B2<>D2),"both"))))))`, then press Enter. Click cell E2 again and double-click the bottom-right corner of the cell to copy the formula in the entire row.
-
-8. **Use conditinal formatting**: Under *Home* > *Styles* > *Conditional Formatting* > *Highlight Cell Rules* > ...
-
-    - **Column A**: *Duplicate Values*.
-    - **Column B**: *Duplicate Values*.
-    - **Column C**: *Text that contains* > "*same*" with **Green Fill with Dark Green Text**.
-    - **Column D**: *Text that contains* > "*same*" with **Green Fill with Dark Green Text**.
-    - **Column E**:
-      - *Text that contains* > "*missing*" with **Light Red Fill with Dark Red Text**.
-      - *Text that contains* > "*name*" with **Yellow Fill with Dark Yellow Text**.
-      - *Text that contains* > "*id*" with **Green Fill with Dark Green Text**.
-      - *Text that contains* > "*both*" with **Custom Format**. I used **Light Blue fill with Dark Blue Text**.
-    - **Column F**: *Text that contains* > "*y*" with **Green Fill with Dark Green Text**.
-
-9. Validate the **new_name** column by searching each names in [Google Maps](https://www.google.com/maps) and locate nearby **divvy-stations**.
+1. Open the csv file using MS Excel, amd save the workbook as "trips_p2_stations.xlsm". 
+2. **Import macros**: Under *Developer* > *Code* > *Visual Basic*. Right-click *VBAProject* > *Import File* > upload files **divvy.bas** and **newtables.bas**.
+3. **Run divvy module**: Under *Modules* folder > open *divvy* > and click **Run** or **press F5**.
+4. Validate the **new_name** column by searching each names in [Google Maps](https://www.google.com/maps) and locate nearby **divvy-stations**.
 
     - Refer to earlier [sample](#validating-sample)
 
-10. **Cleaning process**: aside from `VLOOKUP`, we will use **Find**, **Google Maps**, and manual process to match the data.
+5. **Cleaning process**: aside from `VLOOKUP`, we will use **Find**, **Google Maps**, and manual process to match the data.
 
     - **Example #1**: *Find*
       1. Filter changes column by **missing** and sort the sheet by **old_name** in ascending order.
@@ -924,15 +948,26 @@ Export the result as [trips_p2_stations.csv](https://github.com/ca-ros/divvy-bik
       4. Put "**y**" in the **verified** column.
 
      
-11. **Create another table**: 
+6. **Create another table**: 
+
+    - **Run Macro**: Open *Visual Basic*. Under Modules folder > open **newtables** and press **F5**.
 
     - For **missing stations**:
-      - Filter changes column with values **missing**. Copy columns **old_id**, **old_name**, and **new_id** into a new blank workbook. Remove row14 where **old_id** and **old_name** is equal to **NULL**. Remove all values in **old_id** column except if it has a "**same**" value on **new_id** column. Delete **new_id** column and save it as [missing_stations_p2.csv](https://github.com/ca-ros/divvy-bikeshare/blob/master/data%20wrangling/csv%20files/stations_cleaning/missing_stations_p2.csv).
-    - For **id changes**:
-      - Filter changes column with values **id** and **both**. Copy columns **old_name** and **new_id** into a new blank workbook. Remove duplicates on **old_name** column and remove rows where values on **old_name** column = **NULL**. Save it as [id_changes_p2.csv](https://github.com/ca-ros/divvy-bikeshare/blob/master/data%20wrangling/csv%20files/stations_cleaning/id_changes_p2.csv).
-    - For **name changes**:
-      - Filter changes column with values **name** and **both**. Copy columns **old_name** and **new_name** into a new blank workbook. Remove duplicates on **old_name** column and remove rows where values on **old_name** column = **NULL**. Save it as [name_changes_p2.csv](https://github.com/ca-ros/divvy-bikeshare/blob/master/data%20wrangling/csv%20files/stations_cleaning/name_changes_p2.csv).
 
+      1. **Create new table**: Right click sheet **missing_stations** > *Move or Copy* > *To book* > *new book*.
+      2. Save it as [missing_stations_p2.csv](https://github.com/ca-ros/divvy-bikeshare/blob/master/data%20wrangling/csv%20files/stations_cleaning/missing_stations_p2.csv).
+
+    - For **id changes**: (2 records)
+
+      1. **Create new table**: Right click sheet **id_changes** > *Move or Copy* > *To book* > *new book*.
+      2. Save it as [id_changes_p2.csv](https://github.com/ca-ros/divvy-bikeshare/blob/master/data%20wrangling/csv%20files/stations_cleaning/id_changes_p2.csv).
+
+    - For **name changes**: (137 records)
+
+      1. **Create new table**: Right click sheet **name_changes** > *Move or Copy* > *To book* > *new book*.
+      2. Save it as [name_changes_p2.csv](https://github.com/ca-ros/divvy-bikeshare/blob/master/data%20wrangling/csv%20files/stations_cleaning/name_changes_p2.csv).
+
+7. **Save** the workbook, [trips_p2_stations.xlsm](https://github.com/ca-ros/divvy-bikeshare/blob/master/data%20wrangling/csv%20files/stations_cleaning/trips_p2_stations.xlsm).
 
 > **Optional**: You can hide error values indicators. Under *File* > *Options* > *Formulas* > *Error Checking* > uncheck *Enable background error checking*.
 
