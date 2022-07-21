@@ -474,7 +474,7 @@ In order to analyze the table, the following is done.
       1. **Create new table**: Right click sheet **name_changes** > *Move or Copy* > *To book* > *new book*.
       2. Save it as [name_changes_p1.csv](https://github.com/ca-ros/divvy-bikeshare/blob/master/data%20wrangling/csv%20files/stations_cleaning/name_changes_p1.csv).
 
-14. **Save** the workbook, [trips_p1_stations.xlsm]().
+14. **Save** the workbook, [trips_p1_stations.xlsm](https://github.com/ca-ros/divvy-bikeshare/blob/master/data%20wrangling/csv%20files/stations_cleaning/trips_p1_stations.xlsm).
 
 > **Optional**: You can hide error values indicators. Under *File* > *Options* > *Formulas* > *Error Checking* > uncheck *Enable background error checking*.
 
@@ -487,8 +487,8 @@ We need to debug and clean the macros to remove any possible errors. Not only th
 You can also just import the modules. On Microsoft VBA, right-click *Modules* folder > *Import file* > locate the modules > click *Open*. <br>
 
 Download the modules here:
-- [divvy.bas]()
-- [newtables.bas]()
+- [divvy.bas](https://github.com/ca-ros/divvy-bikeshare/blob/master/data%20wrangling/vba/divvy.bas)
+- [newtables.bas](https://github.com/ca-ros/divvy-bikeshare/blob/master/data%20wrangling/vba/newtables.bas)
 
 **VBScripts**:
 

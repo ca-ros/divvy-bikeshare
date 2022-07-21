@@ -1,4 +1,4 @@
-Attribute VB_Name = "Module1"
+Attribute VB_Name = "newtables"
 Sub newtables()
 Attribute newtables.VB_ProcData.VB_Invoke_Func = " \n14"
 '

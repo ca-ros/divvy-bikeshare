@@ -1,4 +1,4 @@
-Attribute VB_Name = "Module11"
+Attribute VB_Name = "divvy"
 Sub divvy()
 '
 ' divvy Macro
