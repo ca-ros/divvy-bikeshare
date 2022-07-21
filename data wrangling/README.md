@@ -1194,24 +1194,21 @@ Some data are omitted in table **trips_p2** that has NULL **station_names** & **
 
 *Number of records*
 
-```
 | Data     | No. of records |
 | -------- | -------------- |
 | trips_p1 |     24,426,783 |       
 | trips_p2 |      9,136,746 |
 | trips    |     33,563,529 |
 | NULL     |      1,158,190 |
-```
+
 
 *Percent of NULL values*
 
-```
 | Table    | NULL values |
 | -------- | ----------- |
 | trips_p1 |         0 % |
 | trips_p2 |     12.68 % |
 | trips    |      3.45 % |
-```
 
 Divvy-bikeshare dataset contains 3.45% of NULL values. Since the percentage is small, we can then omit these records and proceed with the analysis.
 
