@@ -40,36 +40,43 @@ Questions relating to trip data should be sent to <a href = "mailto:bike-data@ly
 
 I. [Set up SQL Environment](#setting-up-sql-environment)
 
-- Create new schema
-- Change the default schema
-- Create a function
+- [Create new schema](#create-new-schema)
+- [Change the default schema](#change-the-default-schema)
+- [Create a function](#create-a-function)
 
 II. [Combining Data](#combining-data)
 
-- Data preparation
-- Load the libararies
-- Inspection
-- Merge files
-- Import into the database
-- Data structure
+- [Data preparation](#data-preparation)
+- [Load the libararies](#load-the-libraries)
+- [Inspection](#inspection)
+- [Merge files](#merge-files)
+- [Import into the database](#import-into-the-database)
+- [Data structure](#data-structure)
 
 III. [Trips table](#trips-table)
 
-- Preparation
-- Show the Developer tab
-- Import Stations table
+- [Preparation](#preparation)
+- [Show the Developer tab](#show-the-developer-tab)
+- [Import Stations table](#import-stations-table)
 - [First table: trips_p1](#first-table-trips_p1)
-  - Process
-  - Clean Macros
-  - SQL Query
+  - [Process](#process)
+  - [Clean Macros](#clean-macros)
+  - [SQL Query](#sql-query)
 - [Second table: trips_p2](#second-table-trips_p2)
+  - [Process](#process-1)
+  - [SQL Query](#sql-query-1)
 - [Combining tables: trips](#combine-table-trips)
+  - [Schema](#schema)
+  - [SQL Query](#sql-query-2)
 - [NULL values](#null-values)
+  - [SQL Query](#sql-query-3)
 
 IV. [Stations table](#stations-table)
 
 - [Missing stations](#missing-stations)
 - [Cleaning](#cleaning)
+
+V. Cleaned Dataset
 
 
 <h2 align = "center" id = "setting-up-sql-environment">Set up SQL Environment</h2>
