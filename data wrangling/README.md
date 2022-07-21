@@ -40,13 +40,28 @@ Questions relating to trip data should be sent to <a href = "mailto:bike-data@ly
 
 I. [Set up SQL Environment](#setting-up-sql-environment)
 
+- Create new schema
+- Change the default schema
+- Create a function
+
 II. [Combining Data](#combining-data)
 
-
+- Data preparation
+- Load the libararies
+- Inspection
+- Merge files
+- Import into the database
+- Data structure
 
 III. [Trips table](#trips-table)
 
+- Preparation
+- Show the Developer tab
+- Import Stations table
 - [First table: trips_p1](#first-table-trips_p1)
+  - Process
+  - Clean Macros
+  - SQL Query
 - [Second table: trips_p2](#second-table-trips_p2)
 - [Combining tables: trips](#combine-table-trips)
 - [NULL values](#null-values)
@@ -388,7 +403,7 @@ Export the result as [trips_p1_stations.csv](https://github.com/ca-ros/divvy-bik
 
 In order to analyze the table, the following is done.
 
-<h4><strong>Process</strong></h4>
+#### Process
 
 1. Open the csv file using MS Excel, and save the workbook as "**trips_p1_stations.xlsm**".
 2. **Start recording macro**: Under *Developer* > *Code* > *Record Macro*. Macro name: **divvy**, and click **OK**. 
@@ -768,13 +783,11 @@ Sub newtables()
 End Sub
 ```
 
-#### **Going back to PostgreSQL**
+#### SQL Query
 
 Stations names **Lakefront Trail & Bryn Mawr Ave** and **Michigan Ave & 71st St** already have existing IDs in **Stations** table.
 
 Since the smaller station ID is not used in **Stations** table, I used it as a new station ID which are **459** and **651** for **Lakefront Trail & Bryn Mawr Ave** and **Michigan Ave & 71st St** respectively.
-
-**SQL Queries:**
 
 *Import csv file*
 
@@ -877,7 +890,7 @@ WHERE NOT EXISTS (
 
 Export the result as [trips_p2_stations.csv](https://github.com/ca-ros/divvy-bikeshare/blob/master/csv%20files/stations/trips_p2_stations.csv). 
 
-**Process:**
+#### Process
 
 1. Open the csv file using MS Excel, amd save the workbook as "trips_p2_stations.xlsm". 
 2. **Import macros**: Under *Developer* > *Code* > *Visual Basic*. Right-click *VBAProject* > *Import File* > upload files **divvy.bas** and **newtables.bas**.
@@ -977,7 +990,7 @@ Export the result as [trips_p2_stations.csv](https://github.com/ca-ros/divvy-bik
 
 &nbsp;
 
-**SQL Queries:**
+#### SQL Query
 
 *Import csv files*
 
@@ -1151,7 +1164,7 @@ Before combining both tables, some changes has to be made first. By checking the
 
 &nbsp;
 
-**SQL Query:**
+#### SQL Query
 
 ```sql
 CREATE TABLE bike_trips.trips AS
@@ -1214,7 +1227,7 @@ Divvy-bikeshare dataset contains 3.45% of NULL values. Since the percentage is s
 
 &nbsp;    
 
-**SQL Queries**:
+#### SQL Query
 
 *Number of records*
 
