@@ -30,7 +30,7 @@ Questions relating to trip data should be sent to <a href = "mailto:bike-data@ly
 &nbsp;
 
 ### Tools used
-- MS Excel
+- [MS Excel](https://www.microsoft.com/en-ww/microsoft-365/excel)
 - [Notepad++](https://notepad-plus-plus.org/downloads/)
 - [PostgreSQL](https://www.postgresql.org/download/)
 - [RStudio](https://www.rstudio.com/products/rstudio/download/)
