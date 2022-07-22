@@ -1375,5 +1375,4 @@ WHERE s.name = c.old_name;
 
 <h2 id = "cleaned-dataset">🧹 Cleaned Dataset</h2>
 
-- [Trips_table](https://www.dropbox.com/s/qb3ndglnmf7gwh5/trips.csv?dl=0) (4.5 gb)
-- [Stations_table](https://github.com/ca-ros/divvy-bikeshare/blob/master/data%20wrangling/csv%20files/stations_cleaning/Stations_cleaned.csv) (120 kb)
+- [divvybikes-dataset.rar](https://drive.google.com/file/d/1xhHuh9WXHtIBLPV6OO-a62th6Ev27jmM/view?usp=sharing) (678 MB)
