@@ -1365,6 +1365,8 @@ WHERE s.name = c.old_name;
 
 <h2 id = "cleaned-dataset">🧹 Cleaned Dataset</h2>
 
-- [divvybikes-dataset](www.kaggle.com/dataset/e116a4d4f9c1900cf2b5b0b6a9270e20a378a4a18d209f5277253e8afbf2ef7d) (678 MB)
+Download here:
+- [Kaggle](www.kaggle.com/dataset/e116a4d4f9c1900cf2b5b0b6a9270e20a378a4a18d209f5277253e8afbf2ef7d)
+- [Google Drive](https://drive.google.com/file/d/1xhHuh9WXHtIBLPV6OO-a62th6Ev27jmM/view?usp=sharing)
 
 > This dataset contains trip duration less than 60 seconds and stations with null values. I kept it incased someone need the entire data. Stations with null values will be filled with data in the future after I have a good grasp in **Machine Learning** and **Web Scraping**.  
