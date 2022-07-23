@@ -55,8 +55,8 @@ II. [Combining Data](#combining-data)
 III. [Trips table](#trips-table)
 
 - [Preparation](#preparation)
-- [Show the Developer tab](#show-the-developer-tab)
 - [Import Stations table](#import-stations-table)
+- [Enable Excel Macros](#enable-excel-macros)
 - [First table: trips_p1](#first-table-trips_p1)
   - [Process](#process)
   - [Clean Macros](#clean-macros)
@@ -309,30 +309,7 @@ Steps:
 9. **Rename columns**: Station Name = **name**, Total Docks = **docks**, Status = **in_service**, and Location = **coordinate**.
 12. Save as [Stations.csv](https://github.com/ca-ros/divvy-bikeshare/blob/master/data%20wrangling/csv%20files/stations_cleaning/Stations.csv).
 
-
-<h3 id = "show-the-developer-tab">Show the Developer tab</h3>
-
-The **Developer** tab isn't displayed by default, but you can add it to the ribbon.
-
-Steps:
-1. On the **File** tab, go to **Options** > **Customize Ribbon**.
-2. Under **Customize the Ribbon** and under **Main tabs**, select the **Developer** check box.
-
-After you show the tab, the Developer tab stays visible, unless you clear the check box or have to reinstall a Microsoft Office program.
-
-The Developer tab is the place to go when you want to do or use the following:
-- Write macros.
-- Run macros that you previously recorded.
-- Use XML commands.
-- Use ActiveX controls.
-- Create applications to use with Microsoft Office programs.
-- Use form controls in Microsoft Excel.
-- Work with the ShapeSheet in Microsoft Visio.
-- Create new shapes and stencils in Microsoft Visio.
-
-A macro is a series of commands that you can use to automate a repeated task, and can be run when you have to perform the task.
-
-> Read [Show the Developer tab](https://support.microsoft.com/en-us/topic/show-the-developer-tab-e1192344-5e56-4d45-931b-e5fd9bea2d45) and [Macros in Office files](https://support.microsoft.com/en-us/office/macros-in-office-files-12b036fd-d140-4e74-b45e-16fed1a7e5c6).
+> P.S. You can open normally the csv file using Excel but it will mess-up the station IDs.
 
 <h3 id = "import-stations-table">Import Stations table</h3>
 
@@ -362,7 +339,30 @@ FROM 'D:/Github/divvy-bikeshare/csv files/stations/Stations.csv'
 DELIMITER ',' CSV HEADER;
 ```
 
-> P.S. You can open normally the csv file using Excel but it will mess-up the station IDs.
+<h3 id = "enable-excel-macros">Enable Excel Macros</h3>
+
+Excel macros is under Developer tab in Excel. The **Developer** tab isn't displayed by default, but you can add it to the ribbon.
+
+Steps:
+1. On the **File** tab, go to **Options** > **Customize Ribbon**.
+2. Under **Customize the Ribbon** and under **Main tabs**, select the **Developer** check box.
+
+After you show the tab, the Developer tab stays visible, unless you clear the check box or have to reinstall a Microsoft Office program.
+
+The Developer tab is the place to go when you want to do or use the following:
+- Write macros.
+- Run macros that you previously recorded.
+- Use XML commands.
+- Use ActiveX controls.
+- Create applications to use with Microsoft Office programs.
+- Use form controls in Microsoft Excel.
+- Work with the ShapeSheet in Microsoft Visio.
+- Create new shapes and stencils in Microsoft Visio.
+
+A macro is a series of commands that you can use to automate a repeated task, and can be run when you have to perform the task.
+
+> Read [Show the Developer tab](https://support.microsoft.com/en-us/topic/show-the-developer-tab-e1192344-5e56-4d45-931b-e5fd9bea2d45) and [Macros in Office files](https://support.microsoft.com/en-us/office/macros-in-office-files-12b036fd-d140-4e74-b45e-16fed1a7e5c6).
+
 
 &nbsp;
 
