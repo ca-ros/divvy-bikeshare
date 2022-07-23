@@ -34,7 +34,6 @@ Questions relating to trip data should be sent to <a href = "mailto:bike-data@ly
 - [Notepad++](https://notepad-plus-plus.org/downloads/)
 - [PostgreSQL](https://www.postgresql.org/download/)
 - [RStudio](https://www.rstudio.com/products/rstudio/download/)
-- [Python](https://www.python.org/downloads/)
 
 <h2 align = "center">Table of Content</h2>
 
@@ -152,8 +151,6 @@ Steps:
 3. After extracting the zip files, compile separately the bike-trips data and the stations data included in that folder. Name the folder as the part it represents *e.g. trips_p1*.
 4. Start compiling the data, **trips_p1** folder must contain data from year *2013-2019* and **trips_p2** folder must contain data from year *2020-2021*.
 
-> There are two (2) options in merging csv files, by using **R** or **Python**. Choose base on your preference.
-
 <h3 id = "load-the-libraries">Load the libraries</h3>
 
 *Using RStudio*
@@ -163,13 +160,6 @@ install.library(tidyverse)
 library(tidyverse)
 ```
 
-*Using Python*
-
-```python
-import pandas as pd
-import glob
-import os
-```
 
 <h3 id = "inspection">Inspection</h3>
 
@@ -1375,8 +1365,6 @@ WHERE s.name = c.old_name;
 
 <h2 id = "cleaned-dataset">🧹 Cleaned Dataset</h2>
 
-This dataset contains trip duration less than 60 seconds and stations with null values. I kept it incased someone need the entire data.
+- [divvybikes-dataset](www.kaggle.com/dataset/e116a4d4f9c1900cf2b5b0b6a9270e20a378a4a18d209f5277253e8afbf2ef7d) (678 MB)
 
-- [divvybikes-dataset.rar](https://drive.google.com/file/d/1xhHuh9WXHtIBLPV6OO-a62th6Ev27jmM/view?usp=sharing) (678 MB)
-  - divvybikes-trips.csv (4.5 GB)
-  - divvybikes-stations.csv (120 KB)
+> This dataset contains trip duration less than 60 seconds and stations with null values. I kept it incased someone need the entire data. Stations with null values will be filled with data in the future after I have a good grasp in **Machine Learning** and **Web Scraping**.  

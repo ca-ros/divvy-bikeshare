@@ -34,7 +34,6 @@ Questions relating to trip data should be sent to <a href = "mailto:bike-data@ly
 - [Notepad++](https://notepad-plus-plus.org/downloads/)
 - [PostgreSQL](https://www.postgresql.org/download/)
 - [RStudio](https://www.rstudio.com/products/rstudio/download/)
-- [Python](https://www.python.org/downloads/)
 
 <h2 align = "center">Table of Content</h2>
 
@@ -152,8 +151,6 @@ Steps:
 3. After extracting the zip files, compile separately the bike-trips data and the stations data included in that folder. Name the folder as the part it represents *e.g. trips_p1*.
 4. Start compiling the data, **trips_p1** folder must contain data from year *2013-2019* and **trips_p2** folder must contain data from year *2020-2021*.
 
-> There are two (2) options in merging csv files, by using **R** or **Python**. Choose base on your preference.
-
 <h3 id = "load-the-libraries">Load the libraries</h3>
 
 *Using RStudio*
@@ -163,13 +160,6 @@ install.library(tidyverse)
 library(tidyverse)
 ```
 
-*Using Python*
-
-```python
-import pandas as pd
-import glob
-import os
-```
 
 <h3 id = "inspection">Inspection</h3>
 
@@ -802,12 +792,12 @@ Since the smaller station ID is not used in **Stations** table, I used it as a n
 - id_changes_p1.csv
 
 ```sql
-CREATE TABLE bike_trips.id_changes_p1 (
+CREATE TABLE id_changes_p1 (
   old_name varchar, 
   new_id int);
 
 -- Import
-COPY bike_trips.id_changes_p1 (old_name, new_id)
+COPY id_changes_p1 (old_name, new_id)
 FROM 'D:/Github/divvy-bikeshare/csv files/stations/id_changes_p1.csv' 
 DELIMITER ',' CSV HEADER;
 ```
@@ -816,12 +806,12 @@ DELIMITER ',' CSV HEADER;
 
 ```sql
 -- Create table
-CREATE TABLE bike_trips.name_changes_p1 (
+CREATE TABLE name_changes_p1 (
   old_name varchar, 
   new_name varchar);
 
 -- Import
-COPY bike_trips.name_changes_p1 (old_name, new_name)
+COPY name_changes_p1 (old_name, new_name)
 FROM 'D:/Github/divvy-bikeshare/csv files/stations/name_changes_p1.csv' 
 DELIMITER ',' CSV HEADER;
 ```
@@ -831,18 +821,18 @@ DELIMITER ',' CSV HEADER;
 - start_station_id
 
 ```sql
-UPDATE bike_trips.trips_p1 as s
+UPDATE trips_p1 as s
 SET start_station_id = c.new_id
-FROM bike_trips.id_changes_p1 as c
+FROM id_changes_p1 as c
 WHERE s.start_station_name = c.old_name;
 ```
 
 - end_station_id
 
 ```sql
-UPDATE bike_trips.trips_p1 as s
+UPDATE trips_p1 as s
 SET end_station_id = c.new_id
-FROM bike_trips.id_changes_p1 as c
+FROM id_changes_p1 as c
 WHERE s.end_station_name = c.old_name;
 ```
 
@@ -850,17 +840,17 @@ WHERE s.end_station_name = c.old_name;
 
 ```sql
 -- start_station_name
-UPDATE bike_trips.trips_p1 as s
+UPDATE trips_p1 as s
 SET start_station_name = c.new_name
-FROM bike_trips.name_changes_p1 as c
+FROM name_changes_p1 as c
 WHERE s.start_station_name = c.old_name;
 ```
 
 ```sql
 -- end_station_name
-UPDATE bike_trips.trips_p1 as s
+UPDATE trips_p1 as s
 SET end_station_name = c.new_name
-FROM bike_trips.name_changes_p1 as c
+FROM name_changes_p1 as c
 WHERE s.end_station_name = c.old_name;
 ```
 
@@ -926,7 +916,7 @@ Export the result as [trips_p2_stations.csv](https://github.com/ca-ros/divvy-bik
           - Base - 2132 W Hubbard Warehouse
 
           ```sql
-          SELECT start_lat, start_lng FROM bike_trips.trips_p2
+          SELECT start_lat, start_lng FROM trips_p2
           WHERE start_station_name = 'Base - 2132 W Hubbard Warehouse'
 
           /*
@@ -939,7 +929,7 @@ Export the result as [trips_p2_stations.csv](https://github.com/ca-ros/divvy-bik
           - HUBBARD ST BIKE CHECKING (LBS-WH-TEST)
 
           ```sql
-          SELECT start_lat, start_lng FROM bike_trips.trips_p2
+          SELECT start_lat, start_lng FROM trips_p2
           WHERE start_station_name = 'HUBBARD ST BIKE CHECKING (LBS-WH-TEST)'
 
           /*
@@ -1006,14 +996,14 @@ Export the result as [trips_p2_stations.csv](https://github.com/ca-ros/divvy-bik
 
 ```sql
 -- Create table
-CREATE TABLE bike_trips.id_changes_p2 (
+CREATE TABLE id_changes_p2 (
   old_name varchar,
   new_id bigint);
 ```
 
 ```sql
 -- Import
-COPY bike_trips.id_changes_p2 (old_name, new_id)
+COPY id_changes_p2 (old_name, new_id)
 FROM 'D:/Github/divvy-bikeshare/csv files/stations/id_changes_p2.csv' 
 DELIMITER ',' CSV HEADER NULL 'null';
 ```
@@ -1022,14 +1012,14 @@ DELIMITER ',' CSV HEADER NULL 'null';
 
 ```sql
 -- Create table
-CREATE TABLE bike_trips.name_changes_p2 (
+CREATE TABLE name_changes_p2 (
   old_name varchar,
   new_name varchar);
 ```
 
 ```sql
 -- Import
-COPY bike_trips.name_changes_p2 (old_name, new_name)
+COPY name_changes_p2 (old_name, new_name)
 FROM 'D:/Github/divvy-bikeshare/csv files/stations/name_changes_p2.csv' 
 DELIMITER ',' CSV HEADER NULL 'null';
 ```
@@ -1039,7 +1029,7 @@ DELIMITER ',' CSV HEADER NULL 'null';
 - start_station_id
 
 ```sql
-UPDATE bike_trips.trips_p2
+UPDATE trips_p2
 SET start_station_id = CASE
   WHEN start_station_id = 'WL-008' THEN '57'
   WHEN start_station_id = '13221' THEN '61'
@@ -1049,16 +1039,16 @@ WHERE start_station_id IN ('WL-008', '13221', '20215');
 ```
 
 ```sql
-UPDATE bike_trips.trips_p2 as s
+UPDATE trips_p2 as s
 SET start_station_id = CAST(c.new_id AS varchar)
-FROM bike_trips.id_changes_p2 as c
+FROM id_changes_p2 as c
 WHERE s.start_station_name = c.old_name;
 ```
 
 - end_station_id
 
 ```sql
-UPDATE bike_trips.trips_p2
+UPDATE trips_p2
 SET end_station_id = CASE
   WHEN end_station_id = 'WL-008' THEN '57'
   WHEN end_station_id = '13221' THEN '61'
@@ -1068,9 +1058,9 @@ WHERE end_station_id IN ('WL-008', '13221', '20215');
 ```
 
 ```sql
-UPDATE bike_trips.trips_p2 as s
+UPDATE trips_p2 as s
 SET end_station_id = CAST(c.new_id AS varchar)
-FROM bike_trips.id_changes_p2 as c
+FROM id_changes_p2 as c
 WHERE s.end_station_name = c.old_name;
 ```
 
@@ -1079,7 +1069,7 @@ WHERE s.end_station_name = c.old_name;
 - start_station
 
 ```sql
-UPDATE bike_trips.trips_p2
+UPDATE trips_p2
 SET start_station_name = CASE
   WHEN start_station_id = '57' THEN 'Clinton St & Roosevelt Rd'
   WHEN start_station_id = '61' THEN 'Wood St & Milwaukee Ave'
@@ -1089,16 +1079,16 @@ WHERE start_station_id IN ('57', '61', '732');
 ```
 
 ```sql
-UPDATE bike_trips.trips_p2 as s
+UPDATE trips_p2 as s
 SET start_station_name = c.new_name
-FROM bike_trips.name_changes_p2 as c
+FROM name_changes_p2 as c
 WHERE s.start_station_name = c.old_name;
 ```
 
 - end_station
 
 ```sql
-UPDATE bike_trips.trips_p2
+UPDATE trips_p2
 SET end_station_name = CASE
   WHEN end_station_id = '57' THEN 'Clinton St & Roosevelt Rd'
   WHEN end_station_id = '61' THEN 'Wood St & Milwaukee Ave'
@@ -1108,9 +1098,9 @@ WHERE end_station_id IN ('57', '61', '732');
 ```
 
 ```sql
-UPDATE bike_trips.trips_p2 as s
+UPDATE trips_p2 as s
 SET end_station_name = c.new_name
-FROM bike_trips.name_changes_p2 as c
+FROM name_changes_p2 as c
 WHERE s.end_station_name = c.old_name;
 ```
 
@@ -1175,7 +1165,7 @@ Before combining both tables, some changes has to be made first. By checking the
 <h4 id = "sql-query-2">SQL Query</h4>
 
 ```sql
-CREATE TABLE bike_trips.trips AS
+CREATE TABLE trips AS
 SELECT 
   CAST(trip_id AS varchar) AS ride_id,
   CAST(null AS varchar) AS rideable_type,
@@ -1190,7 +1180,7 @@ SELECT
   user_type,
   gender,
   birth_year
-FROM bike_trips.trips_p1
+FROM trips_p1
 UNION ALL
 SELECT
   ride_id,
@@ -1206,7 +1196,7 @@ SELECT
   user_type,
   CAST(null AS text) AS gender,
   CAST(null AS int) AS birth_year
-FROM bike_trips.trips_p2;
+FROM trips_p2;
 ```
 
 <h3 align = "center" id = "null-values"><strong>NULL values</strong></h3>
@@ -1241,17 +1231,17 @@ Divvy-bikeshare dataset contains 3.45% of NULL values. Since the percentage is s
 
 ```sql
 -- trips_p1: 24,426,783
-SELECT COUNT(*) FROM bike_trips.trips_p1;
+SELECT COUNT(*) FROM trips_p1;
 
 -- trips_p2: 9,136,746
-SELECT COUNT(*) FROM bike_trips.trips_p2;
+SELECT COUNT(*) FROM trips_p2;
 
 -- total: 33,563,529
-SELECT COUNT(*) FROM bike_trips.trips;
+SELECT COUNT(*) FROM trips;
 
 -- total NULL records: 1,158,190
 SELECT CAST(COUNT(*) AS numeric) 
-  FROM bike_trips.trips_p2
+  FROM trips_p2
   WHERE (start_station_name IS NULL 
   AND start_station_id IS NULL)
   OR (end_station_name IS NULL
@@ -1264,14 +1254,14 @@ SELECT CAST(COUNT(*) AS numeric)
 -- trips_p1
 SELECT round(100 * 
  (SELECT CAST(COUNT(*) AS numeric) 
-  FROM bike_trips.trips_p1
+  FROM trips_p1
   WHERE (start_station_name IS NULL 
   AND start_station_id IS NULL)
   OR (end_station_name IS NULL
   AND end_station_id IS NULL)
   ) /	
  (SELECT CAST(COUNT(*) AS numeric)
-  FROM bike_trips.trips_p1)
+  FROM trips_p1)
 			 , 2) AS NULL_values_percent
 
 -- none
@@ -1281,14 +1271,14 @@ SELECT round(100 *
 -- trips_p2
 SELECT round(100 * 
  (SELECT CAST(COUNT(*) AS numeric) 
-  FROM bike_trips.trips_p2
+  FROM trips_p2
   WHERE (start_station_name IS NULL 
   AND start_station_id IS NULL)
   OR (end_station_name IS NULL
   AND end_station_id IS NULL)
   ) /	
  (SELECT CAST(COUNT(*) AS numeric)
-  FROM bike_trips.trips_p2)
+  FROM trips_p2)
 			 , 2) AS NULL_values_percent
 
 -- 12.68% of data is NULL
@@ -1300,14 +1290,14 @@ Since only table **trips_p2** has NULL values, we then use the table **trips_p2*
 -- entire dataset
 SELECT round(100 * 
  (SELECT CAST(COUNT(*) AS numeric) 
-  FROM bike_trips.trips_p2
+  FROM trips_p2
   WHERE (start_station_name IS NULL 
   AND start_station_id IS NULL)
   OR (end_station_name IS NULL
   AND end_station_id IS NULL)
   ) /	
  (SELECT CAST(COUNT(*) AS numeric)
-  FROM bike_trips.trips)
+  FROM trips)
 			 , 2) AS omitted_data_percent
 
 -- 3.45% of data is NULL
@@ -1329,7 +1319,7 @@ Add the missing stations to Stations table
 
 ```sql
 -- Import
-COPY bike_trips.stations (
+COPY stations (
   id, 
   name, 
   docks,
@@ -1352,14 +1342,14 @@ Some IDs need to change from the table.
 
 ```sql
 -- Create table
-CREATE TABLE bike_trips.id_changes_stations (
+CREATE TABLE id_changes_stations (
   name varchar,
   id bigint);
 ```
 
 ```sql
 -- Import
-COPY bike_trips.id_changes_stations (name, id)
+COPY id_changes_stations (name, id)
 FROM 'D:/Github/divvy-bikeshare/csv files/stations/id_changes_stations.csv'
 DELIMITER ',' CSV HEADER;
 ```
@@ -1367,13 +1357,14 @@ DELIMITER ',' CSV HEADER;
 *ID change*
 
 ```sql
-UPDATE bike_trips.stations as s
+UPDATE stations as s
 SET id = c.new_id
-FROM bike_trips.id_changes_stations as c
+FROM id_changes_stations as c
 WHERE s.name = c.old_name;
 ```
 
 <h2 id = "cleaned-dataset">🧹 Cleaned Dataset</h2>
 
-- [Trips_table](https://www.dropbox.com/s/qb3ndglnmf7gwh5/trips.csv?dl=0) (4.5 gb)
-- [Stations_table](https://github.com/ca-ros/divvy-bikeshare/blob/master/data%20wrangling/csv%20files/stations_cleaning/Stations_cleaned.csv) (120 kb)
+- [divvybikes-dataset](www.kaggle.com/dataset/e116a4d4f9c1900cf2b5b0b6a9270e20a378a4a18d209f5277253e8afbf2ef7d) (678 MB)
+
+> This dataset contains trip duration less than 60 seconds and stations with null values. I kept it incased someone need the entire data. Stations with null values will be filled with data in the future after I have a good grasp in **Machine Learning** and **Web Scraping**.  
