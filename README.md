@@ -1375,4 +1375,8 @@ WHERE s.name = c.old_name;
 
 <h2 id = "cleaned-dataset">🧹 Cleaned Dataset</h2>
 
+This dataset contains trip duration less than 60 seconds and stations with null values. I kept it incased someone need the entire data.
+
 - [divvybikes-dataset.rar](https://drive.google.com/file/d/1xhHuh9WXHtIBLPV6OO-a62th6Ev27jmM/view?usp=sharing) (678 MB)
+  - divvybikes-trips.csv (4.5 GB)
+  - divvybikes-stations.csv (120 KB)
