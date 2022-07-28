@@ -27,13 +27,13 @@ Questions relating to trip data should be sent to <a href = "mailto:bike-data@ly
 
 > The Stations table continues to get updates. I noticed some changes since I downloaded the data on May 15, 2022 and redownload on June 28, 2022. When I check the site, there is an update on May 18, 2022 hence the change in data.
 
-&nbsp;
-
 ### Tools used
 - [MS Excel](https://www.microsoft.com/en-ww/microsoft-365/excel)
 - [Notepad++](https://notepad-plus-plus.org/downloads/)
 - [PostgreSQL](https://www.postgresql.org/download/)
 - [RStudio](https://www.rstudio.com/products/rstudio/download/)
+
+&nbsp;
 
 <h2 align = "center">Table of Content</h2>
 
