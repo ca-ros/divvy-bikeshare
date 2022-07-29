@@ -497,7 +497,6 @@ In order to analyze the table, the following is done.
 > Upon checking, 2 station names from **trips_p1** table has already existing names in **Stations** table. Thus, duplicate station names with a different **station_id**.
 
 <h4 id = "clean-macros">Clean Macros</h4>
-#### Clean Macros
 
 We need to debug and clean the macros to remove any possible errors. Not only this will remove errors, the code will also be easy to read. Open the Visual Basic: Under *Developer* > *Code* > *Visual Basic*. Under the (*Workbook name*) > *Modules* > *Module1*. The macros recorded must be the same as the codes below. 
 
