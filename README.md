@@ -69,6 +69,7 @@ III. [Trips table](#trips-table)
   - [SQL Query](#sql-query-2)
 - [NULL values](#null-values)
   - [SQL Query](#sql-query-3)
+- [Invalid Data](#invalid-data)
 
 IV. [Stations table](#stations-table)
 
@@ -1302,6 +1303,16 @@ SELECT round(100 *
 -- 3.45% of data is NULL
 ```
 
+<h3 align = "center" id = "invalid-data"><strong>Invalid Data</strong></h3>
+
+We will remove any trips that were below 60 seconds in length (potentially false starts or users trying to re-dock a bike to ensure it was secure).
+
+```sql
+DELETE FROM trips
+WHERE trip_duration < 60
+```
+
+
 &nbsp;
 
 <h2 align = "center" id = "stations-table">Stations table</h2>
@@ -1368,4 +1379,4 @@ Download here:
 - [Kaggle](www.kaggle.com/dataset/e116a4d4f9c1900cf2b5b0b6a9270e20a378a4a18d209f5277253e8afbf2ef7d)
 - [Google Drive](https://drive.google.com/file/d/1xhHuh9WXHtIBLPV6OO-a62th6Ev27jmM/view?usp=sharing)
 
-> This dataset contains trip duration less than 60 seconds and stations with null values. I kept it incased someone need the entire data. Stations with null values will be filled with data in the future after I have a good grasp in **Machine Learning** and **Web Scraping**.  
+> This dataset contains stations with null values. I kept it incased someone need the entire data. These will be filled with data in the future after I have a good grasp in **Machine Learning** and **Web Scraping**.  
